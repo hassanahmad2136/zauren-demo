@@ -39,7 +39,12 @@ from .db_inventory import (
     get_all_categories,
     get_all_products,
     create_nested_inventory_json,
-    get_product_details
+    get_product_details,
+    reserve_stock,
+    release_reserved_stock,
+    get_available_stock,
+    cleanup_expired_reservations,
+    finalize_purchase
 )
 from .session_manager_conversation import (
     get_user_session,
@@ -57,6 +62,32 @@ load_dotenv()
 
 # Global inventory - will be initialized during startup
 global_inventory = None
+
+def initialize_global_inventory():
+    """Initialize the global inventory from database"""
+    global global_inventory
+    try:
+        categories_result = get_all_categories()
+        products_result = get_all_products()
+        
+        if categories_result['status'] == 'success' and products_result['status'] == 'success':
+            categories = categories_result['data']
+            products = products_result['data']
+            global_inventory = create_nested_inventory_json(categories, products)
+            logger.info("✅ Global inventory initialized successfully")
+        else:
+            logger.error("❌ Failed to fetch inventory data from database")
+            global_inventory = '{"categories": []}'
+    except Exception as e:
+        logger.error(f"❌ Error initializing global inventory: {e}")
+        global_inventory = '{"categories": []}'
+
+def refresh_global_inventory():
+    """Refresh the global inventory (call this when inventory changes)"""
+    initialize_global_inventory()
+
+# Initialize inventory on module load
+initialize_global_inventory()
 
 # Message deduplication cache
 processed_messages = {}
@@ -286,6 +317,36 @@ def generate_and_send_response(data, message, sender_id, sender_name, user_sessi
         else:
             reply_text = response_data.get('reply', f"Hi {sender_name}, thanks for your message!")
             handle_cart_updates(user_session, response_data)
+            
+            # Check if order is completed and finalize it
+            if response_data.get('intent') == 'confirm_order' and response_data.get('checkout_stage') == 'completed':
+                try:
+                    # Extract order details from conversation history
+                    order_details = extract_order_details_from_history(user_session['conversation_history'])
+                    
+                    # Finalize the order
+                    from .llm_checkout import finalize_checkout_order
+                    finalization_result = finalize_checkout_order(
+                        user_session['user_id'], 
+                        user_session['cart']['items'], 
+                        order_details
+                    )
+                    
+                    if finalization_result['status'] == 'success':
+                        # Clear cart after successful order
+                        user_session['cart'] = {'items': [], 'total': 0}
+                        update_user_session(user_session['user_id'], {'cart': user_session['cart']})
+                        
+                        # Update response with order confirmation
+                        order_id = finalization_result['order_id']
+                        total_amount = finalization_result['total_amount']
+                        reply_text += f"\n\n🎉 Your order #{order_id[:8]} has been confirmed! Total: ${total_amount:.2f}\n\nYou'll receive a confirmation message shortly with delivery details."
+                    else:
+                        logger.error(f"❌ Order finalization failed: {finalization_result.get('error')}")
+                        reply_text += "\n\nSorry, there was an issue processing your order. Please try again."
+                except Exception as e:
+                    logger.error(f"❌ Error processing order completion: {e}")
+                    reply_text += "\n\nSorry, there was an issue processing your order. Please try again."
         interactive_message = (False,"")
         try:
             if response_data.get('intent') == 'view_inventory':
@@ -1149,10 +1210,41 @@ def update_cart_add_products(user_session, response_data):
                         logger.warning(f"⚠️ Invalid price in response: {product_price}")
                 
                 if existing_product:
+                    # Check if we have enough available stock for the additional quantity
+                    if found_product.get('id'):
+                        stock_check = get_available_stock(found_product['id'])
+                        if stock_check['status'] == 'success':
+                            available = stock_check['available_stock']
+                            if available < quantity:
+                                logger.warning(f"⚠️ Insufficient stock for {product_name}. Available: {available}, Requested: {quantity}")
+                                continue
+                    
+                    # Reserve additional stock
+                    if found_product.get('id'):
+                        reservation_result = reserve_stock(found_product['id'], quantity, user_session['user_id'])
+                        if reservation_result['status'] != 'success':
+                            logger.warning(f"⚠️ Could not reserve stock for {product_name}: {reservation_result.get('error')}")
+                            continue
+                    
                     # Update quantity of existing product
                     existing_product['quantity'] = int(existing_product.get('quantity', 0)) + quantity
                     logger.info(f"✅ Updated quantity for {product_name} to {existing_product['quantity']}")
                 else:
+                    # Check if we have enough available stock for new item
+                    if found_product.get('id'):
+                        stock_check = get_available_stock(found_product['id'])
+                        if stock_check['status'] == 'success':
+                            available = stock_check['available_stock']
+                            if available < quantity:
+                                logger.warning(f"⚠️ Insufficient stock for {product_name}. Available: {available}, Requested: {quantity}")
+                                continue
+                        
+                        # Reserve stock
+                        reservation_result = reserve_stock(found_product['id'], quantity, user_session['user_id'])
+                        if reservation_result['status'] != 'success':
+                            logger.warning(f"⚠️ Could not reserve stock for {product_name}: {reservation_result.get('error')}")
+                            continue
+                    
                     # Add new product to cart
                     new_item = {
                         'id': found_product.get('id', f"product_{product_name.replace(' ', '_')}"),
@@ -1229,39 +1321,70 @@ def update_cart_remove_products(user_session, response_data):
         # Process each product to remove
         for product in products:
             try:
-                # Get product name
+                # Get product details
                 if isinstance(product, dict):
                     product_name = product.get('product', '')
+                    quantity_to_remove = int(product.get('quantity', 0)) if product.get('quantity') else None
+                    product_id = product.get('product_id', None)
                 else:
                     product_name = str(product)
+                    quantity_to_remove = None
+                    product_id = None
                 
                 if not product_name:
                     logger.warning("⚠️ Skipping removal of product with no name")
                     continue
                 
-                logger.info(f"🔄 Removing product: {product_name}")
+                logger.info(f"🔄 Removing product: {product_name}, quantity: {quantity_to_remove}")
                 
                 # Check for 'all' to clear the cart
                 if product_name.lower() == 'all':
+                    # Release reserved stock for all items before clearing cart
+                    for item in user_session['cart']['items']:
+                        if isinstance(item, dict) and item.get('id'):
+                            release_reserved_stock(item.get('id'), item.get('quantity', 0), user_session['user_id'])
                     user_session['cart'] = {'items': [], 'total': 0}
-                    logger.info("🧹 Cleared all items from cart")
+                    logger.info("🧹 Cleared all items from cart and released reserved stock")
                     return
                 
-                # Keep track of number of items before removal
-                old_count = len(user_session['cart']['items'])
+                # Find the product in cart
+                found_item = None
+                for i, item in enumerate(user_session['cart']['items']):
+                    if not isinstance(item, dict):
+                        continue
+                    
+                    # Match by ID if available, otherwise by name
+                    if product_id and item.get('id') == product_id:
+                        found_item = (i, item)
+                        break
+                    elif item.get('name', '').lower() == product_name.lower():
+                        found_item = (i, item)
+                        break
                 
-                # Remove the product
-                user_session['cart']['items'] = [
-                    item for item in user_session['cart']['items']
-                    if isinstance(item, dict) and item.get('name', '').lower() != product_name.lower()
-                ]
+                if not found_item:
+                    logger.warning(f"⚠️ Product not found in cart: {product_name}")
+                    continue
                 
-                # Log results
-                new_count = len(user_session['cart']['items'])
-                if new_count < old_count:
-                    logger.info(f"✅ Removed {old_count - new_count} items matching {product_name}")
+                item_index, cart_item = found_item
+                current_quantity = int(cart_item.get('quantity', 0))
+                
+                # Determine how much to remove
+                if quantity_to_remove is None or quantity_to_remove >= current_quantity:
+                    # Remove entire item
+                    removed_quantity = current_quantity
+                    # Release reserved stock
+                    if cart_item.get('id'):
+                        release_reserved_stock(cart_item.get('id'), removed_quantity, user_session['user_id'])
+                    user_session['cart']['items'].pop(item_index)
+                    logger.info(f"✅ Removed entire item: {product_name} (quantity: {removed_quantity})")
                 else:
-                    logger.warning(f"⚠️ No items found matching {product_name}")
+                    # Remove partial quantity
+                    new_quantity = current_quantity - quantity_to_remove
+                    cart_item['quantity'] = new_quantity
+                    # Release reserved stock for removed quantity
+                    if cart_item.get('id'):
+                        release_reserved_stock(cart_item.get('id'), quantity_to_remove, user_session['user_id'])
+                    logger.info(f"✅ Reduced quantity of {product_name} from {current_quantity} to {new_quantity}")
             
             except Exception as e:
                 logger.error(f"❌ Error removing product {product}: {str(e)}")
@@ -1283,6 +1406,34 @@ def update_cart_remove_products(user_session, response_data):
     except Exception as e:
         logger.error(f"❌ Error in update_cart_remove_products: {e}")
 
+
+def extract_order_details_from_history(conversation_history):
+    """Extract order details from conversation history"""
+    order_details = {
+        'payment_method': 'unknown',
+        'payment_details': 'unknown', 
+        'phone_number': 'unknown',
+        'delivery_address': 'unknown'
+    }
+    
+    # Look through conversation history for order details
+    for msg in reversed(conversation_history):
+        if msg["role"] == "assistant":
+            content = msg["content"]
+            try:
+                data = json.loads(content)
+                if "payment_method" in data and data["payment_method"] != "unknown":
+                    order_details["payment_method"] = data["payment_method"]
+                if "payment_details" in data and data["payment_details"] != "unknown":
+                    order_details["payment_details"] = data["payment_details"]
+                if "phone_number" in data and data["phone_number"] != "unknown":
+                    order_details["phone_number"] = data["phone_number"]
+                if "delivery_address" in data and data["delivery_address"] != "unknown":
+                    order_details["delivery_address"] = data["delivery_address"]
+            except:
+                pass
+                
+    return order_details
 
 def process_generic_event(data):
     """Handle other event types."""

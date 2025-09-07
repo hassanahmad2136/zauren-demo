@@ -63,7 +63,7 @@ def handle_remove_from_cart_impl(message, cart_json, conversation_history, user_
         1. "products": An array of objects with:
            - "product": Name of the product to remove
            - "product_id": Product ID if available in cart
-           - "quantity": Quantity to remove (if specified)
+           - "quantity": Specific quantity to remove (if specified, otherwise removes all)
            - ONLY include this field if a SPECIFIC product can be identified
            
         2. "matched_products": If the user doesn't provide enough details to identify a specific product:
@@ -71,15 +71,15 @@ def handle_remove_from_cart_impl(message, cart_json, conversation_history, user_
            - Each product should include name, quantity in cart, and price
            - ONLY include this field if multiple items in cart match their description
         
-        3. "NEED": If any product information or quantity is incomplete, specify what's needed:
+        3. "NEED": If any product information is incomplete, specify what's needed:
            - "product_selection" if the user needs to select from multiple matching products in cart
-           - "quantity" if the user hasn't specified how many to remove
+           - "quantity_clarification" if it's unclear how many to remove (when user has multiple of same item)
            - Must be an array of missing information
            - REQUIRED FIELD
         
         4. "reply": A response that:
            - If NEED contains "product_selection": Lists the matching products in cart and asks the user to select a specific one
-           - If NEED contains "quantity": Asks the user how many they want to remove
+           - If NEED contains "quantity_clarification": Asks the user how many they want to remove when they have multiple of the same item
            - If all information is provided: Confirms what's being removed from the cart
            - Is natural and conversational like a typical WhatsApp message
            - Only use the user's name occasionally and naturally, not in every message
@@ -91,9 +91,11 @@ def handle_remove_from_cart_impl(message, cart_json, conversation_history, user_
         Notes:
         - If the product isn't in the cart, indicate this in your response
         - If user says "remove all" or "empty cart", set product to "all"
-        - If user doesn't specify quantity but implies removing all, assume they want to remove all of that product
+        - If user specifies a number (e.g., "remove 2 kurtas"), extract the quantity
+        - If user says "remove kurta" and they have multiple kurtas, ask how many to remove
         - Use fuzzy matching for product names to handle typos and variants
         - NEVER assume which specific product the user wants to remove if multiple matches exist in the cart
+        - Handle partial quantity removal - if user has 3 items and wants to remove 1, only remove 1
 
         JSON response:
         """

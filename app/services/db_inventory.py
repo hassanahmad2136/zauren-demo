@@ -2,7 +2,7 @@ import json
 from supabase import create_client, Client
 import os
 from typing import Dict, List, Optional, Union, Any
-from datetime import datetime
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -549,5 +549,301 @@ def create_nested_inventory_json(categories, products):
     inventory_json = json.dumps(inventory)
     
     return inventory_json
+
+def reserve_stock(product_id: str, quantity: int, user_id: str) -> Dict[str, Any]:
+    """
+    Reserve stock for a product when added to cart
+    
+    Args:
+        product_id: Product ID to reserve stock for
+        quantity: Quantity to reserve
+        user_id: User ID making the reservation
+        
+    Returns:
+        Dict with status and result information
+    """
+    try:
+        supabase = get_supabase_client()
+        
+        # Check current available stock
+        product_response = supabase.table('products')\
+            .select('quantity, name')\
+            .eq('id', product_id)\
+            .execute()
+            
+        if not product_response.data:
+            return {
+                'status': 'error',
+                'error': 'Product not found'
+            }
+        
+        product = product_response.data[0]
+        available_stock = product['quantity']
+        
+        # Check if enough stock is available
+        if available_stock < quantity:
+            return {
+                'status': 'error',
+                'error': f'Insufficient stock. Available: {available_stock}, Requested: {quantity}'
+            }
+        
+        # Create or update reservation
+        reservation_response = supabase.table('stock_reservations')\
+            .select('quantity')\
+            .eq('product_id', product_id)\
+            .eq('user_id', user_id)\
+            .execute()
+        
+        if reservation_response.data:
+            # Update existing reservation
+            current_reserved = reservation_response.data[0]['quantity']
+            new_reserved = current_reserved + quantity
+            
+            # Check if total reservation would exceed available stock
+            total_reserved_response = supabase.table('stock_reservations')\
+                .select('quantity')\
+                .eq('product_id', product_id)\
+                .execute()
+            
+            total_reserved = sum(r['quantity'] for r in total_reserved_response.data if r['user_id'] != user_id)
+            
+            if available_stock < total_reserved + new_reserved:
+                return {
+                    'status': 'error',
+                    'error': 'Not enough stock available for reservation'
+                }
+            
+            supabase.table('stock_reservations')\
+                .update({'quantity': new_reserved, 'updated_at': datetime.now().isoformat()})\
+                .eq('product_id', product_id)\
+                .eq('user_id', user_id)\
+                .execute()
+        else:
+            # Create new reservation
+            supabase.table('stock_reservations')\
+                .insert({
+                    'product_id': product_id,
+                    'user_id': user_id,
+                    'quantity': quantity,
+                    'created_at': datetime.now().isoformat(),
+                    'updated_at': datetime.now().isoformat()
+                })\
+                .execute()
+        
+        return {
+            'status': 'success',
+            'reserved_quantity': quantity,
+            'product_name': product['name']
+        }
+        
+    except Exception as e:
+        return {
+            'status': 'error',
+            'error': str(e)
+        }
+
+def release_reserved_stock(product_id: str, quantity: int, user_id: str = None) -> Dict[str, Any]:
+    """
+    Release reserved stock when items are removed from cart
+    
+    Args:
+        product_id: Product ID to release stock for
+        quantity: Quantity to release
+        user_id: User ID (if None, will try to release from any reservation)
+        
+    Returns:
+        Dict with status and result information
+    """
+    try:
+        supabase = get_supabase_client()
+        
+        if user_id:
+            # Get current reservation for this user
+            reservation_response = supabase.table('stock_reservations')\
+                .select('quantity')\
+                .eq('product_id', product_id)\
+                .eq('user_id', user_id)\
+                .execute()
+            
+            if not reservation_response.data:
+                return {
+                    'status': 'warning',
+                    'message': 'No reservation found for this user'
+                }
+            
+            current_reserved = reservation_response.data[0]['quantity']
+            
+            if quantity >= current_reserved:
+                # Remove entire reservation
+                supabase.table('stock_reservations')\
+                    .delete()\
+                    .eq('product_id', product_id)\
+                    .eq('user_id', user_id)\
+                    .execute()
+            else:
+                # Reduce reservation quantity
+                new_reserved = current_reserved - quantity
+                supabase.table('stock_reservations')\
+                    .update({'quantity': new_reserved, 'updated_at': datetime.now().isoformat()})\
+                    .eq('product_id', product_id)\
+                    .eq('user_id', user_id)\
+                    .execute()
+        
+        return {
+            'status': 'success',
+            'released_quantity': quantity
+        }
+        
+    except Exception as e:
+        return {
+            'status': 'error',
+            'error': str(e)
+        }
+
+def get_available_stock(product_id: str) -> Dict[str, Any]:
+    """
+    Get available stock for a product (total stock - reserved stock)
+    
+    Args:
+        product_id: Product ID to check stock for
+        
+    Returns:
+        Dict with available stock information
+    """
+    try:
+        supabase = get_supabase_client()
+        
+        # Get total stock
+        product_response = supabase.table('products')\
+            .select('quantity, name')\
+            .eq('id', product_id)\
+            .execute()
+            
+        if not product_response.data:
+            return {
+                'status': 'error',
+                'error': 'Product not found'
+            }
+        
+        total_stock = product_response.data[0]['quantity']
+        product_name = product_response.data[0]['name']
+        
+        # Get reserved stock
+        reservations_response = supabase.table('stock_reservations')\
+            .select('quantity')\
+            .eq('product_id', product_id)\
+            .execute()
+        
+        reserved_stock = sum(r['quantity'] for r in reservations_response.data)
+        available_stock = total_stock - reserved_stock
+        
+        return {
+            'status': 'success',
+            'product_name': product_name,
+            'total_stock': total_stock,
+            'reserved_stock': reserved_stock,
+            'available_stock': max(0, available_stock)
+        }
+        
+    except Exception as e:
+        return {
+            'status': 'error',
+            'error': str(e)
+        }
+
+def cleanup_expired_reservations(expiry_hours: int = 24) -> Dict[str, Any]:
+    """
+    Clean up expired stock reservations (for inactive carts)
+    
+    Args:
+        expiry_hours: Hours after which reservations expire
+        
+    Returns:
+        Dict with cleanup results
+    """
+    try:
+        supabase = get_supabase_client()
+        
+        # Calculate expiry timestamp
+        expiry_time = datetime.now() - datetime.timedelta(hours=expiry_hours)
+        
+        # Delete expired reservations
+        expired_response = supabase.table('stock_reservations')\
+            .delete()\
+            .lt('updated_at', expiry_time.isoformat())\
+            .execute()
+        
+        return {
+            'status': 'success',
+            'cleaned_reservations': len(expired_response.data) if expired_response.data else 0
+        }
+        
+    except Exception as e:
+        return {
+            'status': 'error',
+            'error': str(e)
+        }
+
+def finalize_purchase(user_id: str, cart_items: List[Dict]) -> Dict[str, Any]:
+    """
+    Finalize purchase by reducing actual stock and clearing reservations
+    
+    Args:
+        user_id: User ID making the purchase
+        cart_items: List of cart items with product_id and quantity
+        
+    Returns:
+        Dict with purchase finalization results
+    """
+    try:
+        supabase = get_supabase_client()
+        
+        # Process each item
+        processed_items = []
+        for item in cart_items:
+            product_id = item.get('id')
+            quantity = item.get('quantity', 0)
+            
+            if not product_id:
+                continue
+            
+            # Reduce actual stock
+            product_response = supabase.table('products')\
+                .select('quantity')\
+                .eq('id', product_id)\
+                .execute()
+            
+            if product_response.data:
+                current_stock = product_response.data[0]['quantity']
+                new_stock = max(0, current_stock - quantity)
+                
+                supabase.table('products')\
+                    .update({'quantity': new_stock})\
+                    .eq('id', product_id)\
+                    .execute()
+                
+                # Remove reservation
+                supabase.table('stock_reservations')\
+                    .delete()\
+                    .eq('product_id', product_id)\
+                    .eq('user_id', user_id)\
+                    .execute()
+                
+                processed_items.append({
+                    'product_id': product_id,
+                    'quantity_purchased': quantity,
+                    'new_stock': new_stock
+                })
+        
+        return {
+            'status': 'success',
+            'processed_items': processed_items
+        }
+        
+    except Exception as e:
+        return {
+            'status': 'error',
+            'error': str(e)
+        }
 
 print(create_nested_inventory_json(get_all_categories()['data'], get_all_products()['data']))

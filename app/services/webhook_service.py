@@ -1324,7 +1324,30 @@ def update_cart_remove_products(user_session, response_data):
                 # Get product details
                 if isinstance(product, dict):
                     product_name = product.get('product', '')
-                    quantity_to_remove = int(product.get('quantity', 0)) if product.get('quantity') else None
+                    # Better quantity extraction with multiple fallbacks
+                    quantity_raw = product.get('quantity')
+                    quantity_to_remove = None
+                    
+                    if quantity_raw is not None:
+                        try:
+                            # Try to convert to int, handle various formats
+                            if isinstance(quantity_raw, (int, float)):
+                                quantity_to_remove = int(quantity_raw)
+                            elif isinstance(quantity_raw, str):
+                                # Handle string numbers
+                                quantity_raw = quantity_raw.strip()
+                                if quantity_raw.isdigit():
+                                    quantity_to_remove = int(quantity_raw)
+                                elif quantity_raw.lower() in ['one', '1']:
+                                    quantity_to_remove = 1
+                                elif quantity_raw.lower() in ['two', '2']:
+                                    quantity_to_remove = 2
+                                elif quantity_raw.lower() in ['three', '3']:
+                                    quantity_to_remove = 3
+                                # Add more word-to-number mappings as needed
+                        except (ValueError, TypeError):
+                            logger.warning(f"⚠️ Could not parse quantity: {quantity_raw}")
+                    
                     product_id = product.get('product_id', None)
                 else:
                     product_name = str(product)
@@ -1335,7 +1358,7 @@ def update_cart_remove_products(user_session, response_data):
                     logger.warning("⚠️ Skipping removal of product with no name")
                     continue
                 
-                logger.info(f"🔄 Removing product: {product_name}, quantity: {quantity_to_remove}")
+                logger.info(f"🔄 Removing product: {product_name}, quantity_to_remove: {quantity_to_remove}, product_data: {product}")
                 
                 # Check for 'all' to clear the cart
                 if product_name.lower() == 'all':
@@ -1368,26 +1391,38 @@ def update_cart_remove_products(user_session, response_data):
                 item_index, cart_item = found_item
                 current_quantity = int(cart_item.get('quantity', 0))
                 
+                logger.info(f"🔍 Found item in cart: {cart_item['name']}, current quantity: {current_quantity}")
+                
                 # Determine how much to remove
-                if quantity_to_remove is None or quantity_to_remove >= current_quantity:
-                    # Remove entire item
+                if quantity_to_remove is None:
+                    # No specific quantity mentioned - remove all of this product
                     removed_quantity = current_quantity
                     # Release reserved stock
                     if cart_item.get('id'):
                         release_reserved_stock(cart_item.get('id'), removed_quantity, user_session['user_id'])
                     user_session['cart']['items'].pop(item_index)
-                    logger.info(f"✅ Removed entire item: {product_name} (quantity: {removed_quantity})")
+                    logger.info(f"✅ Removed entire item (no quantity specified): {product_name} (quantity: {removed_quantity})")
+                elif quantity_to_remove >= current_quantity:
+                    # Remove entire item (requested quantity >= available quantity)
+                    removed_quantity = current_quantity
+                    # Release reserved stock
+                    if cart_item.get('id'):
+                        release_reserved_stock(cart_item.get('id'), removed_quantity, user_session['user_id'])
+                    user_session['cart']['items'].pop(item_index)
+                    logger.info(f"✅ Removed entire item (requested >= available): {product_name} (quantity: {removed_quantity})")
                 else:
-                    # Remove partial quantity
+                    # Remove partial quantity (requested quantity < available quantity)
                     new_quantity = current_quantity - quantity_to_remove
                     cart_item['quantity'] = new_quantity
                     # Release reserved stock for removed quantity
                     if cart_item.get('id'):
                         release_reserved_stock(cart_item.get('id'), quantity_to_remove, user_session['user_id'])
-                    logger.info(f"✅ Reduced quantity of {product_name} from {current_quantity} to {new_quantity}")
+                    logger.info(f"✅ Reduced quantity of {product_name} from {current_quantity} to {new_quantity} (removed: {quantity_to_remove})")
             
             except Exception as e:
                 logger.error(f"❌ Error removing product {product}: {str(e)}")
+                import traceback
+                logger.error(f"❌ Full traceback: {traceback.format_exc()}")
         
         # Calculate cart total
         total = 0

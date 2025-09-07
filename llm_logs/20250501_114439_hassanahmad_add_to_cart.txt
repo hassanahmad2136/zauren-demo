@@ -1,0 +1,37 @@
+Timestamp: 2025-05-01T11:44:39.146925
+User ID: hassanahmad
+Intent: add_to_cart
+User Message: I like this
+LLM Response: {
+   "products": [
+       {
+           "product": "Navy Blue Shalwar Kameez",
+           "product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7",
+           "quantity": null,
+           "variant": null,
+           "description": "Navy blue cotton shalwar kameez with minimal embroidery"
+       }
+   ],
+   "NEED": [
+       "quantity"
+   ],
+   "reply": "You like the Navy Blue Shalwar Kameez! How many would you like to add to your cart?",
+   "suggestions": [
+       {
+           "product": "Black Leather Khussa",
+           "product_id": "7421d9b3-c3c8-4db8-99df-c55149df616e",
+           "description": "Handcrafted black leather khussa with traditional embroidery"
+       },
+       {
+           "product": "White Sindhi Cap",
+           "product_id": "b5204f84-7438-44b1-a99d-4991c69e00f9",
+           "description": "Traditional white Sindhi cap with mirror work"
+       }
+   ]
+}
+
+Parsed Response:
+products: [{"product": "Navy Blue Shalwar Kameez", "product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "quantity": null, "variant": null, "description": "Navy blue cotton shalwar kameez with minimal embroidery"}]
+NEED: ["quantity"]
+reply: "You like the Navy Blue Shalwar Kameez! How many would you like to add to your cart?"
+suggestions: [{"product": "Black Leather Khussa", "product_id": "7421d9b3-c3c8-4db8-99df-c55149df616e", "description": "Handcrafted black leather khussa with traditional embroidery"}, {"product": "White Sindhi Cap", "product_id": "b5204f84-7438-44b1-a99d-4991c69e00f9", "description": "Traditional white Sindhi cap with mirror work"}]

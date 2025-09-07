@@ -1,0 +1,23 @@
+Timestamp: 2025-06-16T20:42:43.392765
+User ID: ali
+Intent: add_to_cart
+User Message: fine,
+LLM Response: {
+  "products": [
+    {
+      "product": "Black Shalwar Kameez",
+      "product_id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a",
+      "quantity": 1,
+      "description": "Elegant black shalwar kameez for formal occasions"
+    }
+  ],
+  "matched_products": [],
+  "NEED": ["quantity"],
+  "reply": "Ali, I've found a Black Shalwar Kameez for you. It's elegant and perfect for formal occasions. The price is 3200. How many would you like to add to your cart?"
+}
+
+Parsed Response:
+products: [{"product": "Black Shalwar Kameez", "product_id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a", "quantity": 1, "description": "Elegant black shalwar kameez for formal occasions"}]
+matched_products: []
+NEED: ["quantity"]
+reply: "Ali, I've found a Black Shalwar Kameez for you. It's elegant and perfect for formal occasions. The price is 3200. How many would you like to add to your cart?"

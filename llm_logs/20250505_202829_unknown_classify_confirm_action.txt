@@ -1,0 +1,12 @@
+Timestamp: 2025-05-05T20:28:29.179319
+User ID: unknown
+Intent: classify_confirm_action
+User Message: Ye 10 percent discount Kese milega
+LLM Response: {
+    "intent": "confirm_action",
+  "reply": "To get 10% discount, simply enter code DISCOUNT10 at checkout."
+}
+
+Parsed Response:
+intent: "confirm_action"
+reply: "To get 10% discount, simply enter code DISCOUNT10 at checkout."

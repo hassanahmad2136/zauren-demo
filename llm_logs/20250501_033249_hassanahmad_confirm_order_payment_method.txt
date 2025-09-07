@@ -1,0 +1,24 @@
+Timestamp: 2025-05-01T03:32:49.061442
+User ID: hassanahmad
+Intent: confirm_order_payment_method
+User Message: Cash on delivery
+LLM Response: {
+   "checkout_stage": "payment_method",
+   "payment_method": "COD",
+   "payment_details": "not_required",
+   "phone_number": "unknown",
+   "delivery_address": "unknown",
+   "NEED": ["phone_number"],
+   "reply": "You've chosen Cash on Delivery. Can you please provide your contact phone number?",
+   "order_summary": "You have 1 Black Royal Sherwani in your cart, totalling $15000."
+}
+
+Parsed Response:
+checkout_stage: "payment_method"
+payment_method: "COD"
+payment_details: "not_required"
+phone_number: "unknown"
+delivery_address: "unknown"
+NEED: ["phone_number"]
+reply: "You've chosen Cash on Delivery. Can you please provide your contact phone number?"
+order_summary: "You have 1 Black Royal Sherwani in your cart, totalling $15000."

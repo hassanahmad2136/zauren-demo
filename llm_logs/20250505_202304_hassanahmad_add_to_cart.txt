@@ -1,0 +1,25 @@
+Timestamp: 2025-05-05T20:23:04.765674
+User ID: hassanahmad
+Intent: add_to_cart
+User Message: Add to cart: Traditional Sindhi ajrak pattern scarf.
+LLM Response: {
+    "products": [
+    {
+      "product": "Handwoven Ajrak Scarf",
+      "product_id": "369734d4-ee6e-4dca-842a-0ab759edfb45",
+      "quantity": 1,
+      "description": "Traditional Sindhi ajrak pattern scarf"
+    }
+  ],
+  "matched_products": [],
+  "NEED": [],
+  "reply": "Added 1 x Handwoven Ajrak Scarf to your cart. Your cart now has 2 items. Total: 3300.0",
+  "suggestions": []
+}
+
+Parsed Response:
+products: [{"product": "Handwoven Ajrak Scarf", "product_id": "369734d4-ee6e-4dca-842a-0ab759edfb45", "quantity": 1, "description": "Traditional Sindhi ajrak pattern scarf"}]
+matched_products: []
+NEED: []
+reply: "Added 1 x Handwoven Ajrak Scarf to your cart. Your cart now has 2 items. Total: 3300.0"
+suggestions: []

@@ -1,0 +1,26 @@
+Timestamp: 2025-06-23T22:58:22.661082
+User ID: ali
+Intent: confirm_order_initial
+User Message: lets proceed
+LLM Response: {
+   "checkout_stage": "initial",
+   "payment_method": "unknown",
+   "payment_details": "unknown",
+   "phone_number": "unknown",
+   "delivery_address": "unknown",
+   "NEED": [
+       "proceed_decision"
+   ],
+   "reply": "You have Black Formal Shalwar Suit and Navy Blue Waistcoat in your cart, totaling $10,700. Do you want to proceed with checkout?",
+   "order_summary": "Black Formal Shalwar Suit and Navy Blue Waistcoat, totaling $10,700"
+}
+
+Parsed Response:
+checkout_stage: "initial"
+payment_method: "unknown"
+payment_details: "unknown"
+phone_number: "unknown"
+delivery_address: "unknown"
+NEED: ["proceed_decision"]
+reply: "You have Black Formal Shalwar Suit and Navy Blue Waistcoat in your cart, totaling $10,700. Do you want to proceed with checkout?"
+order_summary: "Black Formal Shalwar Suit and Navy Blue Waistcoat, totaling $10,700"

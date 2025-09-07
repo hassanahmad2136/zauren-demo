@@ -1,0 +1,25 @@
+Timestamp: 2025-05-02T19:57:08.083115
+User ID: hassanahmad
+Intent: add_to_cart
+User Message: Add to cart: Classic White Shalwar Kameez, perfect for daily wear, available in our Shalwar Kameez category
+LLM Response: {
+    "products": [
+    {
+      "product": "Classic White Shalwar Kameez",
+      "product_id": "33051326-dd13-49ce-a881-a89eee848fe5",
+      "quantity": 1,
+      "description": "Traditional white cotton shalwar kameez, perfect for daily wear"
+    }
+  ],
+  "matched_products": [],
+  "NEED": [],
+  "reply": "Added Classic White Shalwar Kameez to your cart. Your cart now has 1 item.",
+  "suggestions": []
+}
+
+Parsed Response:
+products: [{"product": "Classic White Shalwar Kameez", "product_id": "33051326-dd13-49ce-a881-a89eee848fe5", "quantity": 1, "description": "Traditional white cotton shalwar kameez, perfect for daily wear"}]
+matched_products: []
+NEED: []
+reply: "Added Classic White Shalwar Kameez to your cart. Your cart now has 1 item."
+suggestions: []

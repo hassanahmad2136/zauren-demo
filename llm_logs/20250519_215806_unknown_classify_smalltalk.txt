@@ -1,0 +1,12 @@
+Timestamp: 2025-05-19T21:58:06.400610
+User ID: unknown
+Intent: classify_smalltalk
+User Message: What I have to do?
+LLM Response: {
+  "intent": "smalltalk",
+ "reply": "Want to browse our collections or need help with an order?"
+}
+
+Parsed Response:
+intent: "smalltalk"
+reply: "Want to browse our collections or need help with an order?"

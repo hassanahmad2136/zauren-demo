@@ -1,0 +1,16 @@
+Timestamp: 2025-05-05T21:03:39.507645
+User ID: ali
+Intent: confirm_action_confirm_order_True
+User Message: fine, send me one
+LLM Response: {
+    "action_type": "confirm_order",
+  "confirmed": true,
+  "reply": "A payment link has been sent to you via SMS and email. Please pay to confirm your order.",
+  "next_step": "proceed"
+}
+
+Parsed Response:
+action_type: "confirm_order"
+confirmed: true
+reply: "A payment link has been sent to you via SMS and email. Please pay to confirm your order."
+next_step: "proceed"

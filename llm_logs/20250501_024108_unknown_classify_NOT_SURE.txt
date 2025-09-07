@@ -1,0 +1,12 @@
+Timestamp: 2025-05-01T02:41:08.139344
+User ID: unknown
+Intent: classify_NOT_SURE
+User Message: Pleaseeeee
+LLM Response: {
+   "intent": "NOT_SURE",
+   "reply": "Let me check with our team, what's your order number or which item are you looking to get a discount on?"
+}
+
+Parsed Response:
+intent: "NOT_SURE"
+reply: "Let me check with our team, what's your order number or which item are you looking to get a discount on?"

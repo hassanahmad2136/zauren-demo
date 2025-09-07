@@ -1,0 +1,10 @@
+Timestamp: 2025-06-23T22:54:03.843334
+User ID: unknown
+Intent: classify_product_info
+User Message: Tell me more about: This Black Formal Shalwar Suit is perfect for formal traditional outings.
+LLM Response: {
+   "intent": "product_info"
+}
+
+Parsed Response:
+intent: "product_info"

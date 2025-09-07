@@ -1,0 +1,10 @@
+Timestamp: 2025-05-03T14:22:28.684885
+User ID: unknown
+Intent: classify_confirm_action
+User Message: 0327 1112
+LLM Response: {
+    "intent": "confirm_action"
+}
+
+Parsed Response:
+intent: "confirm_action"

@@ -1,0 +1,24 @@
+Timestamp: 2025-05-03T14:12:24.516053
+User ID: Rana Suleiman
+Intent: confirm_order_payment_method
+User Message: Yeah
+LLM Response: {
+    "checkout_stage": "payment_method",
+  "payment_method": "unknown",
+  "payment_details": "unknown",
+  "phone_number": "unknown",
+  "delivery_address": "unknown",
+  "NEED": ["payment_method"],
+  "reply": "Rana, how would you like to pay? We accept Cash on Delivery, Credit/Debit Card, and more.",
+  "order_summary": "1 x White Sindhi Cap = 1200 PKR"
+}
+
+Parsed Response:
+checkout_stage: "payment_method"
+payment_method: "unknown"
+payment_details: "unknown"
+phone_number: "unknown"
+delivery_address: "unknown"
+NEED: ["payment_method"]
+reply: "Rana, how would you like to pay? We accept Cash on Delivery, Credit/Debit Card, and more."
+order_summary: "1 x White Sindhi Cap = 1200 PKR"

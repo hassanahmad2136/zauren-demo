@@ -1,0 +1,23 @@
+Timestamp: 2025-05-01T12:07:08.688919
+User ID: hassanahmad
+Intent: add_to_cart
+User Message: Navy blue
+LLM Response: {
+   "products": [
+       {
+           "product": "Navy Blue Shalwar Kameez",
+           "product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7",
+           "quantity": 2,
+           "description": "Navy blue cotton shalwar kameez with minimal embroidery"
+       }
+   ],
+   "NEED": [],
+   "reply": "I've added 2 Navy Blue Shalwar Kameez to your cart. Total price will be 5600.",
+   "suggestions": []
+}
+
+Parsed Response:
+products: [{"product": "Navy Blue Shalwar Kameez", "product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "quantity": 2, "description": "Navy blue cotton shalwar kameez with minimal embroidery"}]
+NEED: []
+reply: "I've added 2 Navy Blue Shalwar Kameez to your cart. Total price will be 5600."
+suggestions: []

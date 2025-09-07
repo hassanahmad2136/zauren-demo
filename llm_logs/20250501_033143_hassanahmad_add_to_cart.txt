@@ -1,0 +1,42 @@
+Timestamp: 2025-05-01T03:31:43.827384
+User ID: hassanahmad
+Intent: add_to_cart
+User Message: Add 1 black sherwani
+LLM Response: {
+   "products": [
+     {
+       "product": "Black Royal Sherwani",
+       "product_id": "91b12365-2ba3-45c3-8ece-82329b6c9c76",
+       "quantity": 1,
+       "variant": "",
+       "description": "Majestic black sherwani with gold embroidery for grooms"
+     },
+     {
+       "product": "Grey Shalwar Kameez",
+       "product_id": "058769bc-be2c-4051-87d1-4e7d48dc7314",
+       "quantity": 2,
+       "variant": "Cotton",
+       "description": "Sophisticated grey shalwar kameez with collar detailing"
+     }
+   ],
+   "NEED": [],
+   "reply": "Alright, 1 Black Royal Sherwani and 2 Grey Cotton Shalwar Kameez are added to your cart. The total comes out to be $21,000. Your cart is updated!",
+   "suggestions": [
+     {
+       "product": "Black Velvet Waistcoat",
+       "product_id": "b93aef3a-9ec2-4081-85ba-a41d58060d94",
+       "description": "Luxurious black velvet waistcoat for formal events"
+     },
+     {
+       "product": "Embroidered Tilla Turban",
+       "product_id": "34444f39-bfec-4b9b-9321-a04696eb2629",
+       "description": "Ceremonial embroidered turban for special occasions"
+     }
+   ]
+}
+
+Parsed Response:
+products: [{"product": "Black Royal Sherwani", "product_id": "91b12365-2ba3-45c3-8ece-82329b6c9c76", "quantity": 1, "variant": "", "description": "Majestic black sherwani with gold embroidery for grooms"}, {"product": "Grey Shalwar Kameez", "product_id": "058769bc-be2c-4051-87d1-4e7d48dc7314", "quantity": 2, "variant": "Cotton", "description": "Sophisticated grey shalwar kameez with collar detailing"}]
+NEED: []
+reply: "Alright, 1 Black Royal Sherwani and 2 Grey Cotton Shalwar Kameez are added to your cart. The total comes out to be $21,000. Your cart is updated!"
+suggestions: [{"product": "Black Velvet Waistcoat", "product_id": "b93aef3a-9ec2-4081-85ba-a41d58060d94", "description": "Luxurious black velvet waistcoat for formal events"}, {"product": "Embroidered Tilla Turban", "product_id": "34444f39-bfec-4b9b-9321-a04696eb2629", "description": "Ceremonial embroidered turban for special occasions"}]

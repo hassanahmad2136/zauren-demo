@@ -1,0 +1,65 @@
+Timestamp: 2025-05-01T02:31:00.185650
+User ID: hassanahmad
+Intent: view_inventory
+User Message: Yes please
+LLM Response: {
+   "filter": {
+       "category_id": null,
+       "category_name": null,
+       "price_range": { "min": null, "max": null },
+       "attributes": { "color": [], "style": [], "occasion": [], "material": [], "embroidery": [] },
+       "sort_by": null,
+       "query": null
+   },
+   "reply": "We have a wide range of Shalwar Kameez available. Here are some options:",
+   "personalized": false,
+   "show_categories": false,
+   "show_products": true,
+   "category_details": [],
+   "product_details": [
+       {
+           "id": "33051326-dd13-49ce-a881-a89eee848fe5",
+           "name": "Classic White Shalwar Kameez",
+           "description": "Traditional white cotton shalwar kameez, perfect for daily wear",
+           "quantity": 25,
+           "fixed_price": 2500
+       },
+       {
+           "id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7",
+           "name": "Navy Blue Shalwar Kameez",
+           "description": "Navy blue cotton shalwar kameez with minimal embroidery",
+           "quantity": 18,
+           "fixed_price": 2800
+       },
+       {
+           "id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a",
+           "name": "Black Shalwar Kameez",
+           "description": "Elegant black shalwar kameez for formal occasions",
+           "quantity": 15,
+           "fixed_price": 3200
+       },
+       {
+           "id": "d19af692-4a40-4cfd-9a1e-b236480fa8b2",
+           "name": "Beige Shalwar Kameez",
+           "description": "Light beige shalwar kameez made from lawn fabric",
+           "quantity": 20,
+           "fixed_price": 2700
+       },
+       {
+           "id": "058769bc-be2c-4051-87d1-4e7d48dc7314",
+           "name": "Grey Shalwar Kameez",
+           "description": "Sophisticated grey shalwar kameez with collar detailing",
+           "quantity": 12,
+           "fixed_price": 3000
+       }
+   ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": null}
+reply: "We have a wide range of Shalwar Kameez available. Here are some options:"
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"id": "33051326-dd13-49ce-a881-a89eee848fe5", "name": "Classic White Shalwar Kameez", "description": "Traditional white cotton shalwar kameez, perfect for daily wear", "quantity": 25, "fixed_price": 2500}, {"id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "name": "Navy Blue Shalwar Kameez", "description": "Navy blue cotton shalwar kameez with minimal embroidery", "quantity": 18, "fixed_price": 2800}, {"id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a", "name": "Black Shalwar Kameez", "description": "Elegant black shalwar kameez for formal occasions", "quantity": 15, "fixed_price": 3200}, {"id": "d19af692-4a40-4cfd-9a1e-b236480fa8b2", "name": "Beige Shalwar Kameez", "description": "Light beige shalwar kameez made from lawn fabric", "quantity": 20, "fixed_price": 2700}, {"id": "058769bc-be2c-4051-87d1-4e7d48dc7314", "name": "Grey Shalwar Kameez", "description": "Sophisticated grey shalwar kameez with collar detailing", "quantity": 12, "fixed_price": 3000}]

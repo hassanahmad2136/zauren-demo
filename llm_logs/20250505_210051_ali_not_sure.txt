@@ -1,0 +1,18 @@
+Timestamp: 2025-05-05T21:00:51.205781
+User ID: ali
+Intent: not_sure
+User Message: ...?
+LLM Response: {
+    "possibilities": ["checkout", "continue_shopping", "modify_cart"],
+  "reply": "It seems like you're unsure about what to do next, ali. Would you like to proceed to checkout, continue shopping, or modify your cart?",
+  "suggestions": [
+    "Checkout and pay for your Blue Denim Kurta",
+    "Browse our Kurtas collection to add more items",
+    "View and modify your current cart"
+  ]
+}
+
+Parsed Response:
+possibilities: ["checkout", "continue_shopping", "modify_cart"]
+reply: "It seems like you're unsure about what to do next, ali. Would you like to proceed to checkout, continue shopping, or modify your cart?"
+suggestions: ["Checkout and pay for your Blue Denim Kurta", "Browse our Kurtas collection to add more items", "View and modify your current cart"]

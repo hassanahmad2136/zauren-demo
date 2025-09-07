@@ -1,0 +1,31 @@
+Timestamp: 2025-06-13T08:57:53.497370
+User ID: ali
+Intent: product_info
+User Message: okay fine, 
+what do i wear on top of this black?
+LLM Response: {
+  "products": [
+    {
+      "id": "b93aef3a-9ec2-4081-85ba-a41d58060d94"
+    },
+    {
+      "id": "0650361e-6399-4c85-b4fb-93c0ee57d5ce"
+    },
+    {
+      "id": "bf81a8c0-2cf7-4348-aa7d-de298d6ea2a5"
+    }
+  ],
+  "attribute_query": "design",
+  "NEED": "",
+  "reply": "For a stylish look with our Black Formal Shalwar Suit, consider pairing it with a waistcoat. We have several options: Black Velvet Waistcoat (Rs. 3500), Navy Blue Waistcoat (Rs. 3200), or Maroon Brocade Waistcoat (Rs. 3800). Which one appeals to you?",
+  "similar_products": [],
+  "show_images": true
+}
+
+Parsed Response:
+products: [{"id": "b93aef3a-9ec2-4081-85ba-a41d58060d94"}, {"id": "0650361e-6399-4c85-b4fb-93c0ee57d5ce"}, {"id": "bf81a8c0-2cf7-4348-aa7d-de298d6ea2a5"}]
+attribute_query: "design"
+NEED: ""
+reply: "For a stylish look with our Black Formal Shalwar Suit, consider pairing it with a waistcoat. We have several options: Black Velvet Waistcoat (Rs. 3500), Navy Blue Waistcoat (Rs. 3200), or Maroon Brocade Waistcoat (Rs. 3800). Which one appeals to you?"
+similar_products: []
+show_images: true

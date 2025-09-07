@@ -1,0 +1,25 @@
+Timestamp: 2025-05-03T05:27:35.985063
+User ID: hassanahmad
+Intent: add_to_cart
+User Message: Add to cart: Navy Blue Shalwar Kameez
+LLM Response: {
+    "products": [
+    {
+      "product": "Navy Blue Shalwar Kameez",
+      "product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7",
+      "quantity": 1,
+      "description": "Navy blue cotton shalwar kameez with minimal embroidery"
+    }
+  ],
+  "NEED": [
+    "quantity"
+  ],
+  "reply": "How many Navy Blue Shalwar Kameez would you like to add? The navy blue cotton shalwar kameez with minimal embroidery is priced at 2800 PKR. (18 available in stock)",
+  "suggestions": []
+}
+
+Parsed Response:
+products: [{"product": "Navy Blue Shalwar Kameez", "product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "quantity": 1, "description": "Navy blue cotton shalwar kameez with minimal embroidery"}]
+NEED: ["quantity"]
+reply: "How many Navy Blue Shalwar Kameez would you like to add? The navy blue cotton shalwar kameez with minimal embroidery is priced at 2800 PKR. (18 available in stock)"
+suggestions: []

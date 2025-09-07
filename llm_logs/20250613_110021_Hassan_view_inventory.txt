@@ -1,0 +1,35 @@
+Timestamp: 2025-06-13T11:00:21.076696
+User ID: Hassan
+Intent: view_inventory
+User Message: Show me some products
+LLM Response: {
+  "filter": {
+    "category_id": null,
+    "category_name": null,
+    "price_range": {"min": null, "max": null},
+    "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []},
+    "sort_by": null,
+    "query": null
+  },
+  "reply": "",
+  "personalized": false,
+  "show_categories": false,
+  "show_products": true,
+  "category_details": [],
+  "product_details": [
+    {"product_id": "b5204f84-7438-44b1-a99d-4991c69e00f9", "reply": "Check out our White Sindhi Cap, a traditional Sindhi cap with mirror work, priced at 1200 PKR."},
+    {"product_id": "c4222ee3-3bad-401b-893a-97c0597b70b1", "reply": "Maroon Velvet Sherwani, a rich maroon velvet sherwani with intricate embroidery, priced at 20000 PKR."},
+    {"product_id": "b145d323-273e-44b4-b739-4b023608b80f", "reply": "Red Check Kurta, a casual red check pattern kurta for young men, priced at 1900 PKR."},
+    {"product_id": "d19af692-4a40-4cfd-9a1e-b236480fa8b2", "reply": "Beige Shalwar Kameez, a light beige shalwar kameez made from lawn fabric, priced at 2700 PKR."},
+    {"product_id": "0650361e-6399-4c85-b4fb-93c0ee57d5ce", "reply": "Navy Blue Waistcoat, a classic navy blue waistcoat with satin back, priced at 3200 PKR."}
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": null}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "b5204f84-7438-44b1-a99d-4991c69e00f9", "reply": "Check out our White Sindhi Cap, a traditional Sindhi cap with mirror work, priced at 1200 PKR."}, {"product_id": "c4222ee3-3bad-401b-893a-97c0597b70b1", "reply": "Maroon Velvet Sherwani, a rich maroon velvet sherwani with intricate embroidery, priced at 20000 PKR."}, {"product_id": "b145d323-273e-44b4-b739-4b023608b80f", "reply": "Red Check Kurta, a casual red check pattern kurta for young men, priced at 1900 PKR."}, {"product_id": "d19af692-4a40-4cfd-9a1e-b236480fa8b2", "reply": "Beige Shalwar Kameez, a light beige shalwar kameez made from lawn fabric, priced at 2700 PKR."}, {"product_id": "0650361e-6399-4c85-b4fb-93c0ee57d5ce", "reply": "Navy Blue Waistcoat, a classic navy blue waistcoat with satin back, priced at 3200 PKR."}]

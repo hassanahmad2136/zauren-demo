@@ -1,0 +1,10 @@
+Timestamp: 2025-05-03T14:09:35.037792
+User ID: unknown
+Intent: classify_smalltalk
+User Message: Likn ab wo 1500 rahgya Hy 500 kharch hogae
+LLM Response: {
+    "intent": "smalltalk"
+}
+
+Parsed Response:
+intent: "smalltalk"

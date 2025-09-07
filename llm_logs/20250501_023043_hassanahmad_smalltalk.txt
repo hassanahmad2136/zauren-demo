@@ -1,0 +1,12 @@
+Timestamp: 2025-05-01T02:30:43.845245
+User ID: hassanahmad
+Intent: smalltalk
+User Message: Are you back?
+LLM Response: {
+   "reply": "Yes, I'm back! We do have a variety of shalwar kameez available. Would you like me to show you some options?",
+   "suggested_action": "view_products"
+}
+
+Parsed Response:
+reply: "Yes, I'm back! We do have a variety of shalwar kameez available. Would you like me to show you some options?"
+suggested_action: "view_products"

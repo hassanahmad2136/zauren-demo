@@ -1,0 +1,10 @@
+Timestamp: 2025-06-16T20:47:01.877821
+User ID: ali
+Intent: smalltalk
+User Message: do you know where lda avenue is?
+LLM Response: {
+  "reply": "LDA Avenue is a popular commercial and residential area in Lahore, Pakistan. Many people visit LDA Avenue for shopping and dining. Speaking of shopping, would you like to explore more of our latest collections?"
+}
+
+Parsed Response:
+reply: "LDA Avenue is a popular commercial and residential area in Lahore, Pakistan. Many people visit LDA Avenue for shopping and dining. Speaking of shopping, would you like to explore more of our latest collections?"

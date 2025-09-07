@@ -1,0 +1,59 @@
+Timestamp: 2025-06-23T22:53:27.251511
+User ID: ali
+Intent: view_inventory
+User Message: yes formal traditional
+LLM Response: {
+   "filter": {
+       "category_id": null,
+       "category_name": null,
+       "price_range": {
+           "min": null,
+           "max": null
+       },
+       "attributes": {
+           "color": [],
+           "style": [],
+           "occasion": [],
+           "material": [],
+           "embroidery": []
+       },
+       "sort_by": null,
+       "query": "formal traditional"
+   },
+   "reply": "",
+   "personalized": false,
+   "show_categories": false,
+   "show_products": true,
+   "category_details": [],
+   "product_details": [
+       {
+           "product_id": "74a9d4f2-dfb0-40fc-b2c1-b59b7ab4bf00",
+           "reply": "This Black Formal Shalwar Suit is perfect for formal traditional outings."
+       },
+       {
+           "product_id": "6715b435-df4f-4f0a-b30a-e5445a56a7fb",
+           "reply": "The Grey Wedding Suit is a great option for formal traditional events."
+       },
+       {
+           "product_id": "0349cf19-ee39-44d9-96d9-ca4da6cfae5b",
+           "reply": "The Navy Prince Coat is a traditional outfit suitable for formal outings."
+       },
+       {
+           "product_id": "9e52ef98-684c-4ca0-aaef-fff325c3bbca",
+           "reply": "The Maroon Jamawar Set is a formal traditional outfit made from high-quality jamawar fabric."
+       },
+       {
+           "product_id": "ccb9056c-84e5-47bf-a20d-fee7a8a4c072",
+           "reply": "This White Formal Kurta Set is a traditional formal outfit made of pure white fabric with intricate embroidery."
+       }
+   ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": "formal traditional"}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "74a9d4f2-dfb0-40fc-b2c1-b59b7ab4bf00", "reply": "This Black Formal Shalwar Suit is perfect for formal traditional outings."}, {"product_id": "6715b435-df4f-4f0a-b30a-e5445a56a7fb", "reply": "The Grey Wedding Suit is a great option for formal traditional events."}, {"product_id": "0349cf19-ee39-44d9-96d9-ca4da6cfae5b", "reply": "The Navy Prince Coat is a traditional outfit suitable for formal outings."}, {"product_id": "9e52ef98-684c-4ca0-aaef-fff325c3bbca", "reply": "The Maroon Jamawar Set is a formal traditional outfit made from high-quality jamawar fabric."}, {"product_id": "ccb9056c-84e5-47bf-a20d-fee7a8a4c072", "reply": "This White Formal Kurta Set is a traditional formal outfit made of pure white fabric with intricate embroidery."}]

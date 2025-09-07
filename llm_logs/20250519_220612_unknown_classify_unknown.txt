@@ -1,0 +1,9 @@
+Timestamp: 2025-05-19T22:06:12.334865
+User ID: unknown
+Intent: classify_unknown
+User Message: Tell me more about: Classic white shalwar kameez, perfect for daily wear
+LLM Response: {"error": "Sorry, I'm having trouble connecting. Please try again in a moment.", "reply": "Sorry, I'm having trouble connecting. Please try again in a moment."}
+
+Parsed Response:
+error: "Sorry, I'm having trouble connecting. Please try again in a moment."
+reply: "Sorry, I'm having trouble connecting. Please try again in a moment."

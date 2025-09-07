@@ -1,0 +1,12 @@
+Timestamp: 2025-05-03T14:09:35.642783
+User ID: Rana Suleiman
+Intent: smalltalk
+User Message: Likn ab wo 1500 rahgya Hy 500 kharch hogae
+LLM Response: {
+    "reply": "I see! So you'd like to spend around 1500 PKR and save 500 PKR. That's a great idea! We have some affordable options within that range. Would you like me to show you some products?",
+  "suggested_action": "view_products"
+}
+
+Parsed Response:
+reply: "I see! So you'd like to spend around 1500 PKR and save 500 PKR. That's a great idea! We have some affordable options within that range. Would you like me to show you some products?"
+suggested_action: "view_products"

@@ -1,0 +1,10 @@
+Timestamp: 2025-06-13T08:58:52.062554
+User ID: unknown
+Intent: classify_product_info
+User Message: what do you think, which one will looks good with black from black, maroon and navy blue
+LLM Response: {
+  "intent": "product_info"
+}
+
+Parsed Response:
+intent: "product_info"

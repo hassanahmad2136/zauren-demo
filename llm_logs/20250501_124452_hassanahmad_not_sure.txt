@@ -1,0 +1,22 @@
+Timestamp: 2025-05-01T12:44:52.882746
+User ID: hassanahmad
+Intent: not_sure
+User Message: Hats in my cart
+LLM Response: {
+   "possibilities": [
+       "viewing product details",
+       "adding items to cart",
+       "checking cart status"
+   ],
+   "reply": "You don't have any hats in your cart. Would you like to browse our collection of caps and turbans?",
+   "suggestions": [
+       "Browse caps and turbans",
+       "View cart summary",
+       "Search for specific hats"
+   ]
+}
+
+Parsed Response:
+possibilities: ["viewing product details", "adding items to cart", "checking cart status"]
+reply: "You don't have any hats in your cart. Would you like to browse our collection of caps and turbans?"
+suggestions: ["Browse caps and turbans", "View cart summary", "Search for specific hats"]

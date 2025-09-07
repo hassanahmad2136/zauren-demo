@@ -1,0 +1,12 @@
+Timestamp: 2025-05-19T22:04:35.484898
+User ID: unknown
+Intent: classify_view_inventory
+User Message: Apke Pas kya kya he
+LLM Response: {
+  "intent": "view_inventory",
+ "reply": ""
+}
+
+Parsed Response:
+intent: "view_inventory"
+reply: ""

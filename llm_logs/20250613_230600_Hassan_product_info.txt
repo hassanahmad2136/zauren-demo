@@ -1,0 +1,20 @@
+Timestamp: 2025-06-13T23:06:00.643753
+User ID: Hassan
+Intent: product_info
+User Message: Tell me more about: Elegant black shalwar kameez for formal occasions
+LLM Response: {
+  "products": ["d19af692-4a40-4cfd-9a1e-b236480fa8b2", "fa79eb32-e29c-4cf7-915c-ded5987dce5a", "2ff2aa0d-2a41-4709-a0ce-f096b4d2150d"],
+  "attribute_query": "product_info",
+  "NEED": null,
+  "reply": "Hassan, check out our elegant black shalwar kameez! We have:\n- Elegant black shalwar kameez for formal occasions (Rs. 3200)\n- Light beige shalwar kameez made from lawn fabric (Rs. 2700)\n- Earthy brown shalwar kameez with subtle patterns (Rs. 2900)",
+  "similar_products": ["Grey Shalwar Kameez", "Olive Green Shalwar Kameez"],
+  "show_images": true
+}
+
+Parsed Response:
+products: ["d19af692-4a40-4cfd-9a1e-b236480fa8b2", "fa79eb32-e29c-4cf7-915c-ded5987dce5a", "2ff2aa0d-2a41-4709-a0ce-f096b4d2150d"]
+attribute_query: "product_info"
+NEED: null
+reply: "Hassan, check out our elegant black shalwar kameez! We have:\n- Elegant black shalwar kameez for formal occasions (Rs. 3200)\n- Light beige shalwar kameez made from lawn fabric (Rs. 2700)\n- Earthy brown shalwar kameez with subtle patterns (Rs. 2900)"
+similar_products: ["Grey Shalwar Kameez", "Olive Green Shalwar Kameez"]
+show_images: true

@@ -1,0 +1,10 @@
+Timestamp: 2025-06-16T20:46:59.878265
+User ID: unknown
+Intent: classify_smalltalk
+User Message: do you know where lda avenue is?
+LLM Response: {
+  "intent": "smalltalk"
+}
+
+Parsed Response:
+intent: "smalltalk"

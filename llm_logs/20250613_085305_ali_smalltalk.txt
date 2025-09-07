@@ -1,0 +1,10 @@
+Timestamp: 2025-06-13T08:53:05.186569
+User ID: ali
+Intent: smalltalk
+User Message: hey there
+LLM Response: {
+  "reply": "Assalamu alaikum ali! How's your day going so far? We have some amazing new arrivals in our collection, would you like to take a look?"
+}
+
+Parsed Response:
+reply: "Assalamu alaikum ali! How's your day going so far? We have some amazing new arrivals in our collection, would you like to take a look?"

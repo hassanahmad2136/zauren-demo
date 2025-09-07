@@ -1,0 +1,14 @@
+Timestamp: 2025-05-01T11:59:05.031170
+User ID: hassanahmad
+Intent: view_cart
+User Message: What's in my cart
+LLM Response: {
+   "reply": "You have an empty cart, hassanahmad. There are no items in your cart and the total cost is $0.",
+   "next_action_prompt": "You can start browsing our products to add items to your cart.",
+   "products": []
+}
+
+Parsed Response:
+reply: "You have an empty cart, hassanahmad. There are no items in your cart and the total cost is $0."
+next_action_prompt: "You can start browsing our products to add items to your cart."
+products: []

@@ -1,0 +1,10 @@
+Timestamp: 2025-05-19T21:53:23.334959
+User ID: Angelo
+Intent: smalltalk
+User Message: Are you available?
+LLM Response: {
+  "reply": "I'm here to help you with all your clothing needs. You can check out our latest collection. Would you like me to show you some of our popular items?"
+}
+
+Parsed Response:
+reply: "I'm here to help you with all your clothing needs. You can check out our latest collection. Would you like me to show you some of our popular items?"

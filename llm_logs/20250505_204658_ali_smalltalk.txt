@@ -1,0 +1,13 @@
+Timestamp: 2025-05-05T20:46:58.765187
+User ID: ali
+Intent: smalltalk
+User Message: she's been over my mind today.
+but lets just say im here today for shopping stuff
+LLM Response: {
+    "reply": "Ah, sounds like you've had a lot on your mind! Glad you're here to take a break and shop with us. What's caught your eye? We have some great deals on electronics and fashion.",
+  "suggested_action": "view_products"
+}
+
+Parsed Response:
+reply: "Ah, sounds like you've had a lot on your mind! Glad you're here to take a break and shop with us. What's caught your eye? We have some great deals on electronics and fashion."
+suggested_action: "view_products"

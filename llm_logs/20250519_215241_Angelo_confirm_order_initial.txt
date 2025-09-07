@@ -1,0 +1,24 @@
+Timestamp: 2025-05-19T21:52:41.952219
+User ID: Angelo
+Intent: confirm_order_initial
+User Message: I want to pay you
+LLM Response: {
+  "checkout_stage": "initial",
+ "payment_method": "unknown",
+ "payment_details": "unknown",
+ "phone_number": "unknown",
+ "delivery_address": "unknown",
+ "NEED": ["payment_method"],
+ "reply": "Let's get started with your order. Are you ready to proceed with checkout?",
+ "order_summary": "Your cart is empty. Want to browse some products?"
+}
+
+Parsed Response:
+checkout_stage: "initial"
+payment_method: "unknown"
+payment_details: "unknown"
+phone_number: "unknown"
+delivery_address: "unknown"
+NEED: ["payment_method"]
+reply: "Let's get started with your order. Are you ready to proceed with checkout?"
+order_summary: "Your cart is empty. Want to browse some products?"

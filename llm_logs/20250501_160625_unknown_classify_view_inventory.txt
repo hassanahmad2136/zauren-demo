@@ -1,0 +1,10 @@
+Timestamp: 2025-05-01T16:06:25.212227
+User ID: unknown
+Intent: classify_view_inventory
+User Message: Apke Pas shalwar kameez hen?
+LLM Response: {
+   "intent": "view_inventory"
+}
+
+Parsed Response:
+intent: "view_inventory"

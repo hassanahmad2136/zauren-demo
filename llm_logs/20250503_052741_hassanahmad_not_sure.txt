@@ -1,0 +1,14 @@
+Timestamp: 2025-05-03T05:27:41.021482
+User ID: hassanahmad
+Intent: not_sure
+User Message: 25 avenue
+LLM Response: {
+    "possibilities": ["NOT_SURE", "SHALWAR_KAMEEZ", "ADDRESS"],
+  "reply": "Hassan Ahmad, could you please clarify what you mean by '25 avenue'? Are you looking for a specific product or perhaps an address?",
+  "suggestions": ["View Shalwar Kameez collection", "Check product details", "Get help with order"]
+}
+
+Parsed Response:
+possibilities: ["NOT_SURE", "SHALWAR_KAMEEZ", "ADDRESS"]
+reply: "Hassan Ahmad, could you please clarify what you mean by '25 avenue'? Are you looking for a specific product or perhaps an address?"
+suggestions: ["View Shalwar Kameez collection", "Check product details", "Get help with order"]

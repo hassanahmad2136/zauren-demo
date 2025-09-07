@@ -1,0 +1,20 @@
+Timestamp: 2025-05-03T06:28:26.302807
+User ID: hassanahmad
+Intent: product_info
+User Message: Tell me more about: Classic White Shalwar Kameez, a traditional white cotton shalwar kameez perfect for daily wear.
+LLM Response: {
+    "products": ["33051326-dd13-49ce-a881-a89eee848fe5"],
+  "attribute_query": "product_info",
+  "NEED": null,
+  "reply": "The Classic White Shalwar Kameez is a traditional Pakistani outfit made from high-quality cotton. It's perfect for daily wear and has a timeless design. The price is 2500 PKR, and we have 25 pieces in stock.",
+  "similar_products": ["d19af692-4a40-4cfd-9a1e-b236480fa8b2", "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7"],
+  "show_images": true
+}
+
+Parsed Response:
+products: ["33051326-dd13-49ce-a881-a89eee848fe5"]
+attribute_query: "product_info"
+NEED: null
+reply: "The Classic White Shalwar Kameez is a traditional Pakistani outfit made from high-quality cotton. It's perfect for daily wear and has a timeless design. The price is 2500 PKR, and we have 25 pieces in stock."
+similar_products: ["d19af692-4a40-4cfd-9a1e-b236480fa8b2", "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7"]
+show_images: true

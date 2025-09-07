@@ -1,0 +1,12 @@
+Timestamp: 2025-09-07T00:34:31.634427
+User ID: ...
+Intent: smalltalk
+User Message: I'm good Alhumdulillah
+LLM Response: {
+   "reply": "Alhumdulillah, that's great to hear! Hope you're having a wonderful day. By the way, have you seen our new arrivals? We have some beautiful collections this season.",
+   "suggested_action": "view_products"
+}
+
+Parsed Response:
+reply: "Alhumdulillah, that's great to hear! Hope you're having a wonderful day. By the way, have you seen our new arrivals? We have some beautiful collections this season."
+suggested_action: "view_products"

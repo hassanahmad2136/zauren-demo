@@ -1,0 +1,20 @@
+Timestamp: 2025-05-05T20:22:27.837138
+User ID: hassanahmad
+Intent: product_info
+User Message: Tell me more about: Classic black Jinnah cap made from premium fabric.
+LLM Response: {
+    "products": ["f73f2ce5-380c-4b70-905a-de8f80c84fae"],
+  "attribute_query": "product_info",
+  "NEED": null,
+  "reply": "The Classic Black Jinnah Cap is made from premium fabric and is priced at 1500. Only 35 left in stock.",
+  "similar_products": ["7421d9b3-c3c8-4db8-99df-c55149df616e", "34444f39-bfec-4b9b-9321-a04696eb2629"],
+  "show_images": true
+}
+
+Parsed Response:
+products: ["f73f2ce5-380c-4b70-905a-de8f80c84fae"]
+attribute_query: "product_info"
+NEED: null
+reply: "The Classic Black Jinnah Cap is made from premium fabric and is priced at 1500. Only 35 left in stock."
+similar_products: ["7421d9b3-c3c8-4db8-99df-c55149df616e", "34444f39-bfec-4b9b-9321-a04696eb2629"]
+show_images: true

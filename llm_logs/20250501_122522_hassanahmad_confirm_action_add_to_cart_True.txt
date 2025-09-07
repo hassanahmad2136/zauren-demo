@@ -1,0 +1,16 @@
+Timestamp: 2025-05-01T12:25:22.622497
+User ID: hassanahmad
+Intent: confirm_action_add_to_cart_True
+User Message: Yes
+LLM Response: {
+   "action_type": "add_to_cart",
+   "confirmed": true,
+   "reply": "2 Blue Denim Kurtas have been added to your cart. Total cost is 4400. Would you like to proceed with checkout?",
+   "next_step": "proceed"
+}
+
+Parsed Response:
+action_type: "add_to_cart"
+confirmed: true
+reply: "2 Blue Denim Kurtas have been added to your cart. Total cost is 4400. Would you like to proceed with checkout?"
+next_step: "proceed"

@@ -1,0 +1,12 @@
+Timestamp: 2025-05-01T04:26:30.887330
+User ID: hassanahmad
+Intent: smalltalk
+User Message: Hello
+LLM Response: {
+   "reply": "Hello again, is there something I can help you with or would you like to chat for a bit?",
+   "suggested_action": "continue_chat"
+}
+
+Parsed Response:
+reply: "Hello again, is there something I can help you with or would you like to chat for a bit?"
+suggested_action: "continue_chat"

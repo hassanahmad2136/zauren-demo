@@ -1,0 +1,10 @@
+Timestamp: 2025-05-01T11:50:41.320049
+User ID: unknown
+Intent: classify_view_cart
+User Message: Please confirm what I have in cart
+LLM Response: {
+   "intent": "view_cart"
+}
+
+Parsed Response:
+intent: "view_cart"

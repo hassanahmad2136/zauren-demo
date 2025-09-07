@@ -1,0 +1,16 @@
+Timestamp: 2025-05-03T14:21:58.713120
+User ID: Rana Suleiman
+Intent: confirm_action_confirm_order_True
+User Message: Street 11, wallstreet town, Mars, Galaxy
+LLM Response: {
+    "action_type": "confirm_order",
+  "confirmed": true,
+  "reply": "Thank you, Rana Suleiman! Your order of 25 Classic White Shalwar Kameez is confirmed. We'll deliver to Street 11, Wall Street Town, Mars, Galaxy. Please confirm your phone number.",
+  "next_step": "clarify"
+}
+
+Parsed Response:
+action_type: "confirm_order"
+confirmed: true
+reply: "Thank you, Rana Suleiman! Your order of 25 Classic White Shalwar Kameez is confirmed. We'll deliver to Street 11, Wall Street Town, Mars, Galaxy. Please confirm your phone number."
+next_step: "clarify"

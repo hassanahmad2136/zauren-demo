@@ -1,0 +1,37 @@
+Timestamp: 2025-05-01T18:39:14.911018
+User ID: hassanahmad
+Intent: view_inventory
+User Message: Show me kurtas
+LLM Response: {
+    "filter": {
+    "category_id": null,
+    "category_name": null,
+    "price_range": { "min": null, "max": null },
+    "attributes": { "color": [], "style": [], "occasion": [], "material": [], "embroidery": [] },
+    "sort_by": null,
+    "query": null
+  },
+  "reply": "",
+  "personalized": false,
+  "show_categories": false,
+  "show_products": true,
+  "category_details": [],
+  "product_details": [
+    {"id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "reply": "Check out our White Cotton Kurta, a simple and stylish option for casual wear"},
+    {"id": "e6b0e0ca-b1ea-4a2f-adb4-2a1034d08987", "reply": "Our Black Linen Kurta is a premium option for a sophisticated look"},
+    {"id": "b145d323-273e-44b4-b739-4b023608b80f", "reply": "The Red Check Kurta is a modern and casual option with a stylish check pattern"},
+    {"id": "c26a0a77-29a9-45a1-9bf8-8d9cffd5013f", "reply": "The Off-White Embroidered Kurta features detailed embroidery for special occasions"},
+    {"id": "15f7b3b3-0951-4a94-86aa-50207b1920e3", "reply": "Our Grey Melange Kurta is a contemporary option with a mandarin collar"},
+    {"id": "2ac45e16-cc09-44b5-b386-2bd163ab29ec", "reply": "The Green Striped Kurta features a vertical green striped pattern"},
+    {"id": "eccdc25b-b65f-4bc3-81dd-c125e25c922a", "reply": "The Mustard Yellow Kurta is a bright and stylish option for festive occasions"}
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": null}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "reply": "Check out our White Cotton Kurta, a simple and stylish option for casual wear"}, {"id": "e6b0e0ca-b1ea-4a2f-adb4-2a1034d08987", "reply": "Our Black Linen Kurta is a premium option for a sophisticated look"}, {"id": "b145d323-273e-44b4-b739-4b023608b80f", "reply": "The Red Check Kurta is a modern and casual option with a stylish check pattern"}, {"id": "c26a0a77-29a9-45a1-9bf8-8d9cffd5013f", "reply": "The Off-White Embroidered Kurta features detailed embroidery for special occasions"}, {"id": "15f7b3b3-0951-4a94-86aa-50207b1920e3", "reply": "Our Grey Melange Kurta is a contemporary option with a mandarin collar"}, {"id": "2ac45e16-cc09-44b5-b386-2bd163ab29ec", "reply": "The Green Striped Kurta features a vertical green striped pattern"}, {"id": "eccdc25b-b65f-4bc3-81dd-c125e25c922a", "reply": "The Mustard Yellow Kurta is a bright and stylish option for festive occasions"}]

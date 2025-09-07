@@ -1,0 +1,22 @@
+Timestamp: 2025-05-01T12:10:23.376696
+User ID: hassanahmad
+Intent: remove_from_cart
+User Message: Remove these 2 shalwar kameez
+LLM Response: {
+   "products": [
+       {
+           "product": "Navy Blue Shalwar Kameez",
+           "product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7",
+           "quantity": 2
+       }
+   ],
+   "NEED": [],
+   "reply": "I've removed 2 Navy Blue Shalwar Kameez from your cart.",
+   "cart_status": "Your cart is empty."
+}
+
+Parsed Response:
+products: [{"product": "Navy Blue Shalwar Kameez", "product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "quantity": 2}]
+NEED: []
+reply: "I've removed 2 Navy Blue Shalwar Kameez from your cart."
+cart_status: "Your cart is empty."

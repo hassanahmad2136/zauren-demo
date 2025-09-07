@@ -1,0 +1,12 @@
+Timestamp: 2025-05-03T14:14:06.165610
+User ID: Rana Suleiman
+Intent: smalltalk
+User Message: Location?
+LLM Response: {
+    "reply": "We're an online store, Rana Suleiman, so we don't have a physical location. But we deliver right to your doorstep across the country!",
+  "suggested_action": "view_products"
+}
+
+Parsed Response:
+reply: "We're an online store, Rana Suleiman, so we don't have a physical location. But we deliver right to your doorstep across the country!"
+suggested_action: "view_products"

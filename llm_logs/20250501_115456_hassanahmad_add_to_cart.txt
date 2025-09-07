@@ -1,0 +1,35 @@
+Timestamp: 2025-05-01T11:54:56.866529
+User ID: hassanahmad
+Intent: add_to_cart
+User Message: Hi
+LLM Response: {
+   "products": [
+       {
+           "product": "Navy Blue Shalwar Kameez",
+           "product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7",
+           "quantity": 2,
+           "variant": "Navy Blue",
+           "description": "Navy blue cotton shalwar kameez with minimal embroidery"
+       }
+   ],
+   "reply": "I've added 2 Navy Blue Shalwar Kameez to your cart. Total price is 5600. Would you like to proceed with the order or add more items?",
+   "NEED": [],
+   "suggestions": [
+       {
+           "product": "Black Cotton Kurta",
+           "product_id": "f1d1d372-11a3-4f84-b77a-2988bce4159a",
+           "description": "Simple white cotton kurta for casual wear"
+       },
+       {
+           "product": "Black Leather Khussa",
+           "product_id": "7421d9b3-c3c8-4db8-99df-c55149df616e",
+           "description": "Handcrafted black leather khussa with traditional embroidery"
+       }
+   ]
+}
+
+Parsed Response:
+products: [{"product": "Navy Blue Shalwar Kameez", "product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "quantity": 2, "variant": "Navy Blue", "description": "Navy blue cotton shalwar kameez with minimal embroidery"}]
+reply: "I've added 2 Navy Blue Shalwar Kameez to your cart. Total price is 5600. Would you like to proceed with the order or add more items?"
+NEED: []
+suggestions: [{"product": "Black Cotton Kurta", "product_id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "description": "Simple white cotton kurta for casual wear"}, {"product": "Black Leather Khussa", "product_id": "7421d9b3-c3c8-4db8-99df-c55149df616e", "description": "Handcrafted black leather khussa with traditional embroidery"}]

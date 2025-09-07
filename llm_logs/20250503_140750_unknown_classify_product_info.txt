@@ -1,0 +1,10 @@
+Timestamp: 2025-05-03T14:07:50.270045
+User ID: unknown
+Intent: classify_product_info
+User Message: Yes give me blue one's details
+LLM Response: {
+    "intent": "product_info"
+}
+
+Parsed Response:
+intent: "product_info"

@@ -1,0 +1,34 @@
+Timestamp: 2025-05-03T05:32:55.532475
+User ID: hassanahmad
+Intent: add_to_cart
+User Message: Add to cart: Classic White Shalwar Kameez, traditional white cotton shalwar kameez, perfect for daily wear, 2500 PKR
+LLM Response: {
+    "products": [
+    {
+      "product": "Classic White Shalwar Kameez",
+      "product_id": "33051326-dd13-49ce-a881-a89eee848fe5",
+      "quantity": 1,
+      "description": "Traditional white cotton shalwar kameez, perfect for daily wear"
+    }
+  ],
+  "matched_products": [],
+  "NEED": [],
+  "reply": "You've added 1 Classic White Shalwar Kameez to your cart. Your total is now 2500 PKR.",
+  "suggestions": [
+    {
+      "product": "Navy Blue Shalwar Kameez",
+      "product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7"
+    },
+    {
+      "product": "Black Shalwar Kameez",
+      "product_id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a"
+    }
+  ]
+}
+
+Parsed Response:
+products: [{"product": "Classic White Shalwar Kameez", "product_id": "33051326-dd13-49ce-a881-a89eee848fe5", "quantity": 1, "description": "Traditional white cotton shalwar kameez, perfect for daily wear"}]
+matched_products: []
+NEED: []
+reply: "You've added 1 Classic White Shalwar Kameez to your cart. Your total is now 2500 PKR."
+suggestions: [{"product": "Navy Blue Shalwar Kameez", "product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7"}, {"product": "Black Shalwar Kameez", "product_id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a"}]

@@ -1,0 +1,10 @@
+Timestamp: 2025-05-01T03:27:26.533972
+User ID: unknown
+Intent: classify_add_to_cart
+User Message: add 2 gray shalwar kameez cotton
+LLM Response: {
+   "intent": "add_to_cart"
+}
+
+Parsed Response:
+intent: "add_to_cart"

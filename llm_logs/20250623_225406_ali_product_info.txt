@@ -1,0 +1,20 @@
+Timestamp: 2025-06-23T22:54:06.528270
+User ID: ali
+Intent: product_info
+User Message: Tell me more about: This Black Formal Shalwar Suit is perfect for formal traditional outings.
+LLM Response: {
+   "products": ["74a9d4f2-dfb0-40fc-b2c1-b59b7ab4bf00"],
+   "attribute_query": ["occasion", "price"],
+   "NEED": "size",
+   "reply": "The Black Formal Shalwar Suit is a great choice for formal traditional events. It's priced at $7500 and we have 10 pieces available. What's your size, ali?",
+   "similar_products": ["6715b435-df4f-4f0a-b30a-e5445a56a7fb", "0349cf19-ee39-44d9-96d9-ca4da6cfae5b"],
+   "show_images": true
+}
+
+Parsed Response:
+products: ["74a9d4f2-dfb0-40fc-b2c1-b59b7ab4bf00"]
+attribute_query: ["occasion", "price"]
+NEED: "size"
+reply: "The Black Formal Shalwar Suit is a great choice for formal traditional events. It's priced at $7500 and we have 10 pieces available. What's your size, ali?"
+similar_products: ["6715b435-df4f-4f0a-b30a-e5445a56a7fb", "0349cf19-ee39-44d9-96d9-ca4da6cfae5b"]
+show_images: true

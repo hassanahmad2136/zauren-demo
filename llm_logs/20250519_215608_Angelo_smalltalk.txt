@@ -1,0 +1,10 @@
+Timestamp: 2025-05-19T21:56:08.698635
+User ID: Angelo
+Intent: smalltalk
+User Message: Angelo here
+LLM Response: {
+  "reply": "Hey Angelo! How's it going? We have some amazing new arrivals in our collection. Would you like to take a look?"
+}
+
+Parsed Response:
+reply: "Hey Angelo! How's it going? We have some amazing new arrivals in our collection. Would you like to take a look?"

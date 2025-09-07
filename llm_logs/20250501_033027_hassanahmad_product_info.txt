@@ -1,0 +1,20 @@
+Timestamp: 2025-05-01T03:30:27.915165
+User ID: hassanahmad
+Intent: product_info
+User Message: Ok perfect do you have sherwani?
+LLM Response: {
+   "products": ["91b12365-2ba3-45c3-8ece-82329b6c9c76", "71a5540f-5925-4c81-82b2-f8f29d7bb1cf", "c4222ee3-3bad-401b-893a-97c0597b70b1"],
+   "attribute_query": ["design", "occasion"],
+   "NEED": "size and color",
+   "reply": "Yes, we have Sherwanis! They come in different designs like Black Royal, Ivory Wedding, and Maroon Velvet. Prices range from Rs. 15000 to Rs. 25000. Which one are you interested in? And what's the occasion?",
+   "similar_products": ["058769bc-be2c-4051-87d1-4e7d48dc7314", "d19af692-4a40-4cfd-9a1e-b236480fa8b2"],
+   "show_images": true
+}
+
+Parsed Response:
+products: ["91b12365-2ba3-45c3-8ece-82329b6c9c76", "71a5540f-5925-4c81-82b2-f8f29d7bb1cf", "c4222ee3-3bad-401b-893a-97c0597b70b1"]
+attribute_query: ["design", "occasion"]
+NEED: "size and color"
+reply: "Yes, we have Sherwanis! They come in different designs like Black Royal, Ivory Wedding, and Maroon Velvet. Prices range from Rs. 15000 to Rs. 25000. Which one are you interested in? And what's the occasion?"
+similar_products: ["058769bc-be2c-4051-87d1-4e7d48dc7314", "d19af692-4a40-4cfd-9a1e-b236480fa8b2"]
+show_images: true

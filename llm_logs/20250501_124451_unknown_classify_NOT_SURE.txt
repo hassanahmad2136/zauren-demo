@@ -1,0 +1,12 @@
+Timestamp: 2025-05-01T12:44:51.040716
+User ID: unknown
+Intent: classify_NOT_SURE
+User Message: Hats in my cart
+LLM Response: {
+   "intent": "NOT_SURE",
+   "reply": "You don't have hats in your cart. Would you like to add some?"
+}
+
+Parsed Response:
+intent: "NOT_SURE"
+reply: "You don't have hats in your cart. Would you like to add some?"

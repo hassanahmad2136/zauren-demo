@@ -1,0 +1,34 @@
+Timestamp: 2025-05-02T19:33:02.987846
+User ID: hassanahmad
+Intent: view_inventory
+User Message: What black colored products do you have
+LLM Response: {
+    "filter": {
+    "category_id": null,
+    "category_name": null,
+    "price_range": { "min": null, "max": null },
+    "attributes": { "color": ["Black"], "style": [], "occasion": [], "material": [], "embroidery": [] },
+    "sort_by": null,
+    "query": "black"
+  },
+  "reply": "Here are some black colored products we have:",
+  "personalized": false,
+  "show_categories": false,
+  "show_products": true,
+  "category_details": [],
+  "product_details": [
+    {"id": "33051326-dd13-49ce-a881-a89eee848fe5", "reply": "Classic White Shalwar Kameez is not black, but we have Black Shalwar Kameez, a elegant black shalwar kameez for formal occasions, quantity: 15, price: 3200"},
+    {"id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "reply": "White Cotton Kurta is not black, but we have Black Linen Kurta, a premium black linen kurta for a sophisticated look, quantity: 18, price: 2500"},
+    {"id": "b93aef3a-9ec2-4081-85ba-a41d58060d94", "reply": "Black Velvet Waistcoat, a luxurious black velvet waistcoat for formal events, quantity: 15, price: 3500"},
+    {"id": "91b12365-2ba3-45c3-8ece-82329b6c9c76", "reply": "Black Royal Sherwani, a majestic black sherwani with gold embroidery for grooms, quantity: 5, price: 15000"}
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": ["Black"], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": "black"}
+reply: "Here are some black colored products we have:"
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"id": "33051326-dd13-49ce-a881-a89eee848fe5", "reply": "Classic White Shalwar Kameez is not black, but we have Black Shalwar Kameez, a elegant black shalwar kameez for formal occasions, quantity: 15, price: 3200"}, {"id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "reply": "White Cotton Kurta is not black, but we have Black Linen Kurta, a premium black linen kurta for a sophisticated look, quantity: 18, price: 2500"}, {"id": "b93aef3a-9ec2-4081-85ba-a41d58060d94", "reply": "Black Velvet Waistcoat, a luxurious black velvet waistcoat for formal events, quantity: 15, price: 3500"}, {"id": "91b12365-2ba3-45c3-8ece-82329b6c9c76", "reply": "Black Royal Sherwani, a majestic black sherwani with gold embroidery for grooms, quantity: 5, price: 15000"}]

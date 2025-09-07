@@ -1,0 +1,12 @@
+Timestamp: 2025-05-01T11:40:03.137647
+User ID: hassanahmad
+Intent: smalltalk
+User Message: I am doing fine what about you
+LLM Response: {
+   "reply": "I'm doing great, thanks for asking! How can I assist you today? Need any help with something or just want to chat?",
+   "suggested_action": "continue_chat"
+}
+
+Parsed Response:
+reply: "I'm doing great, thanks for asking! How can I assist you today? Need any help with something or just want to chat?"
+suggested_action: "continue_chat"

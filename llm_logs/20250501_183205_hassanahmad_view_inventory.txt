@@ -1,0 +1,62 @@
+Timestamp: 2025-05-01T18:32:05.871444
+User ID: hassanahmad
+Intent: view_inventory
+User Message: Apke Pas shalwar kameez hen?
+LLM Response: {
+    "filter": {
+    "category_id": null,
+    "category_name": null,
+    "price_range": { "min": null, "max": null },
+    "attributes": { "color": ["Black"], "style": [], "occasion": [], "material": [], "embroidery": [] },
+    "sort_by": null,
+    "query": null
+  },
+  "reply": "",
+  "personalized": false,
+  "show_categories": false,
+  "show_products": true,
+  "category_details": [],
+  "product_details": [
+    {
+      "id": "33051326-dd13-49ce-a881-a89eee848fe5",
+      "reply": "Classic White Shalwar Kameez nahin hai, lekin humare paas Black Shalwar Kameez bhi hai."
+    },
+    {
+      "id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7",
+      "reply": "Navy Blue Shalwar Kameez nahin hai, lekin humare paas Black Shalwar Kameez bhi hai."
+    },
+    {
+      "id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a",
+      "reply": "Black Shalwar Kameez - Elegant black shalwar kameez for formal occasions, quantity: 15, price: 3200"
+    },
+    {
+      "id": "d19af692-4a40-4cfd-9a1e-b236480fa8b2",
+      "reply": "Beige Shalwar Kameez nahin hai, lekin humare paas Black Shalwar Kameez bhi hai."
+    },
+    {
+      "id": "058769bc-be2c-4051-87d1-4e7d48dc7314",
+      "reply": "Grey Shalwar Kameez nahin hai, lekin humare paas Black Shalwar Kameez bhi hai."
+    },
+    {
+      "id": "d06924f9-dd66-4a41-a6fe-f3bf0ebdeee8",
+      "reply": "Olive Green Shalwar Kameez nahin hai, lekin humare paas Black Shalwar Kameez bhi hai."
+    },
+    {
+      "id": "2ff2aa0d-2a41-4709-a0ce-f096b4d2150d",
+      "reply": "Brown Shalwar Kameez nahin hai, lekin humare paas Black Shalwar Kameez bhi hai."
+    },
+    {
+      "id": "39943514-254a-4c23-91f3-169e41056cb7",
+      "reply": "Maroon Shalwar Kameez nahin hai, lekin humare paas Black Shalwar Kameez bhi hai."
+    }
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": ["Black"], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": null}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"id": "33051326-dd13-49ce-a881-a89eee848fe5", "reply": "Classic White Shalwar Kameez nahin hai, lekin humare paas Black Shalwar Kameez bhi hai."}, {"id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "reply": "Navy Blue Shalwar Kameez nahin hai, lekin humare paas Black Shalwar Kameez bhi hai."}, {"id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a", "reply": "Black Shalwar Kameez - Elegant black shalwar kameez for formal occasions, quantity: 15, price: 3200"}, {"id": "d19af692-4a40-4cfd-9a1e-b236480fa8b2", "reply": "Beige Shalwar Kameez nahin hai, lekin humare paas Black Shalwar Kameez bhi hai."}, {"id": "058769bc-be2c-4051-87d1-4e7d48dc7314", "reply": "Grey Shalwar Kameez nahin hai, lekin humare paas Black Shalwar Kameez bhi hai."}, {"id": "d06924f9-dd66-4a41-a6fe-f3bf0ebdeee8", "reply": "Olive Green Shalwar Kameez nahin hai, lekin humare paas Black Shalwar Kameez bhi hai."}, {"id": "2ff2aa0d-2a41-4709-a0ce-f096b4d2150d", "reply": "Brown Shalwar Kameez nahin hai, lekin humare paas Black Shalwar Kameez bhi hai."}, {"id": "39943514-254a-4c23-91f3-169e41056cb7", "reply": "Maroon Shalwar Kameez nahin hai, lekin humare paas Black Shalwar Kameez bhi hai."}]

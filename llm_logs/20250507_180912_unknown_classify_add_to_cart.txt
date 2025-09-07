@@ -1,0 +1,10 @@
+Timestamp: 2025-05-07T18:09:12.972100
+User ID: unknown
+Intent: classify_add_to_cart
+User Message: Show products in category: Kurtas
+LLM Response: {
+  "intent": "add_to_cart"
+}
+
+Parsed Response:
+intent: "add_to_cart"

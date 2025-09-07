@@ -1,0 +1,22 @@
+Timestamp: 2025-05-01T12:24:37.161851
+User ID: hassanahmad
+Intent: remove_from_cart
+User Message: 2
+LLM Response: {
+   "products": [
+       {
+           "product": "Classic White Shalwar Kameez",
+           "product_id": "33051326-dd13-49ce-a881-a89eee848fe5",
+           "quantity": 2
+       }
+   ],
+   "NEED": [],
+   "reply": "Removing 2 Classic White Shalwar Kameez from your cart. Your cart is now empty.",
+   "cart_status": "empty"
+}
+
+Parsed Response:
+products: [{"product": "Classic White Shalwar Kameez", "product_id": "33051326-dd13-49ce-a881-a89eee848fe5", "quantity": 2}]
+NEED: []
+reply: "Removing 2 Classic White Shalwar Kameez from your cart. Your cart is now empty."
+cart_status: "empty"

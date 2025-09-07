@@ -1,0 +1,10 @@
+Timestamp: 2025-05-01T02:54:49.698376
+User ID: unknown
+Intent: classify_add_to_cart
+User Message: can you add 2 gray shalwar kameez to cart
+LLM Response: {
+   "intent": "add_to_cart"
+}
+
+Parsed Response:
+intent: "add_to_cart"

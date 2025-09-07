@@ -1,0 +1,10 @@
+Timestamp: 2025-05-01T04:27:09.292797
+User ID: hassanahmad
+Intent: smalltalk
+User Message: What was my last message
+LLM Response: {
+   "reply": "Your last message was 'Fine how about you'"
+}
+
+Parsed Response:
+reply: "Your last message was 'Fine how about you'"

@@ -1,0 +1,65 @@
+Timestamp: 2025-05-01T02:33:28.243520
+User ID: hassanahmad
+Intent: view_inventory
+User Message: Shalwar kameez also
+LLM Response: {
+   "filter": {
+       "category_id": null,
+       "category_name": null,
+       "price_range": { "min": null, "max": null },
+       "attributes": { "color": [], "style": [], "occasion": [], "material": [], "embroidery": [] },
+       "sort_by": null,
+       "query": null
+   },
+   "reply": "We have a wide range of kurtas and shalwar kameez available",
+   "personalized": false,
+   "show_categories": false,
+   "show_products": true,
+   "category_details": [],
+   "product_details": [
+       {
+           "id": "f1d1d372-11a3-4f84-b77a-2988bce4159a",
+           "name": "White Cotton Kurta",
+           "description": "Simple white cotton kurta for casual wear",
+           "quantity": 30,
+           "fixed_price": 1800
+       },
+       {
+           "id": "e6b0e0ca-b1ea-4a2f-adb4-2a1034d08987",
+           "name": "Blue Denim Kurta",
+           "description": "Modern denim blue kurta with side pockets",
+           "quantity": 22,
+           "fixed_price": 2200
+       },
+       {
+           "id": "33051326-dd13-49ce-a881-a89eee848fe5",
+           "name": "Classic White Shalwar Kameez",
+           "description": "Traditional white cotton shalwar kameez, perfect for daily wear",
+           "quantity": 25,
+           "fixed_price": 2500
+       },
+       {
+           "id": "58a8d8a1-d533-4a15-bf04-38482a01dfc9",
+           "name": "Shalwar Kameez",
+           "description": "Traditional Pakistani attire consisting of a long tunic and loose-fitting pants",
+           "quantity": null,
+           "fixed_price": null
+       },
+       {
+           "id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7",
+           "name": "Navy Blue Shalwar Kameez",
+           "description": "Navy blue cotton shalwar kameez with minimal embroidery",
+           "quantity": 18,
+           "fixed_price": 2800
+       }
+   ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": null}
+reply: "We have a wide range of kurtas and shalwar kameez available"
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "name": "White Cotton Kurta", "description": "Simple white cotton kurta for casual wear", "quantity": 30, "fixed_price": 1800}, {"id": "e6b0e0ca-b1ea-4a2f-adb4-2a1034d08987", "name": "Blue Denim Kurta", "description": "Modern denim blue kurta with side pockets", "quantity": 22, "fixed_price": 2200}, {"id": "33051326-dd13-49ce-a881-a89eee848fe5", "name": "Classic White Shalwar Kameez", "description": "Traditional white cotton shalwar kameez, perfect for daily wear", "quantity": 25, "fixed_price": 2500}, {"id": "58a8d8a1-d533-4a15-bf04-38482a01dfc9", "name": "Shalwar Kameez", "description": "Traditional Pakistani attire consisting of a long tunic and loose-fitting pants", "quantity": null, "fixed_price": null}, {"id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "name": "Navy Blue Shalwar Kameez", "description": "Navy blue cotton shalwar kameez with minimal embroidery", "quantity": 18, "fixed_price": 2800}]

@@ -1,0 +1,14 @@
+Timestamp: 2025-05-05T20:23:23.341151
+User ID: hassanahmad
+Intent: view_cart
+User Message: Can I view my cart
+LLM Response: {
+    "reply": "Here's what's in your cart: 2 items, total cost is 3300.0 PKR. You have: 1 x Black Jinnah Cap (1500.0 PKR) and 1 x Handwoven Ajrak Scarf (1800.0 PKR).",
+  "next_action_prompt": "Do you want to checkout, continue shopping, or modify your cart?",
+  "products": ["f73f2ce5-380c-4b70-905a-de8f80c84fae", "369734d4-ee6e-4dca-842a-0ab759edfb45"]
+}
+
+Parsed Response:
+reply: "Here's what's in your cart: 2 items, total cost is 3300.0 PKR. You have: 1 x Black Jinnah Cap (1500.0 PKR) and 1 x Handwoven Ajrak Scarf (1800.0 PKR)."
+next_action_prompt: "Do you want to checkout, continue shopping, or modify your cart?"
+products: ["f73f2ce5-380c-4b70-905a-de8f80c84fae", "369734d4-ee6e-4dca-842a-0ab759edfb45"]

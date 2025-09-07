@@ -1,0 +1,20 @@
+Timestamp: 2025-06-13T08:58:52.888468
+User ID: ali
+Intent: product_info
+User Message: what do you think, which one will looks good with black from black, maroon and navy blue
+LLM Response: {
+  "products": ["74a9d4f2-dfb0-40fc-b2c1-b59b7ab4bf00", "b93aef3a-9ec2-4081-85ba-a41d58060d94", "0650361e-6399-4c85-b4fb-93c0ee57d5ce"],
+  "attribute_query": "design",
+  "NEED": "",
+  "reply": "Ali, I think the Black Velvet Waistcoat will create a sleek, monochromatic look with the Black Formal Shalwar Suit. The Maroon Brocade Waistcoat will add a pop of color and create a stylish contrast. The Navy Blue Waistcoat will offer a sophisticated, harmonious combination. All three options look great!",
+  "similar_products": [],
+  "show_images": true
+}
+
+Parsed Response:
+products: ["74a9d4f2-dfb0-40fc-b2c1-b59b7ab4bf00", "b93aef3a-9ec2-4081-85ba-a41d58060d94", "0650361e-6399-4c85-b4fb-93c0ee57d5ce"]
+attribute_query: "design"
+NEED: ""
+reply: "Ali, I think the Black Velvet Waistcoat will create a sleek, monochromatic look with the Black Formal Shalwar Suit. The Maroon Brocade Waistcoat will add a pop of color and create a stylish contrast. The Navy Blue Waistcoat will offer a sophisticated, harmonious combination. All three options look great!"
+similar_products: []
+show_images: true

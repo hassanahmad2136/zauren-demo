@@ -1,0 +1,23 @@
+Timestamp: 2025-05-05T20:56:39.980719
+User ID: ali
+Intent: add_to_cart
+User Message: i wanna buy denim one
+LLM Response: {
+    "products": [
+    {
+      "product": "Blue Denim Kurta",
+      "product_id": "e6b0e0ca-b1ea-4a2f-adb4-2a1034d08987",
+      "quantity": 1,
+      "description": "Modern denim blue kurta with side pockets"
+    }
+  ],
+  "matched_products": [],
+  "NEED": ["quantity"],
+  "reply": "How many Blue Denim Kurtas would you like to add to your cart, ali? The Blue Denim Kurta is priced at 2200 PKR and we have 22 pieces available."
+}
+
+Parsed Response:
+products: [{"product": "Blue Denim Kurta", "product_id": "e6b0e0ca-b1ea-4a2f-adb4-2a1034d08987", "quantity": 1, "description": "Modern denim blue kurta with side pockets"}]
+matched_products: []
+NEED: ["quantity"]
+reply: "How many Blue Denim Kurtas would you like to add to your cart, ali? The Blue Denim Kurta is priced at 2200 PKR and we have 22 pieces available."

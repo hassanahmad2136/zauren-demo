@@ -1,0 +1,37 @@
+Timestamp: 2025-05-03T06:13:55.739870
+User ID: hassanahmad
+Intent: view_inventory
+User Message: Show products
+LLM Response: {
+    "filter": {
+    "category_id": null,
+    "category_name": null,
+    "price_range": {"min": null, "max": null},
+    "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []},
+    "sort_by": null,
+    "query": null
+  },
+  "reply": "",
+  "personalized": false,
+  "show_categories": false,
+  "show_products": true,
+  "category_details": [],
+  "product_details": [
+    {"product_id": "33051326-dd13-49ce-a881-a89eee848fe5", "reply": "Classic White Shalwar Kameez, perfect for daily wear, priced at 2500 PKR."},
+    {"product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "reply": "Navy Blue Shalwar Kameez with minimal embroidery, priced at 2800 PKR."},
+    {"product_id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "reply": "White Cotton Kurta for casual wear, priced at 1800 PKR."},
+    {"product_id": "b93aef3a-9ec2-4081-85ba-a41d58060d94", "reply": "Black Velvet Waistcoat for formal events, priced at 3500 PKR."},
+    {"product_id": "7421d9b3-c3c8-4db8-99df-c55149df616e", "reply": "Black Leather Khussa with traditional embroidery, priced at 2500 PKR."},
+    {"product_id": "2bc6f044-3a90-4752-ae40-b4a457173510", "reply": "White Embroidered Kameez with intricate chest and cuff embroidery, priced at 4500 PKR."},
+    {"product_id": "74a9d4f2-dfb0-40fc-b2c1-b59b7ab4bf00", "reply": "Black Formal Shalwar Suit for formal occasions, priced at 7500 PKR."}
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": null}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "33051326-dd13-49ce-a881-a89eee848fe5", "reply": "Classic White Shalwar Kameez, perfect for daily wear, priced at 2500 PKR."}, {"product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "reply": "Navy Blue Shalwar Kameez with minimal embroidery, priced at 2800 PKR."}, {"product_id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "reply": "White Cotton Kurta for casual wear, priced at 1800 PKR."}, {"product_id": "b93aef3a-9ec2-4081-85ba-a41d58060d94", "reply": "Black Velvet Waistcoat for formal events, priced at 3500 PKR."}, {"product_id": "7421d9b3-c3c8-4db8-99df-c55149df616e", "reply": "Black Leather Khussa with traditional embroidery, priced at 2500 PKR."}, {"product_id": "2bc6f044-3a90-4752-ae40-b4a457173510", "reply": "White Embroidered Kameez with intricate chest and cuff embroidery, priced at 4500 PKR."}, {"product_id": "74a9d4f2-dfb0-40fc-b2c1-b59b7ab4bf00", "reply": "Black Formal Shalwar Suit for formal occasions, priced at 7500 PKR."}]

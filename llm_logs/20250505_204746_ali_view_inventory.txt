@@ -1,0 +1,33 @@
+Timestamp: 2025-05-05T20:47:46.446031
+User ID: ali
+Intent: view_inventory
+User Message: what do you have in electronics?
+LLM Response: {
+    "filter": {
+    "category_id": null,
+    "category_name": null,
+    "price_range": { "min": null, "max": null },
+    "attributes": { "color": [], "style": [], "occasion": [], "material": [], "embroidery": [] },
+    "sort_by": null,
+    "query": null
+  },
+  "reply": "We don't actually have electronics, ali. Our store specializes in traditional Pakistani clothing. We have a wide range of kurtas, shalwar kameez, sherwanis, and more. Would you like to explore our collections?",
+  "personalized": false,
+  "show_categories": true,
+  "show_products": false,
+  "category_details": [
+    {"category_id": "41ab8d7f-6b5d-4dc9-87b3-93bf42a2149b", "reply": "Kurtas for all occasions"},
+    {"category_id": "58a8d8a1-d533-4a15-bf04-38482a01dfc9", "reply": "Traditional Shalwar Kameez sets"},
+    {"category_id": "30c1f709-8ae0-405d-9257-ca4b46830522", "reply": "Elegant Sherwanis for formal events"},
+    {"category_id": "5f3b7efb-f0b4-4c2d-87aa-b8718e39227b", "reply": "Waistcoats to add a touch of sophistication"},
+    {"category_id": "048a7372-8242-4484-b6b2-b94277b90b07", "reply": "Accessories like khussa and caps"}
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": null}
+reply: "We don't actually have electronics, ali. Our store specializes in traditional Pakistani clothing. We have a wide range of kurtas, shalwar kameez, sherwanis, and more. Would you like to explore our collections?"
+personalized: false
+show_categories: true
+show_products: false
+category_details: [{"category_id": "41ab8d7f-6b5d-4dc9-87b3-93bf42a2149b", "reply": "Kurtas for all occasions"}, {"category_id": "58a8d8a1-d533-4a15-bf04-38482a01dfc9", "reply": "Traditional Shalwar Kameez sets"}, {"category_id": "30c1f709-8ae0-405d-9257-ca4b46830522", "reply": "Elegant Sherwanis for formal events"}, {"category_id": "5f3b7efb-f0b4-4c2d-87aa-b8718e39227b", "reply": "Waistcoats to add a touch of sophistication"}, {"category_id": "048a7372-8242-4484-b6b2-b94277b90b07", "reply": "Accessories like khussa and caps"}]

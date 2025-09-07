@@ -1,0 +1,10 @@
+Timestamp: 2025-05-19T22:25:13.189912
+User ID: Angelo
+Intent: smalltalk
+User Message: Hey bro
+LLM Response: {
+  "reply": "What's up bro? We have some amazing new arrivals in our Pakistani clothing collection. Want to take a look?"
+}
+
+Parsed Response:
+reply: "What's up bro? We have some amazing new arrivals in our Pakistani clothing collection. Want to take a look?"

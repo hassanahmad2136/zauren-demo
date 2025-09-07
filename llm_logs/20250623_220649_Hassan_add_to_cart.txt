@@ -1,0 +1,48 @@
+Timestamp: 2025-06-23T22:06:49.685029
+User ID: Hassan
+Intent: add_to_cart
+User Message: I am medium sized
+LLM Response: {
+   "products":[],
+   "matched_products":[
+      {
+         "name":"Black Shalwar Kameez",
+         "description":"This Black Shalwar Kameez is a traditional outfit made from high-quality materials. It's suitable for formal events like weddings and parties.",
+         "price":3200,
+         "variants":"Medium size available"
+      },
+      {
+         "name":"Black Velvet Waistcoat",
+         "description":"This product is a black velvet waistcoat, made from velvety fabric, used to add a formal touch to outfits.",
+         "price":3500,
+         "variants":"Medium size available"
+      },
+      {
+         "name":"Grey Textured Waistcoat",
+         "description":"This product is a grey textured waistcoat, made from high-quality materials, designed for formal occasions and business events.",
+         "price":3400,
+         "variants":"Medium size available"
+      }
+   ],
+   "NEED":["product_selection","quantity"],
+   "reply":"Hi Hassan, you can pair our Black Shalwar Kameez with a waistcoat for a formal look. We have the Black Velvet Waistcoat and Grey Textured Waistcoat available. Which one would you like? Also, how many sets would you like to add to your cart?",
+   "suggestions":[
+      {
+         "name":"Black Leather Khussa",
+         "description":"This is a black leather khussa, a type of traditional footwear. It is used for special occasions or everyday wear.",
+         "price":2500
+      },
+      {
+         "name":"Maroon Embroidered Khussa",
+         "description":"This is a pair of maroon-colored, embroidered khussa shoes made with intricate gold thread details.",
+         "price":2800
+      }
+   ]
+}
+
+Parsed Response:
+products: []
+matched_products: [{"name": "Black Shalwar Kameez", "description": "This Black Shalwar Kameez is a traditional outfit made from high-quality materials. It's suitable for formal events like weddings and parties.", "price": 3200, "variants": "Medium size available"}, {"name": "Black Velvet Waistcoat", "description": "This product is a black velvet waistcoat, made from velvety fabric, used to add a formal touch to outfits.", "price": 3500, "variants": "Medium size available"}, {"name": "Grey Textured Waistcoat", "description": "This product is a grey textured waistcoat, made from high-quality materials, designed for formal occasions and business events.", "price": 3400, "variants": "Medium size available"}]
+NEED: ["product_selection", "quantity"]
+reply: "Hi Hassan, you can pair our Black Shalwar Kameez with a waistcoat for a formal look. We have the Black Velvet Waistcoat and Grey Textured Waistcoat available. Which one would you like? Also, how many sets would you like to add to your cart?"
+suggestions: [{"name": "Black Leather Khussa", "description": "This is a black leather khussa, a type of traditional footwear. It is used for special occasions or everyday wear.", "price": 2500}, {"name": "Maroon Embroidered Khussa", "description": "This is a pair of maroon-colored, embroidered khussa shoes made with intricate gold thread details.", "price": 2800}]

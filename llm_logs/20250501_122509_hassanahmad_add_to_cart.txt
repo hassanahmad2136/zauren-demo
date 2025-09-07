@@ -1,0 +1,37 @@
+Timestamp: 2025-05-01T12:25:09.448748
+User ID: hassanahmad
+Intent: add_to_cart
+User Message: Blue denim kurta
+LLM Response: {
+   "products": [
+       {
+           "product": "Blue Denim Kurta",
+           "product_id": "e6b0e0ca-b1ea-4a2f-adb4-2a1034d08987",
+           "quantity": 2,
+           "description": "Modern denim blue kurta with side pockets",
+           "price": 2200
+       }
+   ],
+   "NEED": [],
+   "reply": "Adding 2 Blue Denim Kurtas to your cart. Total cost will be 4400. Is that okay?",
+   "suggestions": [
+       {
+           "product": "Grey Melange Kurta",
+           "product_id": "15f7b3b3-0951-4a94-86aa-50207b1920e3",
+           "description": "Contemporary grey melange kurta with mandarin collar",
+           "price": 2100
+       },
+       {
+           "product": "White Cotton Kurta",
+           "product_id": "f1d1d372-11a3-4f84-b77a-2988bce4159a",
+           "description": "Simple white cotton kurta for casual wear",
+           "price": 1800
+       }
+   ]
+}
+
+Parsed Response:
+products: [{"product": "Blue Denim Kurta", "product_id": "e6b0e0ca-b1ea-4a2f-adb4-2a1034d08987", "quantity": 2, "description": "Modern denim blue kurta with side pockets", "price": 2200}]
+NEED: []
+reply: "Adding 2 Blue Denim Kurtas to your cart. Total cost will be 4400. Is that okay?"
+suggestions: [{"product": "Grey Melange Kurta", "product_id": "15f7b3b3-0951-4a94-86aa-50207b1920e3", "description": "Contemporary grey melange kurta with mandarin collar", "price": 2100}, {"product": "White Cotton Kurta", "product_id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "description": "Simple white cotton kurta for casual wear", "price": 1800}]

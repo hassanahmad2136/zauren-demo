@@ -1,0 +1,10 @@
+Timestamp: 2025-05-04T22:41:19.027379
+User ID: hassanahmad
+Intent: smalltalk
+User Message: Apke Pas shalwar kameez hen?
+LLM Response: {
+    "reply": "Hello! How are you doing today? We have a wide range of products available. Would you like to take a look?"
+}
+
+Parsed Response:
+reply: "Hello! How are you doing today? We have a wide range of products available. Would you like to take a look?"

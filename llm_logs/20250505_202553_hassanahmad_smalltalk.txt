@@ -1,0 +1,12 @@
+Timestamp: 2025-05-05T20:25:53.647851
+User ID: hassanahmad
+Intent: smalltalk
+User Message: Perfect kya apke Pas discount he?
+LLM Response: {
+    "reply": "Hassan, currently we have a 10% discount on orders over 2500 PKR. You can avail it on your current cart!",
+  "suggested_action": "view_cart"
+}
+
+Parsed Response:
+reply: "Hassan, currently we have a 10% discount on orders over 2500 PKR. You can avail it on your current cart!"
+suggested_action: "view_cart"

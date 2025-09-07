@@ -1,0 +1,10 @@
+Timestamp: 2025-05-01T03:43:23.362857
+User ID: unknown
+Intent: classify_confirm_order
+User Message: Yes
+LLM Response: {
+   "intent": "confirm_order"
+}
+
+Parsed Response:
+intent: "confirm_order"

@@ -1,0 +1,35 @@
+Timestamp: 2025-05-03T14:10:58.556363
+User ID: Rana Suleiman
+Intent: view_inventory
+User Message: Chalu sae Hy ab Kuch aur products dekhao
+LLM Response: {
+    "filter": {
+    "category_id": null,
+    "category_name": null,
+    "price_range": { "min": 1500, "max": 3000 },
+    "attributes": { "color": [], "style": [], "occasion": [], "material": [], "embroidery": [] },
+    "sort_by": null,
+    "query": null
+  },
+  "reply": "",
+  "personalized": false,
+  "show_categories": false,
+  "show_products": true,
+  "category_details": [],
+  "product_details": [
+    {"product_id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "reply": "Simple white cotton kurta for casual wear, priced at 1800 PKR."},
+    {"product_id": "b145d323-273e-44b4-b739-4b023608b80f", "reply": "Casual red check pattern kurta for young men, priced at 1900 PKR."},
+    {"product_id": "2ac45e16-cc09-44b5-b386-2bd163ab29ec", "reply": "Vertical green striped pattern kurta, priced at 2000 PKR."},
+    {"product_id": "eccdc25b-b65f-4bc3-81dd-c125e25c922a", "reply": "Bright mustard yellow kurta for festive occasions, priced at 2300 PKR."},
+    {"product_id": "69a7d9ac-2756-4c83-94dd-08972c5309f1", "reply": "Classic brown leather khussa with comfortable padding, priced at 2300 PKR."}
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": 1500, "max": 3000}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": null}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "reply": "Simple white cotton kurta for casual wear, priced at 1800 PKR."}, {"product_id": "b145d323-273e-44b4-b739-4b023608b80f", "reply": "Casual red check pattern kurta for young men, priced at 1900 PKR."}, {"product_id": "2ac45e16-cc09-44b5-b386-2bd163ab29ec", "reply": "Vertical green striped pattern kurta, priced at 2000 PKR."}, {"product_id": "eccdc25b-b65f-4bc3-81dd-c125e25c922a", "reply": "Bright mustard yellow kurta for festive occasions, priced at 2300 PKR."}, {"product_id": "69a7d9ac-2756-4c83-94dd-08972c5309f1", "reply": "Classic brown leather khussa with comfortable padding, priced at 2300 PKR."}]

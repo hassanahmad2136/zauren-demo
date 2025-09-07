@@ -1,0 +1,15 @@
+Timestamp: 2025-06-23T22:15:51.829955
+User ID: Hassan
+Intent: confirm_order_initial
+User Message: 03440653633
+LLM Response: {"checkout_stage": "initial", "payment_method": "card", "payment_details": "4242 4242 4242 4242, expires 3/30, cvv 453", "phone_number": "03440653633", "delivery_address": "unknown", "NEED": ["address"], "reply": "Thanks for sharing your phone number. Now, can you please provide your delivery address? (I need to process your order step by step. Let's continue with the current step.)", "order_summary": "1 Beige Linen Waistcoat and 1 Black Shalwar Kameez, totaling $6200"}
+
+Parsed Response:
+checkout_stage: "initial"
+payment_method: "card"
+payment_details: "4242 4242 4242 4242, expires 3/30, cvv 453"
+phone_number: "03440653633"
+delivery_address: "unknown"
+NEED: ["address"]
+reply: "Thanks for sharing your phone number. Now, can you please provide your delivery address? (I need to process your order step by step. Let's continue with the current step.)"
+order_summary: "1 Beige Linen Waistcoat and 1 Black Shalwar Kameez, totaling $6200"

@@ -1,0 +1,20 @@
+Timestamp: 2025-06-23T22:06:25.324040
+User ID: Hassan
+Intent: product_info
+User Message: What if I went with black shalwar kameez and something on top of it for the formal look
+LLM Response: {
+   "products": ["Black Shalwar Kameez", "Black Velvet Waistcoat", "Grey Textured Waistcoat"],
+   "attribute_query": ["design", "occasion"],
+   "NEED": "size",
+   "reply": "You can pair our Black Shalwar Kameez with a waistcoat like the Black Velvet Waistcoat or Grey Textured Waistcoat for a formal look. The Black Shalwar Kameez is priced at $3200, and the waistcoats range from $3400 to $3500. What's your size?",
+   "similar_products": ["Navy Blue Waistcoat", "Maroon Brocade Waistcoat"],
+   "show_images": true
+}
+
+Parsed Response:
+products: ["Black Shalwar Kameez", "Black Velvet Waistcoat", "Grey Textured Waistcoat"]
+attribute_query: ["design", "occasion"]
+NEED: "size"
+reply: "You can pair our Black Shalwar Kameez with a waistcoat like the Black Velvet Waistcoat or Grey Textured Waistcoat for a formal look. The Black Shalwar Kameez is priced at $3200, and the waistcoats range from $3400 to $3500. What's your size?"
+similar_products: ["Navy Blue Waistcoat", "Maroon Brocade Waistcoat"]
+show_images: true

@@ -1,0 +1,12 @@
+Timestamp: 2025-05-01T03:47:43.447669
+User ID: hassanahmad
+Intent: view_cart
+User Message: Hi what's in my cart
+LLM Response: {
+   "reply": "You've got no items in your cart right now. Your total comes out to be $0. Let's get some shopping done!",
+   "next_action_prompt": "Want to browse our products and add some to your cart?"
+}
+
+Parsed Response:
+reply: "You've got no items in your cart right now. Your total comes out to be $0. Let's get some shopping done!"
+next_action_prompt: "Want to browse our products and add some to your cart?"

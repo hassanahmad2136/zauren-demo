@@ -1,0 +1,15 @@
+Timestamp: 2025-06-23T22:16:09.109999
+User ID: Hassan
+Intent: confirm_order_initial
+User Message: Njx Lhore
+LLM Response: {"checkout_stage": "initial", "payment_method": "card", "payment_details": "4242 4242 4242 4242, 3/30, 453", "phone_number": "03440653633", "delivery_address": "Njx Lhore", "NEED": [], "reply": "Thanks for providing your delivery address. Let me summarize your order: You have 1 Beige Linen Waistcoat and 1 Black Shalwar Kameez in your cart, totaling 6200.0. Please confirm to proceed. (I need to process your order step by step. Let's continue with the current step.)", "order_summary": "1 Beige Linen Waistcoat, 1 Black Shalwar Kameez, Total: 6200.0"}
+
+Parsed Response:
+checkout_stage: "initial"
+payment_method: "card"
+payment_details: "4242 4242 4242 4242, 3/30, 453"
+phone_number: "03440653633"
+delivery_address: "Njx Lhore"
+NEED: []
+reply: "Thanks for providing your delivery address. Let me summarize your order: You have 1 Beige Linen Waistcoat and 1 Black Shalwar Kameez in your cart, totaling 6200.0. Please confirm to proceed. (I need to process your order step by step. Let's continue with the current step.)"
+order_summary: "1 Beige Linen Waistcoat, 1 Black Shalwar Kameez, Total: 6200.0"

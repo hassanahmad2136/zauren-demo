@@ -1,0 +1,35 @@
+Timestamp: 2025-05-05T20:50:44.084688
+User ID: ali
+Intent: view_inventory
+User Message: only one color in kurta
+LLM Response: {
+    "filter": {
+    "category_id": null,
+    "category_name": null,
+    "price_range": { "min": null, "max": null },
+    "attributes": { "color": [], "style": [], "occasion": [], "material": [], "embroidery": [] },
+    "sort_by": null,
+    "query": "kurta color options"
+  },
+  "reply": "We have kurtas in various colors! You can choose from white, blue, black, red, grey, green, mustard yellow, and more.",
+  "personalized": false,
+  "show_categories": false,
+  "show_products": true,
+  "category_details": [],
+  "product_details": [
+    {"product_id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "reply": "Our White Cotton Kurta is a simple yet elegant option."},
+    {"product_id": "e6b0e0ca-b1ea-4a2f-adb4-2a1034d08987", "reply": "The Blue Denim Kurta is a modern twist on the classic kurta."},
+    {"product_id": "68eceba2-bdc2-446c-aa4e-f8aae3a40724", "reply": "The Black Linen Kurta is a sophisticated choice."},
+    {"product_id": "b145d323-273e-44b4-b739-4b023608b80f", "reply": "The Red Check Kurta is a great option for those who like a pop of color."},
+    {"product_id": "c26a0a77-29a9-45a1-9bf8-8d9cffd5013f", "reply": "The Off-White Embroidered Kurta is perfect for special occasions."}
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": "kurta color options"}
+reply: "We have kurtas in various colors! You can choose from white, blue, black, red, grey, green, mustard yellow, and more."
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "reply": "Our White Cotton Kurta is a simple yet elegant option."}, {"product_id": "e6b0e0ca-b1ea-4a2f-adb4-2a1034d08987", "reply": "The Blue Denim Kurta is a modern twist on the classic kurta."}, {"product_id": "68eceba2-bdc2-446c-aa4e-f8aae3a40724", "reply": "The Black Linen Kurta is a sophisticated choice."}, {"product_id": "b145d323-273e-44b4-b739-4b023608b80f", "reply": "The Red Check Kurta is a great option for those who like a pop of color."}, {"product_id": "c26a0a77-29a9-45a1-9bf8-8d9cffd5013f", "reply": "The Off-White Embroidered Kurta is perfect for special occasions."}]

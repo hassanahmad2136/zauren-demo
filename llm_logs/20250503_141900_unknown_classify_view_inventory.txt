@@ -1,0 +1,14 @@
+Timestamp: 2025-05-03T14:19:00.728970
+User ID: unknown
+Intent: classify_view_inventory
+User Message: Show products in category: Traditional Pakistani attire, Shalwar Kameez.
+LLM Response: {
+    "intent": "view_inventory",
+  "category": "Traditional Pakistani attire",
+  "subcategory": "Shalwar Kameez"
+}
+
+Parsed Response:
+intent: "view_inventory"
+category: "Traditional Pakistani attire"
+subcategory: "Shalwar Kameez"

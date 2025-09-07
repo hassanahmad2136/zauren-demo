@@ -1,0 +1,11 @@
+Timestamp: 2025-06-13T08:57:52.633614
+User ID: unknown
+Intent: classify_product_info
+User Message: okay fine, 
+what do i wear on top of this black?
+LLM Response: {
+  "intent": "product_info"
+}
+
+Parsed Response:
+intent: "product_info"

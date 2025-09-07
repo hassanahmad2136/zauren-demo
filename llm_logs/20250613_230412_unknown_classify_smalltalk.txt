@@ -1,0 +1,10 @@
+Timestamp: 2025-06-13T23:04:12.241543
+User ID: unknown
+Intent: classify_smalltalk
+User Message: hi
+LLM Response: {
+  "intent": "smalltalk"
+}
+
+Parsed Response:
+intent: "smalltalk"

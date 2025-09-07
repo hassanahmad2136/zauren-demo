@@ -1,0 +1,10 @@
+Timestamp: 2025-05-01T03:30:55.267310
+User ID: unknown
+Intent: classify_product_info
+User Message: It's for a wedding
+LLM Response: {
+   "intent": "product_info"
+}
+
+Parsed Response:
+intent: "product_info"

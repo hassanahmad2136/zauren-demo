@@ -1,0 +1,16 @@
+Timestamp: 2025-05-05T21:02:56.537772
+User ID: ali
+Intent: confirm_action_confirm_order_True
+User Message: bilal park,. sharaqpur sharif
+LLM Response: {
+    "action_type": "confirm_order",
+  "confirmed": true,
+  "reply": "Your order will be delivered to Bilal Park, Sharaqpur Sharif. We'll send you a payment link. Please pay to confirm.",
+  "next_step": "proceed"
+}
+
+Parsed Response:
+action_type: "confirm_order"
+confirmed: true
+reply: "Your order will be delivered to Bilal Park, Sharaqpur Sharif. We'll send you a payment link. Please pay to confirm."
+next_step: "proceed"

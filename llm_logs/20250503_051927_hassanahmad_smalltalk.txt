@@ -1,0 +1,10 @@
+Timestamp: 2025-05-03T05:19:27.011337
+User ID: hassanahmad
+Intent: smalltalk
+User Message: Hi
+LLM Response: {
+    "reply": "Hello! How's your day going so far? We have some exciting deals on our latest products, just thought I'd mention it."
+}
+
+Parsed Response:
+reply: "Hello! How's your day going so far? We have some exciting deals on our latest products, just thought I'd mention it."

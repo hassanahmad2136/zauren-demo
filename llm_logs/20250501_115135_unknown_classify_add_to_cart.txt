@@ -1,0 +1,10 @@
+Timestamp: 2025-05-01T11:51:35.555105
+User ID: unknown
+Intent: classify_add_to_cart
+User Message: Need to buy 2 navy blue shalwar kameez
+LLM Response: {
+   "intent": "add_to_cart"
+}
+
+Parsed Response:
+intent: "add_to_cart"

@@ -1,0 +1,12 @@
+Timestamp: 2025-05-01T12:29:00.952717
+User ID: hassanahmad
+Intent: smalltalk
+User Message: Hi
+LLM Response: {
+   "reply": "Hello! How are you today? You have 2 Blue Denim Kurtas in your cart, would you like to proceed with checkout or add more items?",
+   "suggested_action": "continue_chat"
+}
+
+Parsed Response:
+reply: "Hello! How are you today? You have 2 Blue Denim Kurtas in your cart, would you like to proceed with checkout or add more items?"
+suggested_action: "continue_chat"

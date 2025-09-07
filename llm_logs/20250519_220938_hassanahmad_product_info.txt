@@ -1,0 +1,28 @@
+Timestamp: 2025-05-19T22:09:38.165129
+User ID: hassanahmad
+Intent: product_info
+User Message: Tell me more about: This is a navy blue shalwar kameez with minimal embroidery.
+LLM Response: {
+  "products": [
+  {
+   "id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7",
+   "name": "Navy Blue Shalwar Kameez",
+   "description": "Navy blue cotton shalwar kameez with minimal embroidery",
+   "quantity": 18,
+   "fixed_price": 2800
+  }
+ ],
+ "attribute_query": "product_info",
+ "NEED": null,
+ "reply": "Hassanahmad, this navy blue shalwar kameez with minimal embroidery is available in our collection. It's made of cotton, priced at 2800 PKR, and we have 18 pieces in stock.",
+ "similar_products": null,
+ "show_images": true
+}
+
+Parsed Response:
+products: [{"id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "name": "Navy Blue Shalwar Kameez", "description": "Navy blue cotton shalwar kameez with minimal embroidery", "quantity": 18, "fixed_price": 2800}]
+attribute_query: "product_info"
+NEED: null
+reply: "Hassanahmad, this navy blue shalwar kameez with minimal embroidery is available in our collection. It's made of cotton, priced at 2800 PKR, and we have 18 pieces in stock."
+similar_products: null
+show_images: true

@@ -1,0 +1,10 @@
+Timestamp: 2025-06-13T08:53:29.645711
+User ID: unknown
+Intent: classify_view_inventory
+User Message: wasallam, what do you have in formal?
+LLM Response: {
+  "intent": "view_inventory"
+}
+
+Parsed Response:
+intent: "view_inventory"

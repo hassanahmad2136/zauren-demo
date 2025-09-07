@@ -1,0 +1,12 @@
+Timestamp: 2025-05-03T06:54:18.141691
+User ID: unknown
+Intent: classify_view_inventory
+User Message: Show products in category: Traditional Pakistani attire consisting of a long tunic and loose-fitting pants
+LLM Response: {
+    "intent": "view_inventory",
+  "category": "Traditional Pakistani attire"
+}
+
+Parsed Response:
+intent: "view_inventory"
+category: "Traditional Pakistani attire"

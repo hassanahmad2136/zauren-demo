@@ -1,0 +1,33 @@
+Timestamp: 2025-06-23T22:09:16.064572
+User ID: Hassan
+Intent: add_to_cart
+User Message: I like this one it would go well paired with black shalwar kameez
+LLM Response: {
+   "products": [
+       {
+           "product": "Beige Linen Waistcoat",
+           "product_id": "9efd5222-1425-49a1-a389-bab427f6f35b",
+           "quantity": 1,
+           "variant": null,
+           "description": "The Beige Linen Waistcoat is a casual, linen garment worn over a shirt and trousers. It's designed for warm weather and suitable for summer events. Made from high-quality linen, this waistcoat is available in limited quantities (SKU: WC-BL-006) and priced at $3000. Please note that only 14 pieces are currently in stock."
+       },
+       {
+           "product": "Black Shalwar Kameez",
+           "product_id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a",
+           "quantity": 1,
+           "variant": null,
+           "description": "This Black Shalwar Kameez is a traditional outfit made from high-quality materials. It's suitable for formal events like weddings and parties.  If you're looking for a unique, formal attire, this outfit may be a good option, its made from wool."
+       }
+   ],
+   "NEED": [
+       "quantity"
+   ],
+   "reply": "You've selected the Beige Linen Waistcoat and Black Shalwar Kameez. How many sets would you like to add to your cart?",
+   "suggestions": []
+}
+
+Parsed Response:
+products: [{"product": "Beige Linen Waistcoat", "product_id": "9efd5222-1425-49a1-a389-bab427f6f35b", "quantity": 1, "variant": null, "description": "The Beige Linen Waistcoat is a casual, linen garment worn over a shirt and trousers. It's designed for warm weather and suitable for summer events. Made from high-quality linen, this waistcoat is available in limited quantities (SKU: WC-BL-006) and priced at $3000. Please note that only 14 pieces are currently in stock."}, {"product": "Black Shalwar Kameez", "product_id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a", "quantity": 1, "variant": null, "description": "This Black Shalwar Kameez is a traditional outfit made from high-quality materials. It's suitable for formal events like weddings and parties.  If you're looking for a unique, formal attire, this outfit may be a good option, its made from wool."}]
+NEED: ["quantity"]
+reply: "You've selected the Beige Linen Waistcoat and Black Shalwar Kameez. How many sets would you like to add to your cart?"
+suggestions: []

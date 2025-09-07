@@ -1,0 +1,42 @@
+Timestamp: 2025-06-23T22:09:30.354162
+User ID: Hassan
+Intent: add_to_cart
+User Message: 1
+LLM Response: {
+   "products":[
+      {
+         "product":"Beige Linen Waistcoat",
+         "product_id":"9efd5222-1425-49a1-a389-bab427f6f35b",
+         "quantity":1,
+         "variant":"",
+         "description":"The Beige Linen Waistcoat is a casual, linen garment worn over a shirt and trousers. It's designed for warm weather and suitable for summer events. Made from high-quality linen, this waistcoat is available in limited quantities (SKU: WC-BL-006) and priced at $3000. Please note that only 14 pieces are currently in stock."
+      },
+      {
+         "product":"Black Shalwar Kameez",
+         "product_id":"fa79eb32-e29c-4cf7-915c-ded5987dce5a",
+         "quantity":1,
+         "variant":"",
+         "description":"This Black Shalwar Kameez is a traditional outfit made from high-quality materials. It's suitable for formal events like weddings and parties.  If you're looking for a unique, formal attire, this outfit may be a good option, its made from wool."
+      }
+   ],
+   "NEED":[],
+   "reply":"I've added 1 Beige Linen Waistcoat and 1 Black Shalwar Kameez to your cart. Your total comes out to be $5800. Please note that the Beige Linen Waistcoat has limited stock, only 14 pieces are available. Would you like to proceed with the order or add more items?",
+   "suggestions":[
+      {
+         "product":"Black Leather Khussa",
+         "product_id":"7421d9b3-c3c8-4db8-99df-c55149df616e",
+         "description":"This is a black leather khussa, a type of traditional footwear. It is used for special occasions or everyday wear. Made from premium black leather, it features intricate embroidery and is priced at $2500."
+      },
+      {
+         "product":"Maroon Embroidered Khussa",
+         "product_id":"6936e121-5ed5-44c1-82f7-4a5857184acc",
+         "description":"This is a pair of maroon-colored, embroidered khussa shoes made with intricate gold thread details. They are designed for traditional or formal wear. The shoes are handcrafted and limited to 15 pairs in stock, with a price of $2800."
+      }
+   ]
+}
+
+Parsed Response:
+products: [{"product": "Beige Linen Waistcoat", "product_id": "9efd5222-1425-49a1-a389-bab427f6f35b", "quantity": 1, "variant": "", "description": "The Beige Linen Waistcoat is a casual, linen garment worn over a shirt and trousers. It's designed for warm weather and suitable for summer events. Made from high-quality linen, this waistcoat is available in limited quantities (SKU: WC-BL-006) and priced at $3000. Please note that only 14 pieces are currently in stock."}, {"product": "Black Shalwar Kameez", "product_id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a", "quantity": 1, "variant": "", "description": "This Black Shalwar Kameez is a traditional outfit made from high-quality materials. It's suitable for formal events like weddings and parties.  If you're looking for a unique, formal attire, this outfit may be a good option, its made from wool."}]
+NEED: []
+reply: "I've added 1 Beige Linen Waistcoat and 1 Black Shalwar Kameez to your cart. Your total comes out to be $5800. Please note that the Beige Linen Waistcoat has limited stock, only 14 pieces are available. Would you like to proceed with the order or add more items?"
+suggestions: [{"product": "Black Leather Khussa", "product_id": "7421d9b3-c3c8-4db8-99df-c55149df616e", "description": "This is a black leather khussa, a type of traditional footwear. It is used for special occasions or everyday wear. Made from premium black leather, it features intricate embroidery and is priced at $2500."}, {"product": "Maroon Embroidered Khussa", "product_id": "6936e121-5ed5-44c1-82f7-4a5857184acc", "description": "This is a pair of maroon-colored, embroidered khussa shoes made with intricate gold thread details. They are designed for traditional or formal wear. The shoes are handcrafted and limited to 15 pairs in stock, with a price of $2800."}]

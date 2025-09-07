@@ -1,0 +1,16 @@
+Timestamp: 2025-05-01T12:20:30.165240
+User ID: hassanahmad
+Intent: product_info
+User Message: Prices for both?
+LLM Response: {
+   "products": ["33051326-dd13-49ce-a881-a89eee848fe5", "d19af692-4a40-4cfd-9a1e-b236480fa8b2"],
+   "attribute_query": "price",
+   "reply": "The price for the Classic White Shalwar Kameez is 2500, and the price for the Beige Shalwar Kameez is 2700. Both prices are fixed, with no discounts available.",
+   "show_images": true
+}
+
+Parsed Response:
+products: ["33051326-dd13-49ce-a881-a89eee848fe5", "d19af692-4a40-4cfd-9a1e-b236480fa8b2"]
+attribute_query: "price"
+reply: "The price for the Classic White Shalwar Kameez is 2500, and the price for the Beige Shalwar Kameez is 2700. Both prices are fixed, with no discounts available."
+show_images: true

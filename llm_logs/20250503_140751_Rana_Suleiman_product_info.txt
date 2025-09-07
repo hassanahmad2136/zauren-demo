@@ -1,0 +1,20 @@
+Timestamp: 2025-05-03T14:07:51.605850
+User ID: Rana Suleiman
+Intent: product_info
+User Message: Yes give me blue one's details
+LLM Response: {
+    "products": ["b5204f84-7438-44b1-a99d-4991c69e00f9"],
+  "attribute_query": "price",
+  "NEED": null,
+  "reply": "The Blue Denim Shalwar is priced at 2200 PKR. It's a modern blue denim shalwar for casual outings, made from denim fabric.",
+  "similar_products": ["0d16fef3-09ff-4a55-91a2-7f23a5bf11c7", "657c6da2-efc0-460e-b19e-b2baed546b2a"],
+  "show_images": true
+}
+
+Parsed Response:
+products: ["b5204f84-7438-44b1-a99d-4991c69e00f9"]
+attribute_query: "price"
+NEED: null
+reply: "The Blue Denim Shalwar is priced at 2200 PKR. It's a modern blue denim shalwar for casual outings, made from denim fabric."
+similar_products: ["0d16fef3-09ff-4a55-91a2-7f23a5bf11c7", "657c6da2-efc0-460e-b19e-b2baed546b2a"]
+show_images: true

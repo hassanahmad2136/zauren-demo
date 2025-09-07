@@ -1,0 +1,10 @@
+Timestamp: 2025-06-14T22:01:21.130020
+User ID: unknown
+Intent: classify_product_info
+User Message: Does black look good in formal outings?
+LLM Response: {
+  "intent": "product_info"
+}
+
+Parsed Response:
+intent: "product_info"

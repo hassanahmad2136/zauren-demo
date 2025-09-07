@@ -1,0 +1,10 @@
+Timestamp: 2025-05-19T21:58:44.534909
+User ID: hassanahmad
+Intent: smalltalk
+User Message: Alhumdulillah ap sunao
+LLM Response: {
+  "reply": "Alhumdulillah, main theek hoon! Aapne abhi tak koi kurta nahi dekha hai, humare paas kai stylish aur comfortable kurtas available hain. Dekhna chahte hain?"
+}
+
+Parsed Response:
+reply: "Alhumdulillah, main theek hoon! Aapne abhi tak koi kurta nahi dekha hai, humare paas kai stylish aur comfortable kurtas available hain. Dekhna chahte hain?"

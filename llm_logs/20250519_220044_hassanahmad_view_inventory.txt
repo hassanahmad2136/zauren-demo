@@ -1,0 +1,36 @@
+Timestamp: 2025-05-19T22:00:44.255812
+User ID: hassanahmad
+Intent: view_inventory
+User Message: Can I see categories
+LLM Response: {
+  "filter": {
+ "category_id": null,
+ "category_name": null,
+ "price_range": { "min": null, "max": null },
+ "attributes": { "color": [], "style": [], "occasion": [], "material": [], "embroidery": [] },
+ "sort_by": null,
+ "query": null
+ },
+ "reply": "",
+ "personalized": false,
+ "show_categories": true,
+ "show_products": false,
+ "category_details": [
+ {"category_id": "41ab8d7f-6b5d-4dc9-87b3-93bf42a2149b", "reply": "Kurtas for men"},
+ {"category_id": "58a8d8a1-d533-4a15-bf04-38482a01dfc9", "reply": "Traditional Shalwar Kameez"},
+ {"category_id": "5f3b7efb-f0b4-4c2d-87aa-b8718e39227b", "reply": "Formal Waistcoats"},
+ {"category_id": "30c1f709-8ae0-405d-9257-ca4b46830522", "reply": "Elegant Sherwanis"},
+ {"category_id": "048a7372-8242-4484-b6b2-b94277b90b07", "reply": "Accessories like khussa and caps"},
+ {"category_id": "73bf3db8-0b10-49b9-85d7-047173c6bc3c", "reply": "Embroidered Collection"},
+ {"category_id": "a40a620d-f472-4de7-aea9-e78003c6bfe3", "reply": "Casual Wear for everyday"},
+ {"category_id": "fabf500a-e180-4b55-a181-700370780825", "reply": "Formal Wear for special occasions"}
+ ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": null}
+reply: ""
+personalized: false
+show_categories: true
+show_products: false
+category_details: [{"category_id": "41ab8d7f-6b5d-4dc9-87b3-93bf42a2149b", "reply": "Kurtas for men"}, {"category_id": "58a8d8a1-d533-4a15-bf04-38482a01dfc9", "reply": "Traditional Shalwar Kameez"}, {"category_id": "5f3b7efb-f0b4-4c2d-87aa-b8718e39227b", "reply": "Formal Waistcoats"}, {"category_id": "30c1f709-8ae0-405d-9257-ca4b46830522", "reply": "Elegant Sherwanis"}, {"category_id": "048a7372-8242-4484-b6b2-b94277b90b07", "reply": "Accessories like khussa and caps"}, {"category_id": "73bf3db8-0b10-49b9-85d7-047173c6bc3c", "reply": "Embroidered Collection"}, {"category_id": "a40a620d-f472-4de7-aea9-e78003c6bfe3", "reply": "Casual Wear for everyday"}, {"category_id": "fabf500a-e180-4b55-a181-700370780825", "reply": "Formal Wear for special occasions"}]

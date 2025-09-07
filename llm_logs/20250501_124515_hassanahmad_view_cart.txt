@@ -1,0 +1,18 @@
+Timestamp: 2025-05-01T12:45:15.057702
+User ID: hassanahmad
+Intent: view_cart
+User Message: What's in my cart
+LLM Response: {
+   "reply": "You have 1 item in your cart: 2 Black Leather Khussa. The total cost is 5000.0.",
+   "next_action_prompt": "Would you like to checkout, continue shopping, or modify your cart?",
+   "products": [
+       {
+           "product_id": "7421d9b3-c3c8-4db8-99df-c55149df616e"
+       }
+   ]
+}
+
+Parsed Response:
+reply: "You have 1 item in your cart: 2 Black Leather Khussa. The total cost is 5000.0."
+next_action_prompt: "Would you like to checkout, continue shopping, or modify your cart?"
+products: [{"product_id": "7421d9b3-c3c8-4db8-99df-c55149df616e"}]

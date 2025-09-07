@@ -1,0 +1,16 @@
+Timestamp: 2025-05-05T21:03:24.574540
+User ID: ali
+Intent: confirm_action_confirm_order_True
+User Message: dont you accept cash on delivery?
+LLM Response: {
+    "action_type": "confirm_order",
+  "confirmed": true,
+  "reply": "No, COD isn't available. We'll send a payment link.",
+  "next_step": "proceed"
+}
+
+Parsed Response:
+action_type: "confirm_order"
+confirmed: true
+reply: "No, COD isn't available. We'll send a payment link."
+next_step: "proceed"

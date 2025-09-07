@@ -1,0 +1,10 @@
+Timestamp: 2025-05-19T22:08:13.764275
+User ID: hassanahmad
+Intent: smalltalk
+User Message: Assalamulaikum Bhai kya hal h
+LLM Response: {
+  "reply": "Wa Alaikumussalam hassanahmad! Main theek hoon, shukriya. Aap kaise ho? Humare paas kuch naya collection aaya hai, dekhne layak hai?"
+}
+
+Parsed Response:
+reply: "Wa Alaikumussalam hassanahmad! Main theek hoon, shukriya. Aap kaise ho? Humare paas kuch naya collection aaya hai, dekhne layak hai?"

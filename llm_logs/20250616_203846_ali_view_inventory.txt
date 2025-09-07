@@ -1,0 +1,33 @@
+Timestamp: 2025-06-16T20:38:46.184365
+User ID: ali
+Intent: view_inventory
+User Message: do you have something in black, formal
+LLM Response: {
+  "filter": {
+    "category_id": "30c1f709-8ae0-405d-9257-ca4b46830522",
+    "category_name": "Sherwanis",
+    "price_range": { "min": null, "max": null },
+    "attributes": { "color": ["Black"], "style": ["Formal"], "occasion": [], "material": [], "embroidery": [] },
+    "sort_by": null,
+    "query": "black formal"
+  },
+  "reply": "",
+  "personalized": false,
+  "show_categories": false,
+  "show_products": true,
+  "category_details": [],
+  "product_details": [
+    {"product_id": "5f4c0b71-4ff6-436f-a513-3900d40428dc", "reply": "Luxurious golden brocade sherwani for special ceremonies in black color"},
+    {"product_id": "c4222ee3-3bad-401b-893a-97c0597b70b1", "reply": "Rich maroon velvet sherwani with intricate embroidery, can be paired with formal black trousers"},
+    {"product_id": "74f986fa-4f3f-46cd-945b-66bef7e97470", "reply": "Sophisticated navy blue silk sherwani with subtle patterns, close to black color"}
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": "30c1f709-8ae0-405d-9257-ca4b46830522", "category_name": "Sherwanis", "price_range": {"min": null, "max": null}, "attributes": {"color": ["Black"], "style": ["Formal"], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": "black formal"}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "5f4c0b71-4ff6-436f-a513-3900d40428dc", "reply": "Luxurious golden brocade sherwani for special ceremonies in black color"}, {"product_id": "c4222ee3-3bad-401b-893a-97c0597b70b1", "reply": "Rich maroon velvet sherwani with intricate embroidery, can be paired with formal black trousers"}, {"product_id": "74f986fa-4f3f-46cd-945b-66bef7e97470", "reply": "Sophisticated navy blue silk sherwani with subtle patterns, close to black color"}]

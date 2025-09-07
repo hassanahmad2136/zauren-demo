@@ -1,0 +1,25 @@
+Timestamp: 2025-06-23T21:53:10.803530
+User ID: Hassan
+Intent: product_info
+User Message: Tell me more about: The Navy Blue Silk Sherwani is another excellent choice for a wedding with a dark theme, offering a sophisticated and elegant look.
+LLM Response: {
+   "products":[
+      "74f986fa-4f3f-46cd-945b-66bef7e97470"
+   ],
+   "attribute_query":"occasion",
+   "NEED":"size",
+   "reply":"The Navy Blue Silk Sherwani is a fantastic choice for a wedding. It's made from high-quality silk and features subtle patterns, giving it a sophisticated look. The price is $16,000, and we currently have 6 pieces in stock. What's your size?",
+   "similar_products":[
+      "0349cf19-ee39-44d9-96d9-ca4da6cfae5b",
+      "9e52ef98-684c-4ca0-aaef-fff325c3bbca"
+   ],
+   "show_images":true
+}
+
+Parsed Response:
+products: ["74f986fa-4f3f-46cd-945b-66bef7e97470"]
+attribute_query: "occasion"
+NEED: "size"
+reply: "The Navy Blue Silk Sherwani is a fantastic choice for a wedding. It's made from high-quality silk and features subtle patterns, giving it a sophisticated look. The price is $16,000, and we currently have 6 pieces in stock. What's your size?"
+similar_products: ["0349cf19-ee39-44d9-96d9-ca4da6cfae5b", "9e52ef98-684c-4ca0-aaef-fff325c3bbca"]
+show_images: true

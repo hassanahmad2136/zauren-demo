@@ -1,0 +1,12 @@
+Timestamp: 2025-09-07T00:34:08.424086
+User ID: ...
+Intent: smalltalk
+User Message: Hi
+LLM Response: {
+   "reply": "Hello! How are you doing today?",
+   "suggested_action": "continue_chat"
+}
+
+Parsed Response:
+reply: "Hello! How are you doing today?"
+suggested_action: "continue_chat"

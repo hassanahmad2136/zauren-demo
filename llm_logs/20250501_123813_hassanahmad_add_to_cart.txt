@@ -1,0 +1,62 @@
+Timestamp: 2025-05-01T12:38:13.052863
+User ID: hassanahmad
+Intent: add_to_cart
+User Message: Add two more waistcoats of different color
+LLM Response: {
+   "products": [],
+   "matched_products": [
+       {
+           "name": "Black Velvet Waistcoat",
+           "description": "Luxurious black velvet waistcoat for formal events",
+           "price": 3500,
+           "variants": []
+       },
+       {
+           "name": "Navy Blue Waistcoat",
+           "description": "Classic navy blue waistcoat with satin back",
+           "price": 3200,
+           "variants": []
+       },
+       {
+           "name": "Grey Textured Waistcoat",
+           "description": "Elegant grey textured waistcoat with silver buttons",
+           "price": 3400,
+           "variants": []
+       },
+       {
+           "name": "Maroon Brocade Waistcoat",
+           "description": "Traditional maroon brocade waistcoat with gold patterns",
+           "price": 3800,
+           "variants": []
+       },
+       {
+           "name": "Green Silk Waistcoat",
+           "description": "Emerald green silk waistcoat for festive wear",
+           "price": 4000,
+           "variants": []
+       }
+   ],
+   "NEED": [
+       "product_selection"
+   ],
+   "reply": "We have several waistcoat options in different colors. Please choose one: Black Velvet, Navy Blue, Grey Textured, Maroon Brocade, or Green Silk. I'll add 2 to your cart once you select the color.",
+   "suggestions": [
+       {
+           "name": "White Cotton Kurta",
+           "description": "Simple white cotton kurta for casual wear",
+           "price": 1800
+       },
+       {
+           "name": "Blue Denim Kurta",
+           "description": "Modern denim blue kurta with side pockets",
+           "price": 2200
+       }
+   ]
+}
+
+Parsed Response:
+products: []
+matched_products: [{"name": "Black Velvet Waistcoat", "description": "Luxurious black velvet waistcoat for formal events", "price": 3500, "variants": []}, {"name": "Navy Blue Waistcoat", "description": "Classic navy blue waistcoat with satin back", "price": 3200, "variants": []}, {"name": "Grey Textured Waistcoat", "description": "Elegant grey textured waistcoat with silver buttons", "price": 3400, "variants": []}, {"name": "Maroon Brocade Waistcoat", "description": "Traditional maroon brocade waistcoat with gold patterns", "price": 3800, "variants": []}, {"name": "Green Silk Waistcoat", "description": "Emerald green silk waistcoat for festive wear", "price": 4000, "variants": []}]
+NEED: ["product_selection"]
+reply: "We have several waistcoat options in different colors. Please choose one: Black Velvet, Navy Blue, Grey Textured, Maroon Brocade, or Green Silk. I'll add 2 to your cart once you select the color."
+suggestions: [{"name": "White Cotton Kurta", "description": "Simple white cotton kurta for casual wear", "price": 1800}, {"name": "Blue Denim Kurta", "description": "Modern denim blue kurta with side pockets", "price": 2200}]

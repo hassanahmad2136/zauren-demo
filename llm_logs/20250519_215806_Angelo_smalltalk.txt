@@ -1,0 +1,12 @@
+Timestamp: 2025-05-19T21:58:06.967445
+User ID: Angelo
+Intent: smalltalk
+User Message: What I have to do?
+LLM Response: {
+  "reply": "You can browse our products or check out our latest collections. We have a wide range of Pakistani clothing. Would you like some recommendations, Angelo?",
+ "suggested_action": "view_products"
+}
+
+Parsed Response:
+reply: "You can browse our products or check out our latest collections. We have a wide range of Pakistani clothing. Would you like some recommendations, Angelo?"
+suggested_action: "view_products"

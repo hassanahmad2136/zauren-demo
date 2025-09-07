@@ -1,0 +1,54 @@
+Timestamp: 2025-05-02T19:47:39.815553
+User ID: hassanahmad
+Intent: view_inventory
+User Message: Show categories
+LLM Response: {
+    "filter": {
+    "category_id": null,
+    "category_name": null,
+    "price_range": { "min": null, "max": null },
+    "attributes": { "color": [], "style": [], "occasion": [], "material": [], "embroidery": [] },
+    "sort_by": null,
+    "query": "black"
+  },
+  "reply": "",
+  "personalized": false,
+  "show_categories": false,
+  "show_products": true,
+  "category_details": [],
+  "product_details": [
+    {"id": "33051326-dd13-49ce-a881-a89eee848fe5", "reply": "Classic White Shalwar Kameez is not black, but I have Black Shalwar Kameez"},
+    {"id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "reply": "Navy Blue Shalwar Kameez is not black"},
+    {"id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a", "reply": "Black Shalwar Kameez"},
+    {"id": "d06924f9-dd66-4a41-a6fe-f3bf0ebdeee8", "reply": "No, Grey Shalwar Kameez is not black"},
+    {"id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "reply": "No, White Cotton Kurta is not black"},
+    {"id": "68eceba2-bdc2-446c-aa4e-f8aae3a40724", "reply": "Black Linen Kurta"},
+    {"id": "b145d323-273e-44b4-b739-4b023608b80f", "reply": "No, Red Check Kurta is not black"},
+    {"id": "c26a0a77-29a9-45a1-9bf8-8d9cffd5013f", "reply": "No, Off-White Embroidered Kurta is not black"},
+    {"id": "2ac45e16-cc09-44b5-b386-2bd163ab29ec", "reply": "No, Green Striped Kurta is not black"},
+    {"id": "eccdc25b-b65f-4bc3-81dd-c125e25c922a", "reply": "No, Mustard Yellow Kurta is not black"},
+    {"id": "b93aef3a-9ec2-4081-85ba-a41d58060d94", "reply": "No, Black Velvet Waistcoat"},
+    {"id": "0650361e-6399-4c85-b4fb-93c0ee57d5ce", "reply": "No, Navy Blue Waistcoat is not black"},
+    {"id": "b353053a-f576-460f-aa03-d3072e45cc4c", "reply": "No, Grey Textured Waistcoat is not black"},
+    {"id": "bf81a8c0-2cf7-4348-aa7d-de298d6ea2a5", "reply": "No, Maroon Brocade Waistcoat is not black"},
+    {"id": "a323267f-cf60-414b-8416-e74737d25004", "reply": "No, Green Silk Waistcoat is not black"},
+    {"id": "9efd5222-1425-49a1-a389-bab427f6f35b", "reply": "No, Beige Linen Waistcoat is not black"},
+    {"id": "91b12365-2ba3-45c3-8ece-82329b6c9c76", "reply": "No, Black Royal Sherwani"},
+    {"id": "71a5540f-5925-4c81-82b2-f8f29d7bb1cf", "reply": "No, Ivory Wedding Sherwani is not black"},
+    {"id": "c4222ee3-3bad-401b-893a-97c0597b70b1", "reply": "Maroon Velvet Sherwani is not black"},
+    {"id": "74f986fa-4f3f-46cd-945b-66bef7e97470", "reply": "No, Navy Blue Silk Sherwani is not black"},
+    {"id": "5f4c0b71-4ff6-436f-a513-3900d40428dc", "reply": "No, Golden Brocade Sherwani is not black"},
+    {"id": "7421d9b3-c3c8-4db8-99df-c55149df616e", "reply": "No, Black Leather Khussa"},
+    {"id": "69a7d9ac-2756-4c83-94dd-08972c5309f1", "reply": "No, Brown Leather Khussa is not black"},
+    {"id": "6936e121-5ed5-44c1-82f7-4a5857184acc", "reply": "No, Maroon Embroidered Khussa is not black"}
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": "black"}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"id": "33051326-dd13-49ce-a881-a89eee848fe5", "reply": "Classic White Shalwar Kameez is not black, but I have Black Shalwar Kameez"}, {"id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "reply": "Navy Blue Shalwar Kameez is not black"}, {"id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a", "reply": "Black Shalwar Kameez"}, {"id": "d06924f9-dd66-4a41-a6fe-f3bf0ebdeee8", "reply": "No, Grey Shalwar Kameez is not black"}, {"id": "f1d1d372-11a3-4f84-b77a-2988bce4159a", "reply": "No, White Cotton Kurta is not black"}, {"id": "68eceba2-bdc2-446c-aa4e-f8aae3a40724", "reply": "Black Linen Kurta"}, {"id": "b145d323-273e-44b4-b739-4b023608b80f", "reply": "No, Red Check Kurta is not black"}, {"id": "c26a0a77-29a9-45a1-9bf8-8d9cffd5013f", "reply": "No, Off-White Embroidered Kurta is not black"}, {"id": "2ac45e16-cc09-44b5-b386-2bd163ab29ec", "reply": "No, Green Striped Kurta is not black"}, {"id": "eccdc25b-b65f-4bc3-81dd-c125e25c922a", "reply": "No, Mustard Yellow Kurta is not black"}, {"id": "b93aef3a-9ec2-4081-85ba-a41d58060d94", "reply": "No, Black Velvet Waistcoat"}, {"id": "0650361e-6399-4c85-b4fb-93c0ee57d5ce", "reply": "No, Navy Blue Waistcoat is not black"}, {"id": "b353053a-f576-460f-aa03-d3072e45cc4c", "reply": "No, Grey Textured Waistcoat is not black"}, {"id": "bf81a8c0-2cf7-4348-aa7d-de298d6ea2a5", "reply": "No, Maroon Brocade Waistcoat is not black"}, {"id": "a323267f-cf60-414b-8416-e74737d25004", "reply": "No, Green Silk Waistcoat is not black"}, {"id": "9efd5222-1425-49a1-a389-bab427f6f35b", "reply": "No, Beige Linen Waistcoat is not black"}, {"id": "91b12365-2ba3-45c3-8ece-82329b6c9c76", "reply": "No, Black Royal Sherwani"}, {"id": "71a5540f-5925-4c81-82b2-f8f29d7bb1cf", "reply": "No, Ivory Wedding Sherwani is not black"}, {"id": "c4222ee3-3bad-401b-893a-97c0597b70b1", "reply": "Maroon Velvet Sherwani is not black"}, {"id": "74f986fa-4f3f-46cd-945b-66bef7e97470", "reply": "No, Navy Blue Silk Sherwani is not black"}, {"id": "5f4c0b71-4ff6-436f-a513-3900d40428dc", "reply": "No, Golden Brocade Sherwani is not black"}, {"id": "7421d9b3-c3c8-4db8-99df-c55149df616e", "reply": "No, Black Leather Khussa"}, {"id": "69a7d9ac-2756-4c83-94dd-08972c5309f1", "reply": "No, Brown Leather Khussa is not black"}, {"id": "6936e121-5ed5-44c1-82f7-4a5857184acc", "reply": "No, Maroon Embroidered Khussa is not black"}]

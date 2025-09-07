@@ -1,0 +1,10 @@
+Timestamp: 2025-05-01T12:20:28.746206
+User ID: unknown
+Intent: classify_product_info
+User Message: Prices for both?
+LLM Response: {
+   "intent": "product_info"
+}
+
+Parsed Response:
+intent: "product_info"

@@ -1,0 +1,37 @@
+Timestamp: 2025-05-05T21:22:05.658205
+User ID: hassanahmad
+Intent: view_inventory
+User Message: Show products in category: Complementary accessories like khussa, caps, and more
+LLM Response: {
+    "filter": {
+    "category_id": null,
+    "category_name": null,
+    "price_range": { "min": null, "max": null },
+    "attributes": { "color": [], "style": [], "occasion": [], "material": [], "embroidery": [] },
+    "sort_by": null,
+    "query": null
+  },
+  "reply": "",
+  "personalized": false,
+  "show_categories": false,
+  "show_products": true,
+  "category_details": [],
+  "product_details": [
+    {"product_id": "7421d9b3-c3c8-4db8-99df-c55149df616e", "reply": "Handcrafted black leather khussa with traditional embroidery, perfect for formal occasions."},
+    {"product_id": "69a7d9ac-2756-4c83-94dd-08972c5309f1", "reply": "Classic brown leather khussa with comfortable padding, ideal for everyday wear."},
+    {"product_id": "6936e121-5ed5-44c1-82f7-4a5857184acc", "reply": "Elegant maroon khussa with gold thread embroidery, great for special events."},
+    {"product_id": "b5204f84-7438-44b1-a99d-4991c69e00f9", "reply": "Traditional white Sindhi cap with mirror work, adds a touch of elegance."},
+    {"product_id": "f73f2ce5-380c-4b70-905a-de8f80c84fae", "reply": "Classic black Jinnah cap made from premium fabric, suitable for formal wear."},
+    {"product_id": "34444f39-bfec-4b9b-9321-a04696eb2629", "reply": "Ceremonial embroidered turban for special occasions, made with intricate designs."},
+    {"product_id": "369734d4-ee6e-4dca-842a-0ab759edfb45", "reply": "Traditional Sindhi ajrak pattern scarf, perfect for adding a cultural touch."}
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": null}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "7421d9b3-c3c8-4db8-99df-c55149df616e", "reply": "Handcrafted black leather khussa with traditional embroidery, perfect for formal occasions."}, {"product_id": "69a7d9ac-2756-4c83-94dd-08972c5309f1", "reply": "Classic brown leather khussa with comfortable padding, ideal for everyday wear."}, {"product_id": "6936e121-5ed5-44c1-82f7-4a5857184acc", "reply": "Elegant maroon khussa with gold thread embroidery, great for special events."}, {"product_id": "b5204f84-7438-44b1-a99d-4991c69e00f9", "reply": "Traditional white Sindhi cap with mirror work, adds a touch of elegance."}, {"product_id": "f73f2ce5-380c-4b70-905a-de8f80c84fae", "reply": "Classic black Jinnah cap made from premium fabric, suitable for formal wear."}, {"product_id": "34444f39-bfec-4b9b-9321-a04696eb2629", "reply": "Ceremonial embroidered turban for special occasions, made with intricate designs."}, {"product_id": "369734d4-ee6e-4dca-842a-0ab759edfb45", "reply": "Traditional Sindhi ajrak pattern scarf, perfect for adding a cultural touch."}]

@@ -1,0 +1,57 @@
+Timestamp: 2025-05-03T06:45:39.679082
+User ID: hassanahmad
+Intent: view_inventory
+User Message: Show categories
+LLM Response: {
+      "filter": {
+        "category_id": null,
+        "category_name": null,
+        "price_range": {
+            "min": null,
+            "max": null
+        },
+        "attributes": {
+            "color": [],
+            "style": [],
+            "occasion": [],
+            "material": [],
+            "embroidery": []
+        },
+        "sort_by": null,
+        "query": null
+    },
+    "reply": "",
+    "personalized": false,
+    "show_categories": true,
+    "show_products": false,
+    "category_details": [
+        {
+            "category_id": "58a8d8a1-d533-4a15-bf04-38482a01dfc9",
+            "reply": "Shalwar Kameez collection, including Classic White Shalwar Kameez, Navy Blue Shalwar Kameez, and more."
+        },
+        {
+            "category_id": "41ab8d7f-6b5d-4dc9-87b3-93bf42a2149b",
+            "reply": "Kurtas for men, featuring White Cotton Kurta, Blue Denim Kurta, and Black Linen Kurta."
+        },
+        {
+            "category_id": "5f3b7efb-f0b4-4c2d-87aa-b8718e39227b",
+            "reply": "Waistcoats for formal events, including Black Velvet Waistcoat, Navy Blue Waistcoat, and Grey Textured Waistcoat."
+        },
+        {
+            "category_id": "30c1f709-8ae0-405d-9257-ca4b46830522",
+            "reply": "Sherwanis for weddings and formal occasions, featuring Black Royal Sherwani, Ivory Wedding Sherwani, and Maroon Velvet Sherwani."
+        },
+        {
+            "category_id": "048a7372-8242-4484-b6b2-b94277b90b07",
+            "reply": "Accessories like khussa, caps, and scarves, including Black Leather Khussa, Brown Leather Khussa, and White Sindhi Cap."
+        }
+    ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": null}
+reply: ""
+personalized: false
+show_categories: true
+show_products: false
+category_details: [{"category_id": "58a8d8a1-d533-4a15-bf04-38482a01dfc9", "reply": "Shalwar Kameez collection, including Classic White Shalwar Kameez, Navy Blue Shalwar Kameez, and more."}, {"category_id": "41ab8d7f-6b5d-4dc9-87b3-93bf42a2149b", "reply": "Kurtas for men, featuring White Cotton Kurta, Blue Denim Kurta, and Black Linen Kurta."}, {"category_id": "5f3b7efb-f0b4-4c2d-87aa-b8718e39227b", "reply": "Waistcoats for formal events, including Black Velvet Waistcoat, Navy Blue Waistcoat, and Grey Textured Waistcoat."}, {"category_id": "30c1f709-8ae0-405d-9257-ca4b46830522", "reply": "Sherwanis for weddings and formal occasions, featuring Black Royal Sherwani, Ivory Wedding Sherwani, and Maroon Velvet Sherwani."}, {"category_id": "048a7372-8242-4484-b6b2-b94277b90b07", "reply": "Accessories like khussa, caps, and scarves, including Black Leather Khussa, Brown Leather Khussa, and White Sindhi Cap."}]

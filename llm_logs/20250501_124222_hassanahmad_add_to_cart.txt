@@ -1,0 +1,27 @@
+Timestamp: 2025-05-01T12:42:22.910778
+User ID: hassanahmad
+Intent: add_to_cart
+User Message: Add 2 khussa
+LLM Response: {
+   "products":[
+      {
+         "product":"Black Leather Khussa",
+         "product_id":"7421d9b3-c3c8-4db8-99df-c55149df616e",
+         "quantity":2,
+         "description":"Handcrafted black leather khussa with traditional embroidery"
+      }
+   ],
+   "NEED":[
+      
+   ],
+   "reply":"I've added 2 Black Leather Khussa to your cart. Your new total is 19000.0",
+   "suggestions":[
+      
+   ]
+}
+
+Parsed Response:
+products: [{"product": "Black Leather Khussa", "product_id": "7421d9b3-c3c8-4db8-99df-c55149df616e", "quantity": 2, "description": "Handcrafted black leather khussa with traditional embroidery"}]
+NEED: []
+reply: "I've added 2 Black Leather Khussa to your cart. Your new total is 19000.0"
+suggestions: []

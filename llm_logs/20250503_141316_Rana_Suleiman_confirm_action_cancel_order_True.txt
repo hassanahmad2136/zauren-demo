@@ -1,0 +1,16 @@
+Timestamp: 2025-05-03T14:13:16.932151
+User ID: Rana Suleiman
+Intent: confirm_action_cancel_order_True
+User Message: Yes I want to cancel my order
+LLM Response: {
+    "action_type": "cancel_order",
+  "confirmed": true,
+  "reply": "Rana Suleiman, your order cancellation has been processed. You'll receive a refund shortly if you've already paid. If you have any questions or need assistance, feel free to ask!",
+  "next_step": "proceed"
+}
+
+Parsed Response:
+action_type: "cancel_order"
+confirmed: true
+reply: "Rana Suleiman, your order cancellation has been processed. You'll receive a refund shortly if you've already paid. If you have any questions or need assistance, feel free to ask!"
+next_step: "proceed"

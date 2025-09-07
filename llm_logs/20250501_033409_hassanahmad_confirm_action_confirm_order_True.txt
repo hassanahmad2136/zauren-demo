@@ -1,0 +1,16 @@
+Timestamp: 2025-05-01T03:34:09.081396
+User ID: hassanahmad
+Intent: confirm_action_confirm_order_True
+User Message: Yes
+LLM Response: {
+   "action_type": "confirm_order",
+   "confirmed": true,
+   "reply": "Great, your order is confirmed. We'll send a confirmation email to hassanahmad2136@gmail.com and deliver to 26 Farooq Avenue. Our team will be in touch soon.",
+   "next_step": "proceed"
+}
+
+Parsed Response:
+action_type: "confirm_order"
+confirmed: true
+reply: "Great, your order is confirmed. We'll send a confirmation email to hassanahmad2136@gmail.com and deliver to 26 Farooq Avenue. Our team will be in touch soon."
+next_step: "proceed"

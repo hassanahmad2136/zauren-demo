@@ -1,0 +1,38 @@
+Timestamp: 2025-05-01T04:33:31.350394
+User ID: hassanahmad
+Intent: view_inventory
+User Message: Yes
+LLM Response: {
+   "filter": {
+      "category_id": null,
+      "category_name": null,
+      "price_range": { "min": null, "max": null },
+      "attributes": { "color": [], "style": [], "occasion": [], "material": [], "embroidery": [] },
+      "sort_by": null,
+      "query": null
+   },
+   "reply": "We have a variety of categories to choose from, including Shalwar Kameez, Kurtas, Waistcoats, Sherwanis, Accessories, Embroidered Collection, Formal Wear, and Casual Wear.",
+   "personalized": false,
+   "show_categories": true,
+   "show_products": false,
+   "category_details": [
+      {"id": "58a8d8a1-d533-4a15-bf04-38482a01dfc9"},
+      {"id": "41ab8d7f-6b5d-4dc9-87b3-93bf42a2149b"},
+      {"id": "5f3b7efb-f0b4-4c2d-87aa-b8718e39227b"},
+      {"id": "30c1f709-8ae0-405d-9257-ca4b46830522"},
+      {"id": "048a7372-8242-4484-b6b2-b94277b90b07"},
+      {"id": "73bf3db8-0b10-49b9-85d7-047173c6bc3c"},
+      {"id": "fabf500a-e180-4b55-a181-700370780825"},
+      {"id": "a40a620d-f472-4de7-aea9-e78003c6bfe3"}
+   ],
+   "product_details": []
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": null}
+reply: "We have a variety of categories to choose from, including Shalwar Kameez, Kurtas, Waistcoats, Sherwanis, Accessories, Embroidered Collection, Formal Wear, and Casual Wear."
+personalized: false
+show_categories: true
+show_products: false
+category_details: [{"id": "58a8d8a1-d533-4a15-bf04-38482a01dfc9"}, {"id": "41ab8d7f-6b5d-4dc9-87b3-93bf42a2149b"}, {"id": "5f3b7efb-f0b4-4c2d-87aa-b8718e39227b"}, {"id": "30c1f709-8ae0-405d-9257-ca4b46830522"}, {"id": "048a7372-8242-4484-b6b2-b94277b90b07"}, {"id": "73bf3db8-0b10-49b9-85d7-047173c6bc3c"}, {"id": "fabf500a-e180-4b55-a181-700370780825"}, {"id": "a40a620d-f472-4de7-aea9-e78003c6bfe3"}]
+product_details: []

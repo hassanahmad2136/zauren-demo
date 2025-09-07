@@ -1,0 +1,36 @@
+Timestamp: 2025-05-03T14:10:27.776422
+User ID: Rana Suleiman
+Intent: add_to_cart
+User Message: Add to cart: A traditional white Sindhi cap with mirror work, priced at 1200 PKR.
+LLM Response: {
+    "products": [
+    {
+      "product": "White Sindhi Cap",
+      "product_id": "b5204f84-7438-44b1-a99d-4991c69e00f9",
+      "quantity": 1,
+      "description": "Traditional white Sindhi cap with mirror work"
+    }
+  ],
+  "matched_products": [],
+  "NEED": [],
+  "reply": "Added 1 White Sindhi Cap to your cart, Rana. Your total is now 1200 PKR.",
+  "suggestions": [
+    {
+      "product": "Black Jinnah Cap",
+      "product_id": "f73f2ce5-380c-4b70-905a-de8f80c84fae",
+      "price": 1500
+    },
+    {
+      "product": "Maroon Embroidered Khussa",
+      "product_id": "6936e121-5ed5-44c1-82f7-4a5857184acc",
+      "price": 2800
+    }
+  ]
+}
+
+Parsed Response:
+products: [{"product": "White Sindhi Cap", "product_id": "b5204f84-7438-44b1-a99d-4991c69e00f9", "quantity": 1, "description": "Traditional white Sindhi cap with mirror work"}]
+matched_products: []
+NEED: []
+reply: "Added 1 White Sindhi Cap to your cart, Rana. Your total is now 1200 PKR."
+suggestions: [{"product": "Black Jinnah Cap", "product_id": "f73f2ce5-380c-4b70-905a-de8f80c84fae", "price": 1500}, {"product": "Maroon Embroidered Khussa", "product_id": "6936e121-5ed5-44c1-82f7-4a5857184acc", "price": 2800}]

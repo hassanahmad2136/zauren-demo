@@ -1,0 +1,10 @@
+Timestamp: 2025-05-02T20:10:04.507747
+User ID: unknown
+Intent: classify_view_inventory
+User Message: Show shalwar kameez
+LLM Response: {
+    "intent": "view_inventory"
+}
+
+Parsed Response:
+intent: "view_inventory"

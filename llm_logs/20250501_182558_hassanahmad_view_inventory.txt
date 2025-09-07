@@ -1,0 +1,42 @@
+Timestamp: 2025-05-01T18:25:58.110177
+User ID: hassanahmad
+Intent: view_inventory
+User Message: In black
+LLM Response: {
+   "filter": {
+      "category_id": "58a8d8a1-d533-4a15-bf04-38482a01dfc9",
+      "category_name": "Shalwar Kameez",
+      "price_range": { "min": 2000, "max": 3200 },
+      "attributes": { "color": ["Black"] },
+      "sort_by": null,
+      "query": "black"
+   },
+   "reply": "Haan, humare paas kuch beautiful Black Shalwar Kameez available hain.",
+   "personalized": false,
+   "show_categories": false,
+   "show_products": true,
+   "category_details": [],
+   "product_details": [
+      {
+         "id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a",
+         "reply": "Humaray popular Black Shalwar Kameez me ek elegant aur sophisticated jeevan style lagta hai."
+      },
+      {
+         "id": "d19af692-4a40-4cfd-9a1e-b236480fa8b2",
+         "reply": "Humaray us Black Shalwar Kameez me ek trending design aur modern style milta hai."
+      },
+      {
+         "id": "058769bc-be2c-4051-87d1-4e7d48dc7314",
+         "reply": "Humaray is se black shalwar kameez me ek cool aur relaxed style milta hai."
+      }
+   ]
+}
+
+Parsed Response:
+filter: {"category_id": "58a8d8a1-d533-4a15-bf04-38482a01dfc9", "category_name": "Shalwar Kameez", "price_range": {"min": 2000, "max": 3200}, "attributes": {"color": ["Black"]}, "sort_by": null, "query": "black"}
+reply: "Haan, humare paas kuch beautiful Black Shalwar Kameez available hain."
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a", "reply": "Humaray popular Black Shalwar Kameez me ek elegant aur sophisticated jeevan style lagta hai."}, {"id": "d19af692-4a40-4cfd-9a1e-b236480fa8b2", "reply": "Humaray us Black Shalwar Kameez me ek trending design aur modern style milta hai."}, {"id": "058769bc-be2c-4051-87d1-4e7d48dc7314", "reply": "Humaray is se black shalwar kameez me ek cool aur relaxed style milta hai."}]

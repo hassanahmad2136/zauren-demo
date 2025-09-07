@@ -1,0 +1,10 @@
+Timestamp: 2025-05-03T05:18:43.737789
+User ID: unknown
+Intent: classify_smalltalk
+User Message: Show shalwar kameez
+LLM Response: {
+    "intent": "smalltalk"
+}
+
+Parsed Response:
+intent: "smalltalk"

@@ -1,0 +1,63 @@
+Timestamp: 2025-06-23T22:55:59.570659
+User ID: ali
+Intent: view_inventory
+User Message: show some waist coats,
+LLM Response: {
+   "filter": {
+       "category_id": null,
+       "category_name": null,
+       "price_range": {
+           "min": null,
+           "max": null
+       },
+       "attributes": {
+           "color": [],
+           "style": [],
+           "occasion": [],
+           "material": [],
+           "embroidery": []
+       },
+       "sort_by": null,
+       "query": "waist coats"
+   },
+   "reply": "",
+   "personalized": false,
+   "show_categories": false,
+   "show_products": true,
+   "category_details": [],
+   "product_details": [
+       {
+           "product_id": "bf81a8c0-2cf7-4348-aa7d-de298d6ea2a5",
+           "reply": "This Maroon Brocade Waistcoat is a great addition to formal outfits, priced at $3800."
+       },
+       {
+           "product_id": "0650361e-6399-4c85-b4fb-93c0ee57d5ce",
+           "reply": "The Navy Blue Waistcoat is a classic choice, priced at $3200."
+       },
+       {
+           "product_id": "b93aef3a-9ec2-4081-85ba-a41d58060d94",
+           "reply": "This Black Velvet Waistcoat is perfect for formal events, priced at $3500."
+       },
+       {
+           "product_id": "9efd5222-1425-49a1-a389-bab427f6f35b",
+           "reply": "The Beige Linen Waistcoat is a great option for warm weather, priced at $3000."
+       },
+       {
+           "product_id": "a323267f-cf60-414b-8416-e74737d25004",
+           "reply": "This Green Silk Waistcoat is a stylish choice, priced at $4000."
+       },
+       {
+           "product_id": "b353053a-f576-460f-aa03-d3072e45cc4c",
+           "reply": "The Grey Textured Waistcoat is a versatile option, priced at $3400."
+       }
+   ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": "waist coats"}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "bf81a8c0-2cf7-4348-aa7d-de298d6ea2a5", "reply": "This Maroon Brocade Waistcoat is a great addition to formal outfits, priced at $3800."}, {"product_id": "0650361e-6399-4c85-b4fb-93c0ee57d5ce", "reply": "The Navy Blue Waistcoat is a classic choice, priced at $3200."}, {"product_id": "b93aef3a-9ec2-4081-85ba-a41d58060d94", "reply": "This Black Velvet Waistcoat is perfect for formal events, priced at $3500."}, {"product_id": "9efd5222-1425-49a1-a389-bab427f6f35b", "reply": "The Beige Linen Waistcoat is a great option for warm weather, priced at $3000."}, {"product_id": "a323267f-cf60-414b-8416-e74737d25004", "reply": "This Green Silk Waistcoat is a stylish choice, priced at $4000."}, {"product_id": "b353053a-f576-460f-aa03-d3072e45cc4c", "reply": "The Grey Textured Waistcoat is a versatile option, priced at $3400."}]

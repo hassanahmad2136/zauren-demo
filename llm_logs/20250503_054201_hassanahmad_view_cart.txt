@@ -1,0 +1,14 @@
+Timestamp: 2025-05-03T05:42:01.495285
+User ID: hassanahmad
+Intent: view_cart
+User Message: Show categories
+LLM Response: {
+    "reply": "You've got 1 item in your cart, totaling ₹5000. Here's what you have: 2 x Classic White Shalwar Kameez, ₹2500 each.",
+  "next_action_prompt": "Would you like to checkout, continue shopping, or modify your cart?",
+  "products": ["33051326-dd13-49ce-a881-a89eee848fe5"]
+}
+
+Parsed Response:
+reply: "You've got 1 item in your cart, totaling ₹5000. Here's what you have: 2 x Classic White Shalwar Kameez, ₹2500 each."
+next_action_prompt: "Would you like to checkout, continue shopping, or modify your cart?"
+products: ["33051326-dd13-49ce-a881-a89eee848fe5"]

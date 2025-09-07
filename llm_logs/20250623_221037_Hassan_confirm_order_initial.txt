@@ -1,0 +1,24 @@
+Timestamp: 2025-06-23T22:10:37.503656
+User ID: Hassan
+Intent: confirm_order_initial
+User Message: Yes
+LLM Response: {
+   "checkout_stage": "initial",
+   "payment_method": "unknown",
+   "payment_details": "unknown",
+   "phone_number": "unknown",
+   "delivery_address": "unknown",
+   "NEED": [],
+   "reply": "You have 1 Beige Linen Waistcoat and 1 Black Shalwar Kameez in your cart, totaling $6200. To proceed with checkout, I need to know how you'd like to pay. Would you like to pay by card or cash on delivery?",
+   "order_summary": "1 Beige Linen Waistcoat, 1 Black Shalwar Kameez, totaling $6200"
+}
+
+Parsed Response:
+checkout_stage: "initial"
+payment_method: "unknown"
+payment_details: "unknown"
+phone_number: "unknown"
+delivery_address: "unknown"
+NEED: []
+reply: "You have 1 Beige Linen Waistcoat and 1 Black Shalwar Kameez in your cart, totaling $6200. To proceed with checkout, I need to know how you'd like to pay. Would you like to pay by card or cash on delivery?"
+order_summary: "1 Beige Linen Waistcoat, 1 Black Shalwar Kameez, totaling $6200"

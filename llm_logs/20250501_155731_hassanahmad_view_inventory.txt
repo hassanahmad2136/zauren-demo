@@ -1,0 +1,5 @@
+Timestamp: 2025-05-01T15:57:31.561842
+User ID: hassanahmad
+Intent: view_inventory
+User Message: Apke Pas shalwar kameez hen?
+LLM Response: None

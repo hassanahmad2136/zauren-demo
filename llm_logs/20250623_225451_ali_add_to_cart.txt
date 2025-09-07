@@ -1,0 +1,35 @@
+Timestamp: 2025-06-23T22:54:51.208133
+User ID: ali
+Intent: add_to_cart
+User Message: just one
+LLM Response: {
+   "products":[
+      {
+         "product":"Black Formal Shalwar Suit",
+         "product_id":"74a9d4f2-dfb0-40fc-b2c1-b59b7ab4bf00",
+         "quantity":1,
+         "variant":"Medium",
+         "description":"This Black Formal Shalwar Suit is a traditional outfit made of high-quality materials, designed for formal events. It features a classic design and is available in a single color option."
+      }
+   ],
+   "NEED":[],
+   "reply":"Adding 1 Black Formal Shalwar Suit in medium size to your cart. Your total comes out to be $7500.",
+   "suggestions":[
+      {
+         "product":"Grey Wedding Suit",
+         "product_id":"6715b435-df4f-4f0a-b30a-e5445a56a7fb",
+         "description":"This Grey Wedding Suit is a formal outfit for grooms, made to be worn on their wedding day. It is priced at $9000 and currently, there are only 6 suits available in stock."
+      },
+      {
+         "product":"Navy Prince Coat",
+         "product_id":"0349cf19-ee39-44d9-96d9-ca4da6cfae5b",
+         "description":"The Navy Prince Coat is a traditional outfit consisting of a navy coat and matching shalwar. It's designed for special occasions and made from high-quality materials."
+      }
+   ]
+}
+
+Parsed Response:
+products: [{"product": "Black Formal Shalwar Suit", "product_id": "74a9d4f2-dfb0-40fc-b2c1-b59b7ab4bf00", "quantity": 1, "variant": "Medium", "description": "This Black Formal Shalwar Suit is a traditional outfit made of high-quality materials, designed for formal events. It features a classic design and is available in a single color option."}]
+NEED: []
+reply: "Adding 1 Black Formal Shalwar Suit in medium size to your cart. Your total comes out to be $7500."
+suggestions: [{"product": "Grey Wedding Suit", "product_id": "6715b435-df4f-4f0a-b30a-e5445a56a7fb", "description": "This Grey Wedding Suit is a formal outfit for grooms, made to be worn on their wedding day. It is priced at $9000 and currently, there are only 6 suits available in stock."}, {"product": "Navy Prince Coat", "product_id": "0349cf19-ee39-44d9-96d9-ca4da6cfae5b", "description": "The Navy Prince Coat is a traditional outfit consisting of a navy coat and matching shalwar. It's designed for special occasions and made from high-quality materials."}]

@@ -1,0 +1,15 @@
+Timestamp: 2025-05-01T03:33:15.200759
+User ID: hassanahmad
+Intent: confirm_order_initial
+User Message: 034406653633
+LLM Response: {"checkout_stage": "initial", "payment_method": "COD", "payment_details": "not_required", "phone_number": "034406653633", "delivery_address": "unknown", "NEED": ["address"], "reply": "Thanks for the number! Now, can you please provide your delivery address? (I need to process your order step by step. Let's continue with the current step.)", "order_summary": "2 Grey Cotton Shalwar Kameez and 1 Black Royal Sherwani, totalling $21,000"}
+
+Parsed Response:
+checkout_stage: "initial"
+payment_method: "COD"
+payment_details: "not_required"
+phone_number: "034406653633"
+delivery_address: "unknown"
+NEED: ["address"]
+reply: "Thanks for the number! Now, can you please provide your delivery address? (I need to process your order step by step. Let's continue with the current step.)"
+order_summary: "2 Grey Cotton Shalwar Kameez and 1 Black Royal Sherwani, totalling $21,000"

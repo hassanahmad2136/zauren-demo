@@ -1,0 +1,16 @@
+Timestamp: 2025-05-19T22:11:14.934532
+User ID: hassanahmad
+Intent: confirm_action_confirm_order_True
+User Message: Cash
+LLM Response: {
+  "action_type": "confirm_order",
+ "confirmed": true,
+ "reply": "Order confirmed! Cash on Delivery selected. Our team will call you soon to confirm delivery details.",
+ "next_step": "proceed"
+}
+
+Parsed Response:
+action_type: "confirm_order"
+confirmed: true
+reply: "Order confirmed! Cash on Delivery selected. Our team will call you soon to confirm delivery details."
+next_step: "proceed"

@@ -1,0 +1,69 @@
+Timestamp: 2025-05-01T16:27:19.491934
+User ID: hassanahmad
+Intent: view_inventory
+User Message: Apke Pas shalwar kameez hen?
+LLM Response: {
+   "filter": {
+       "category_id": null,
+       "category_name": null,
+       "price_range": {
+           "min": null,
+           "max": null
+       },
+       "attributes": {
+           "color": [],
+           "style": [],
+           "occasion": [],
+           "material": [],
+           "embroidery": []
+       },
+       "sort_by": null,
+       "query": "shalwar kameez"
+   },
+   "reply": "Haan, humare paas shalwar kameez available hain.",
+   "personalized": false,
+   "show_categories": false,
+   "show_products": true,
+   "product_details": [
+       {
+           "id": "33051326-dd13-49ce-a881-a89eee848fe5",
+           "reply": "Classic White Shalwar Kameez"
+       },
+       {
+           "id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7",
+           "reply": "Navy Blue Shalwar Kameez"
+       },
+       {
+           "id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a",
+           "reply": "Black Shalwar Kameez"
+       },
+       {
+           "id": "d19af692-4a40-4cfd-9a1e-b236480fa8b2",
+           "reply": "Beige Shalwar Kameez"
+       },
+       {
+           "id": "058769bc-be2c-4051-87d1-4e7d48dc7314",
+           "reply": "Grey Shalwar Kameez"
+       },
+       {
+           "id": "d06924f9-dd66-4a41-a6fe-f3bf0ebdeee8",
+           "reply": "Olive Green Shalwar Kameez"
+       },
+       {
+           "id": "2ff2aa0d-2a41-4709-a0ce-f096b4d2150d",
+           "reply": "Brown Shalwar Kameez"
+       },
+       {
+           "id": "39943514-254a-4c23-91f3-169e41056cb7",
+           "reply": "Maroon Shalwar Kameez"
+       }
+   ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": "shalwar kameez"}
+reply: "Haan, humare paas shalwar kameez available hain."
+personalized: false
+show_categories: false
+show_products: true
+product_details: [{"id": "33051326-dd13-49ce-a881-a89eee848fe5", "reply": "Classic White Shalwar Kameez"}, {"id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "reply": "Navy Blue Shalwar Kameez"}, {"id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a", "reply": "Black Shalwar Kameez"}, {"id": "d19af692-4a40-4cfd-9a1e-b236480fa8b2", "reply": "Beige Shalwar Kameez"}, {"id": "058769bc-be2c-4051-87d1-4e7d48dc7314", "reply": "Grey Shalwar Kameez"}, {"id": "d06924f9-dd66-4a41-a6fe-f3bf0ebdeee8", "reply": "Olive Green Shalwar Kameez"}, {"id": "2ff2aa0d-2a41-4709-a0ce-f096b4d2150d", "reply": "Brown Shalwar Kameez"}, {"id": "39943514-254a-4c23-91f3-169e41056cb7", "reply": "Maroon Shalwar Kameez"}]

@@ -1,0 +1,20 @@
+Timestamp: 2025-06-16T20:44:39.079410
+User ID: ali
+Intent: product_info
+User Message: can you convince in detail why i should have this combo
+LLM Response: {
+  "products": ["fa79eb32-e29c-4cf7-915c-ded5987dce5a"],
+  "attribute_query": "styling",
+  "NEED": null,
+  "reply": "Ali, the Black Shalwar Kameez with a Black Velvet Waistcoat is a stunning combination. The velvet adds luxury and sophistication, perfect for formal events. The black-on-black creates a sleek look. Trust me, you'll make a statement!",
+  "similar_products": ["058769bc-be2c-4051-87d1-4e7d48dc7314", "d06924f9-dd66-4a41-a6fe-f3bf0ebdeee8"],
+  "show_images": true
+}
+
+Parsed Response:
+products: ["fa79eb32-e29c-4cf7-915c-ded5987dce5a"]
+attribute_query: "styling"
+NEED: null
+reply: "Ali, the Black Shalwar Kameez with a Black Velvet Waistcoat is a stunning combination. The velvet adds luxury and sophistication, perfect for formal events. The black-on-black creates a sleek look. Trust me, you'll make a statement!"
+similar_products: ["058769bc-be2c-4051-87d1-4e7d48dc7314", "d06924f9-dd66-4a41-a6fe-f3bf0ebdeee8"]
+show_images: true

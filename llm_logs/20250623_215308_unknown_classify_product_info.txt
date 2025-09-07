@@ -1,0 +1,10 @@
+Timestamp: 2025-06-23T21:53:08.952064
+User ID: unknown
+Intent: classify_product_info
+User Message: Tell me more about: The Navy Blue Silk Sherwani is another excellent choice for a wedding with a dark theme, offering a sophisticated and elegant look.
+LLM Response: {
+   "intent": "product_info"
+}
+
+Parsed Response:
+intent: "product_info"

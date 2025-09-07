@@ -1,0 +1,40 @@
+Timestamp: 2025-06-16T20:42:23.376477
+User ID: Hassan
+Intent: view_inventory
+User Message: do you have something in black, for formal occassions
+LLM Response: {
+  "filter": {
+    "category_id": null,
+    "category_name": null,
+    "price_range": { "min": null, "max": null },
+    "attributes": { "color": ["black"], "style": [], "occasion": ["formal"], "material": [], "embroidery": [] },
+    "sort_by": null,
+    "query": "black formal"
+  },
+  "reply": "",
+  "personalized": false,
+  "show_categories": false,
+  "show_products": true,
+  "category_details": [],
+  "product_details": [
+    {"product_id": "0349cf19-ee39-44d9-96d9-ca4da6cfae5b", "reply": "Elegant navy prince coat with matching shalwar"},
+    {"product_id": "74a9d4f2-dfb0-40fc-b2c1-b59b7ab4bf00", "reply": "Premium black shalwar suit for formal occasions"},
+    {"product_id": "6715b435-df4f-4f0a-b30a-e5445a56a7fb", "reply": "Modern grey suit with traditional elements for weddings"},
+    {"product_id": "9e52ef98-684c-4ca0-aaef-fff325c3bbca", "reply": "Luxurious maroon jamawar fabric formal set"},
+    {"product_id": "ccb9056c-84e5-47bf-a20d-fee7a8a4c072", "reply": "Pure white formal kurta set with delicate embroidery"},
+    {"product_id": "5f4c0b71-4ff6-436f-a513-3900d40428dc", "reply": "Luxurious golden brocade sherwani for special ceremonies"},
+    {"product_id": "71a5540f-5925-4c81-82b2-f8f29d7bb1cf", "reply": "Elegant ivory sherwani with delicate silver work"},
+    {"product_id": "74f986fa-4f3f-46cd-945b-66bef7e97470", "reply": "Sophisticated navy blue silk sherwani with subtle patterns"},
+    {"product_id": "c4222ee3-3bad-401b-893a-97c0597b70b1", "reply": "Rich maroon velvet sherwani with intricate embroidery"},
+    {"product_id": "b93aef3a-9ec2-4081-85ba-a41d58060d94", "reply": "Luxurious black velvet waistcoat for formal events"}
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": ["black"], "style": [], "occasion": ["formal"], "material": [], "embroidery": []}, "sort_by": null, "query": "black formal"}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "0349cf19-ee39-44d9-96d9-ca4da6cfae5b", "reply": "Elegant navy prince coat with matching shalwar"}, {"product_id": "74a9d4f2-dfb0-40fc-b2c1-b59b7ab4bf00", "reply": "Premium black shalwar suit for formal occasions"}, {"product_id": "6715b435-df4f-4f0a-b30a-e5445a56a7fb", "reply": "Modern grey suit with traditional elements for weddings"}, {"product_id": "9e52ef98-684c-4ca0-aaef-fff325c3bbca", "reply": "Luxurious maroon jamawar fabric formal set"}, {"product_id": "ccb9056c-84e5-47bf-a20d-fee7a8a4c072", "reply": "Pure white formal kurta set with delicate embroidery"}, {"product_id": "5f4c0b71-4ff6-436f-a513-3900d40428dc", "reply": "Luxurious golden brocade sherwani for special ceremonies"}, {"product_id": "71a5540f-5925-4c81-82b2-f8f29d7bb1cf", "reply": "Elegant ivory sherwani with delicate silver work"}, {"product_id": "74f986fa-4f3f-46cd-945b-66bef7e97470", "reply": "Sophisticated navy blue silk sherwani with subtle patterns"}, {"product_id": "c4222ee3-3bad-401b-893a-97c0597b70b1", "reply": "Rich maroon velvet sherwani with intricate embroidery"}, {"product_id": "b93aef3a-9ec2-4081-85ba-a41d58060d94", "reply": "Luxurious black velvet waistcoat for formal events"}]

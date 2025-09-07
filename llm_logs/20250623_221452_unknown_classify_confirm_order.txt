@@ -1,0 +1,10 @@
+Timestamp: 2025-06-23T22:14:52.928328
+User ID: unknown
+Intent: classify_confirm_order
+User Message: Hassan Ahmad is the name on card
+LLM Response: {
+   "intent": "confirm_order"
+}
+
+Parsed Response:
+intent: "confirm_order"

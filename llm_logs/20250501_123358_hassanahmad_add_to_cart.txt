@@ -1,0 +1,41 @@
+Timestamp: 2025-05-01T12:33:58.412817
+User ID: hassanahmad
+Intent: add_to_cart
+User Message: Waistcoat
+LLM Response: {
+   "products":[],
+   "matched_products":[
+       {
+           "product":"Grey Textured Waistcoat",
+           "product_id":"b353053a-f576-460f-aa03-d3072e45cc4c",
+           "quantity":0,
+           "variant":"",
+           "description":"Elegant grey textured waistcoat with silver buttons"
+       },
+       {
+           "product":"Beige Linen Waistcoat",
+           "product_id":"9efd5222-1425-49a1-a389-bab427f6f35b",
+           "quantity":0,
+           "variant":"",
+           "description":"Casual beige linen waistcoat for summer events"
+       }
+   ],
+   "NEED":[
+       "product_selection"
+   ],
+   "reply":"You have multiple options for Waistcoats. Please select one from the following: Grey Textured Waistcoat or Beige Linen Waistcoat. Please respond with the name of the product.",
+   "suggestions":[
+       {
+           "product":"Navy Blue Waistcoat",
+           "product_id":"0650361e-6399-4c85-b4fb-93c0ee57d5ce",
+           "price":3200.0
+       }
+   ]
+}
+
+Parsed Response:
+products: []
+matched_products: [{"product": "Grey Textured Waistcoat", "product_id": "b353053a-f576-460f-aa03-d3072e45cc4c", "quantity": 0, "variant": "", "description": "Elegant grey textured waistcoat with silver buttons"}, {"product": "Beige Linen Waistcoat", "product_id": "9efd5222-1425-49a1-a389-bab427f6f35b", "quantity": 0, "variant": "", "description": "Casual beige linen waistcoat for summer events"}]
+NEED: ["product_selection"]
+reply: "You have multiple options for Waistcoats. Please select one from the following: Grey Textured Waistcoat or Beige Linen Waistcoat. Please respond with the name of the product."
+suggestions: [{"product": "Navy Blue Waistcoat", "product_id": "0650361e-6399-4c85-b4fb-93c0ee57d5ce", "price": 3200.0}]

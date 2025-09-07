@@ -1,0 +1,24 @@
+Timestamp: 2025-06-23T22:58:56.180979
+User ID: ali
+Intent: confirm_order_payment_method
+User Message: cod
+LLM Response: {
+   "checkout_stage": "payment_method",
+   "payment_method": "COD",
+   "payment_details": "not_required",
+   "phone_number": "unknown",
+   "delivery_address": "unknown",
+   "NEED": ["phone_number"],
+   "reply": "You've chosen COD. Please provide your contact phone number.",
+   "order_summary": "Black Formal Shalwar Suit and Navy Blue Waistcoat, totaling $10,700"
+}
+
+Parsed Response:
+checkout_stage: "payment_method"
+payment_method: "COD"
+payment_details: "not_required"
+phone_number: "unknown"
+delivery_address: "unknown"
+NEED: ["phone_number"]
+reply: "You've chosen COD. Please provide your contact phone number."
+order_summary: "Black Formal Shalwar Suit and Navy Blue Waistcoat, totaling $10,700"

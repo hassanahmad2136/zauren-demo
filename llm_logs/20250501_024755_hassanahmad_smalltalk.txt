@@ -1,0 +1,12 @@
+Timestamp: 2025-05-01T02:47:55.321664
+User ID: hassanahmad
+Intent: smalltalk
+User Message: What were we talking about
+LLM Response: {
+   "reply": "We were chatting about shopping and you were interested in making a purchase. You also asked about discounts and added a Grey Shalwar Kameez to your cart.",
+   "suggested_action": "view_cart"
+}
+
+Parsed Response:
+reply: "We were chatting about shopping and you were interested in making a purchase. You also asked about discounts and added a Grey Shalwar Kameez to your cart."
+suggested_action: "view_cart"

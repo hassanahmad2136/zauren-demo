@@ -1,0 +1,16 @@
+Timestamp: 2025-05-01T04:36:41.251983
+User ID: hassanahmad
+Intent: confirm_action_add_to_cart_True
+User Message: Ok
+LLM Response: {
+   "action_type": "add_to_cart",
+   "confirmed": true,
+   "reply": "Added 2 Black Royal Sherwani to your cart. Your current total comes out to be the price of the items. Next, I'll guide you through the checkout process. Please confirm if you'd like to proceed with the checkout.",
+   "next_step": "proceed"
+}
+
+Parsed Response:
+action_type: "add_to_cart"
+confirmed: true
+reply: "Added 2 Black Royal Sherwani to your cart. Your current total comes out to be the price of the items. Next, I'll guide you through the checkout process. Please confirm if you'd like to proceed with the checkout."
+next_step: "proceed"

@@ -1,0 +1,10 @@
+Timestamp: 2025-05-05T21:22:02.612453
+User ID: unknown
+Intent: classify_view_inventory
+User Message: Show products in category: Complementary accessories like khussa, caps, and more
+LLM Response: {
+    "intent": "view_inventory"
+}
+
+Parsed Response:
+intent: "view_inventory"

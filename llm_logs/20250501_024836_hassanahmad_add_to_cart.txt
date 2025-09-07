@@ -1,0 +1,26 @@
+Timestamp: 2025-05-01T02:48:36.931919
+User ID: hassanahmad
+Intent: add_to_cart
+User Message: Grey shalwar kameez
+LLM Response: {
+   "products":[
+   ],
+   "matched_products":[
+      {
+         "name":"Grey Shalwar Kameez",
+         "description":"Sophisticated grey shalwar kameez with collar detailing",
+         "price":3000,
+         "variants":"Grey"
+      }
+   ],
+   "NEED":[
+      "quantity"
+   ],
+   "reply":"We have a Grey Shalwar Kameez for 3000. How many would you like to add to your cart?"
+}
+
+Parsed Response:
+products: []
+matched_products: [{"name": "Grey Shalwar Kameez", "description": "Sophisticated grey shalwar kameez with collar detailing", "price": 3000, "variants": "Grey"}]
+NEED: ["quantity"]
+reply: "We have a Grey Shalwar Kameez for 3000. How many would you like to add to your cart?"

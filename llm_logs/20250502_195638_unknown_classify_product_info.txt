@@ -1,0 +1,10 @@
+Timestamp: 2025-05-02T19:56:38.482330
+User ID: unknown
+Intent: classify_product_info
+User Message: Tell me more about: Classic White Shalwar Kameez, perfect for daily wear, available in our Shalwar Kameez category
+LLM Response: {
+    "intent": "product_info"
+}
+
+Parsed Response:
+intent: "product_info"

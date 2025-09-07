@@ -1,0 +1,10 @@
+Timestamp: 2025-05-19T21:57:47.848111
+User ID: unknown
+Intent: classify_smalltalk
+User Message: Bro I’m putting a bad review on your upwork
+LLM Response: {
+  "intent": "smalltalk"
+}
+
+Parsed Response:
+intent: "smalltalk"

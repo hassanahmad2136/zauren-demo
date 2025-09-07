@@ -1,0 +1,12 @@
+Timestamp: 2025-05-01T03:34:25.445213
+User ID: hassanahmad
+Intent: view_cart
+User Message: What's in my cart
+LLM Response: {
+   "reply": "You currently have no items in your cart.",
+   "next_action_prompt": "Would you like to browse our products and start shopping?"
+}
+
+Parsed Response:
+reply: "You currently have no items in your cart."
+next_action_prompt: "Would you like to browse our products and start shopping?"

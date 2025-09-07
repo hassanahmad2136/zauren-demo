@@ -1,0 +1,10 @@
+Timestamp: 2025-05-02T17:00:50.901064
+User ID: hassanahmad
+Intent: smalltalk
+User Message: Hi
+LLM Response: {
+    "reply": "Hello again! I see you're interested in kurtas earlier. Do you have a favorite color or style in mind?"
+}
+
+Parsed Response:
+reply: "Hello again! I see you're interested in kurtas earlier. Do you have a favorite color or style in mind?"

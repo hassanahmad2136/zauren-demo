@@ -1,0 +1,10 @@
+Timestamp: 2025-05-01T02:40:50.943483
+User ID: unknown
+Intent: classify_product_info
+User Message: Is there any discount?
+LLM Response: {
+   "intent": "product_info"
+}
+
+Parsed Response:
+intent: "product_info"

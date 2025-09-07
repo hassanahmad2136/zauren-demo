@@ -1,0 +1,71 @@
+Timestamp: 2025-05-05T23:07:23.925710
+User ID: hassanahmad
+Intent: view_inventory
+User Message: Show products in category: Shalwar Kameez
+LLM Response: {
+    "filter": {
+    "category_id": "58a8d8a1-d533-4a15-bf04-38482a01dfc9",
+    "category_name": "Shalwar Kameez",
+    "price_range": {
+      "min": null,
+      "max": null
+    },
+    "attributes": {
+      "color": [],
+      "style": [],
+      "occasion": [],
+      "material": [],
+      "embroidery": []
+    },
+    "sort_by": null,
+    "query": null
+  },
+  "reply": "",
+  "personalized": false,
+  "show_categories": false,
+  "show_products": true,
+  "category_details": [],
+  "product_details": [
+    {
+      "product_id": "33051326-dd13-49ce-a881-a89eee848fe5",
+      "reply": "Traditional white cotton shalwar kameez, perfect for daily wear. Price: 2500 PKR. Quantity: 25 available."
+    },
+    {
+      "product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7",
+      "reply": "Navy blue cotton shalwar kameez with minimal embroidery. Price: 2800 PKR. Quantity: 18 available."
+    },
+    {
+      "product_id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a",
+      "reply": "Elegant black shalwar kameez for formal occasions. Price: 3200 PKR. Quantity: 15 available."
+    },
+    {
+      "product_id": "d19af692-4a40-4cfd-9a1e-b236480fa8b2",
+      "reply": "Light beige shalwar kameez made from lawn fabric. Price: 2700 PKR. Quantity: 20 available."
+    },
+    {
+      "product_id": "058769bc-be2c-4051-87d1-4e7d48dc7314",
+      "reply": "Sophisticated grey shalwar kameez with collar detailing. Price: 3000 PKR. Quantity: 12 available."
+    },
+    {
+      "product_id": "d06924f9-dd66-4a41-a6fe-f3bf0ebdeee8",
+      "reply": "Stylish olive green shalwar kameez for a distinctive look. Price: 3100 PKR. Quantity: 10 available."
+    },
+    {
+      "product_id": "2ff2aa0d-2a41-4709-a0ce-f096b4d2150d",
+      "reply": "Earthy brown shalwar kameez with subtle patterns. Price: 2900 PKR. Quantity: 15 available."
+    },
+    {
+      "product_id": "39943514-254a-4c23-91f3-169e41056cb7",
+      "reply": "Rich maroon shalwar kameez for festive occasions. Price: 3500 PKR. Quantity: 8 available."
+    }
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": "58a8d8a1-d533-4a15-bf04-38482a01dfc9", "category_name": "Shalwar Kameez", "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": null}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "33051326-dd13-49ce-a881-a89eee848fe5", "reply": "Traditional white cotton shalwar kameez, perfect for daily wear. Price: 2500 PKR. Quantity: 25 available."}, {"product_id": "ae8fbc89-829c-4780-aa0a-d6ec58bc58a7", "reply": "Navy blue cotton shalwar kameez with minimal embroidery. Price: 2800 PKR. Quantity: 18 available."}, {"product_id": "fa79eb32-e29c-4cf7-915c-ded5987dce5a", "reply": "Elegant black shalwar kameez for formal occasions. Price: 3200 PKR. Quantity: 15 available."}, {"product_id": "d19af692-4a40-4cfd-9a1e-b236480fa8b2", "reply": "Light beige shalwar kameez made from lawn fabric. Price: 2700 PKR. Quantity: 20 available."}, {"product_id": "058769bc-be2c-4051-87d1-4e7d48dc7314", "reply": "Sophisticated grey shalwar kameez with collar detailing. Price: 3000 PKR. Quantity: 12 available."}, {"product_id": "d06924f9-dd66-4a41-a6fe-f3bf0ebdeee8", "reply": "Stylish olive green shalwar kameez for a distinctive look. Price: 3100 PKR. Quantity: 10 available."}, {"product_id": "2ff2aa0d-2a41-4709-a0ce-f096b4d2150d", "reply": "Earthy brown shalwar kameez with subtle patterns. Price: 2900 PKR. Quantity: 15 available."}, {"product_id": "39943514-254a-4c23-91f3-169e41056cb7", "reply": "Rich maroon shalwar kameez for festive occasions. Price: 3500 PKR. Quantity: 8 available."}]

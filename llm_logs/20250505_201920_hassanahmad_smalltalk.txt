@@ -1,0 +1,10 @@
+Timestamp: 2025-05-05T20:19:20.785296
+User ID: hassanahmad
+Intent: smalltalk
+User Message: Fine
+LLM Response: {
+    "reply": "Glad to hear that! We have some exciting deals going on in our store. Would you like to take a look?"
+}
+
+Parsed Response:
+reply: "Glad to hear that! We have some exciting deals going on in our store. Would you like to take a look?"

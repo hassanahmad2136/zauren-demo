@@ -1,0 +1,10 @@
+Timestamp: 2025-05-02T19:55:44.544414
+User ID: unknown
+Intent: classify_view_inventory
+User Message: Tell me more about category: We have a variety of Shalwar Kameez, traditional Pakistani attire.
+LLM Response: {
+    "intent": "view_inventory"
+}
+
+Parsed Response:
+intent: "view_inventory"

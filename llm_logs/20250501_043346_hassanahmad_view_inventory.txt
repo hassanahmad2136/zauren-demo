@@ -1,0 +1,36 @@
+Timestamp: 2025-05-01T04:33:46.632496
+User ID: hassanahmad
+Intent: view_inventory
+User Message: Casual wear
+LLM Response: {
+   "filter": {
+       "category_id": null,
+       "category_name": null,
+       "price_range": { "min": null, "max": null },
+       "attributes": { "color": [], "style": [], "occasion": [], "material": [], "embroidery": [] },
+       "sort_by": null,
+       "query": "Casual wear"
+   },
+   "reply": "Here are a few casual wear options we have: Blue Denim Shalwar, Grey Melange T-shirt Kurta, Black Casual Kameez, Olive Green Casual Set, Beige Summer Kurta, Checkered Casual Shirt",
+   "personalized": false,
+   "show_categories": false,
+   "show_products": true,
+   "category_details": [],
+   "product_details": [
+       "0d16fef3-09ff-4a55-91a2-7f23a5bf11c7",
+       "657c6da2-efc0-460e-b19e-b2baed546b2a",
+       "30cde232-7e02-417f-b349-a3399780bb87",
+       "40931594-e3c7-47e8-8327-769b09943f47",
+       "2f8e3854-fbb8-4607-a2ba-a2a8e21d85fb",
+       "4396f5d4-8e52-4ba3-a6f7-27410e7f45ec"
+   ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": "Casual wear"}
+reply: "Here are a few casual wear options we have: Blue Denim Shalwar, Grey Melange T-shirt Kurta, Black Casual Kameez, Olive Green Casual Set, Beige Summer Kurta, Checkered Casual Shirt"
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: ["0d16fef3-09ff-4a55-91a2-7f23a5bf11c7", "657c6da2-efc0-460e-b19e-b2baed546b2a", "30cde232-7e02-417f-b349-a3399780bb87", "40931594-e3c7-47e8-8327-769b09943f47", "2f8e3854-fbb8-4607-a2ba-a2a8e21d85fb", "4396f5d4-8e52-4ba3-a6f7-27410e7f45ec"]

@@ -1,0 +1,216 @@
+import requests
+import os
+import mimetypes
+from typing import Union, Optional, Dict, Any, BinaryIO
+
+import json
+
+def upload_media_to_whatsapp(
+    access_token: str,
+    phone_number_id: str,
+    media: Union[str, bytes, BinaryIO, None] = None,
+    media_type: str = "image",
+    filename: Optional[str] = None,
+    use_placeholder: bool = False
+) -> Dict[str, Any]:
+    """
+    Upload media to WhatsApp Cloud API
+    
+    Args:
+        access_token: WhatsApp API access token
+        phone_number_id: WhatsApp Business phone number ID
+        media: File path, URL, bytes, or file-like object containing the media
+        media_type: Type of media ('image', 'video', 'audio', 'document', 'sticker')
+        filename: Optional filename for documents
+        use_placeholder: If True, fetch a placeholder image (ignores media parameter)
+        
+    Returns:
+        Dictionary containing the response with media ID
+    """
+    # Validate media type
+    valid_media_types = ['image', 'video', 'audio', 'document', 'sticker']
+    if media_type not in valid_media_types:
+        raise ValueError(f"Invalid media type. Must be one of: {', '.join(valid_media_types)}")
+    
+    # API endpoint for media upload
+    url = f"https://graph.facebook.com/v22.0/{phone_number_id}/media"
+    
+    # Headers for the request
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+    
+    # Create form data
+    form_data = {
+        "messaging_product": "whatsapp",
+        "type": media_type
+    }
+    
+    files = {}
+    
+    # Use placeholder image if requested
+    if use_placeholder:
+        # Get a placeholder image from placeholder.com
+        placeholder_url = "https://placehold.co/800x600.png"
+        print(f"Fetching placeholder image from: {placeholder_url}")
+        
+        # Download the placeholder image
+        response = requests.get(placeholder_url)
+        response.raise_for_status()
+        media_content = response.content
+        
+        files = {
+            "file": (filename or "placeholder.png", media_content, "image/png")
+        }
+    
+    # Handle different types of media inputs if no placeholder is used
+    elif media is not None:
+        if isinstance(media, str):
+            if media.startswith(('http://', 'https://')):
+                # If media is a URL, download it first
+                print(f"Downloading media from URL: {media}")
+                response = requests.get(media)
+                response.raise_for_status()
+                media_content = response.content
+                
+                # Try to determine the filename from URL if not provided
+                if not filename and media_type == 'document':
+                    filename = os.path.basename(media)
+                
+                # Try to determine the mimetype
+                content_type = response.headers.get('Content-Type')
+                if not content_type:
+                    # Guess from filename or use generic type
+                    if filename:
+                        content_type, _ = mimetypes.guess_type(filename)
+                    if not content_type:
+                        content_type = f"{media_type}/octet-stream"
+                
+                files = {
+                    "file": (filename or f"media.{media_type}", media_content, content_type)
+                }
+            else:
+                # Assume it's a file path
+                if not os.path.exists(media):
+                    raise FileNotFoundError(f"File not found: {media}")
+                
+                print(f"Reading media from file: {media}")
+                
+                # Use provided filename or extract from path
+                if not filename and media_type == 'document':
+                    filename = os.path.basename(media)
+                
+                # Get mimetype
+                content_type, _ = mimetypes.guess_type(media)
+                if not content_type:
+                    content_type = f"{media_type}/octet-stream"
+                
+                files = {
+                    "file": (filename or os.path.basename(media), open(media, 'rb'), content_type)
+                }
+        elif isinstance(media, bytes):
+            # If media is bytes
+            print("Using provided bytes data as media")
+            
+            if not filename and media_type == 'document':
+                filename = f"document.{media_type}"
+            
+            # Use generic mimetype based on media_type
+            content_type = f"{media_type}/octet-stream"
+            
+            files = {
+                "file": (filename or f"media.{media_type}", media, content_type)
+            }
+        elif hasattr(media, 'read'):
+            # If media is a file-like object
+            print("Using provided file-like object as media")
+            
+            if not filename and media_type == 'document':
+                filename = getattr(media, 'name', f"document.{media_type}")
+            
+            # Try to determine mimetype from filename
+            content_type = None
+            if filename:
+                content_type, _ = mimetypes.guess_type(filename)
+            if not content_type:
+                content_type = f"{media_type}/octet-stream"
+            
+            files = {
+                "file": (filename or f"media.{media_type}", media, content_type)
+            }
+        else:
+            raise TypeError("Unsupported media format. Please provide a file path, URL, bytes, or file-like object.")
+    else:
+        raise ValueError("Either provide media or set use_placeholder=True")
+    
+    # Add filename for documents if provided
+    if media_type == 'document' and filename:
+        form_data["filename"] = filename
+    
+    try:
+        # Make API request
+        print(f"Uploading media to WhatsApp Cloud API: {url}")
+        response = requests.post(
+            url,
+            headers=headers,
+            data=form_data,
+            files=files
+        )
+        
+        # Parse response
+        result = response.json()
+        
+        if response.status_code != 200:
+            print(f"Upload failed with status code {response.status_code}")
+            return {
+                "success": False,
+                "error": result.get("error", {}).get("message", "Unknown error"),
+                "details": result
+            }
+        
+        print(f"Upload successful! Media ID: {result.get('id')}")
+        return {
+            "success": True,
+            "media_id": result.get("id"),
+            "response": result
+        }
+    except Exception as e:
+        print(f"Exception during upload: {str(e)}")
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+
+# Example usage
+if __name__ == "__main__":
+    # Replace with your actual credentials
+    ACCESS_TOKEN = "EAASorvykZB1IBO8H8EFlYXlU9Vyi0xZCfjawGq6EJxfEoaVCK9N1AZCPszr22noZBwRrqJ2oCaXlLV0yJlgvmVyRslGQMaqxOZAPkPzRzKldS87XPF4u1TvGz6jgXHm3KZAtjmouZBQ0kZAIMZBXn7axj3EJrHqrlqSZAXImUIwrbAouc79IZASbYzEYxm1K6zqosbcL8AsvVnimEy2VVNj8vBMYob5V14h"
+    PHONE_NUMBER_ID = "637760662753733"
+    
+    # # Example 1: Upload a placeholder image
+    # result1 = upload_media_to_whatsapp(
+    #     access_token=ACCESS_TOKEN,
+    #     phone_number_id=PHONE_NUMBER_ID,
+    #     use_placeholder=True
+    # )
+    # print(json.dumps(result1, indent=2))
+    
+    # Example 2: Upload from a URL
+    # result2 = upload_media_to_whatsapp(
+    #     access_token=ACCESS_TOKEN,
+    #     phone_number_id=PHONE_NUMBER_ID,
+    #     media="https://example.com/image.jpg",
+    #     media_type="image"
+    # )
+    # print(json.dumps(result2, indent=2))
+    
+    # Example 3: Upload from a local file
+    result3 = upload_media_to_whatsapp(
+        access_token=ACCESS_TOKEN,
+        phone_number_id=PHONE_NUMBER_ID,
+        media="formal wear.png",
+        media_type="image",
+        filename="formal wear.png"
+    )
+    print(json.dumps(result3, indent=2))

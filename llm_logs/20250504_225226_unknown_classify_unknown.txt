@@ -1,0 +1,9 @@
+Timestamp: 2025-05-04T22:52:26.667578
+User ID: unknown
+Intent: classify_unknown
+User Message: Hi
+LLM Response: {"error": "Sorry, I'm having trouble connecting. Please try again in a moment.", "reply": "Sorry, I'm having trouble connecting. Please try again in a moment."}
+
+Parsed Response:
+error: "Sorry, I'm having trouble connecting. Please try again in a moment."
+reply: "Sorry, I'm having trouble connecting. Please try again in a moment."

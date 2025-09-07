@@ -1,0 +1,10 @@
+Timestamp: 2025-06-23T21:51:45.676434
+User ID: unknown
+Intent: classify_view_inventory
+User Message: I have a Shaadi coming up can you recommend something to wear, I prefer dark themes
+LLM Response: {
+   "intent": "view_inventory"
+}
+
+Parsed Response:
+intent: "view_inventory"

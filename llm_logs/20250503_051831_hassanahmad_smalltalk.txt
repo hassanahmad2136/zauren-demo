@@ -1,0 +1,10 @@
+Timestamp: 2025-05-03T05:18:31.312924
+User ID: hassanahmad
+Intent: smalltalk
+User Message: Hi
+LLM Response: {
+    "reply": "Hi hassanahmad! How's it going? We have some amazing shalwar kameez collections. Would you like to take a look?"
+}
+
+Parsed Response:
+reply: "Hi hassanahmad! How's it going? We have some amazing shalwar kameez collections. Would you like to take a look?"

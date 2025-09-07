@@ -1,0 +1,34 @@
+Timestamp: 2025-06-23T18:03:18.062038
+User ID: Hassan
+Intent: view_inventory
+User Message: Do you have black sherwani
+LLM Response: {
+  "filter": {
+    "category_id": "30c1f709-8ae0-405d-9257-ca4b46830522",
+    "category_name": "Sherwanis",
+    "price_range": { "min": null, "max": null },
+    "attributes": { "color": ["Black"], "style": [], "occasion": [], "material": [], "embroidery": [] },
+    "sort_by": null,
+    "query": "Black Sherwani"
+  },
+  "reply": "We have a range of sherwanis in different colors, including black.",
+  "personalized": false,
+  "show_categories": false,
+  "show_products": true,
+  "category_details": [],
+  "product_details": [
+    {
+      "product_id": "5f4c0b71-4ff6-436f-a513-3900d40428dc",
+      "reply": "This is a luxurious golden brocade sherwani for special ceremonies."
+    }
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": "30c1f709-8ae0-405d-9257-ca4b46830522", "category_name": "Sherwanis", "price_range": {"min": null, "max": null}, "attributes": {"color": ["Black"], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": "Black Sherwani"}
+reply: "We have a range of sherwanis in different colors, including black."
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "5f4c0b71-4ff6-436f-a513-3900d40428dc", "reply": "This is a luxurious golden brocade sherwani for special ceremonies."}]

@@ -1,0 +1,10 @@
+Timestamp: 2025-06-23T18:37:12.056323
+User ID: unknown
+Intent: classify_view_inventory
+User Message: Anything white for wearing as a shirt
+LLM Response: {
+  "intent": "view_inventory"
+}
+
+Parsed Response:
+intent: "view_inventory"

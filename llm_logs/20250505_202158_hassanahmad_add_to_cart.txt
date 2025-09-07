@@ -1,0 +1,25 @@
+Timestamp: 2025-05-05T20:21:58.775896
+User ID: hassanahmad
+Intent: add_to_cart
+User Message: Add to cart: Classic black Jinnah cap made from premium fabric.
+LLM Response: {
+    "products": [
+    {
+      "product": "Black Jinnah Cap",
+      "product_id": "f73f2ce5-380c-4b70-905a-de8f80c84fae",
+      "quantity": 1,
+      "description": "Classic black Jinnah cap made from premium fabric"
+    }
+  ],
+  "matched_products": [],
+  "NEED": [],
+  "reply": "Adding 1 x Black Jinnah Cap to your cart. Your cart now has 1 item.",
+  "suggestions": []
+}
+
+Parsed Response:
+products: [{"product": "Black Jinnah Cap", "product_id": "f73f2ce5-380c-4b70-905a-de8f80c84fae", "quantity": 1, "description": "Classic black Jinnah cap made from premium fabric"}]
+matched_products: []
+NEED: []
+reply: "Adding 1 x Black Jinnah Cap to your cart. Your cart now has 1 item."
+suggestions: []

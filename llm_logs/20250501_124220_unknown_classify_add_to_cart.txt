@@ -1,0 +1,10 @@
+Timestamp: 2025-05-01T12:42:20.650096
+User ID: unknown
+Intent: classify_add_to_cart
+User Message: Add 2 khussa
+LLM Response: {
+   "intent": "add_to_cart"
+}
+
+Parsed Response:
+intent: "add_to_cart"

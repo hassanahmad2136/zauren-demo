@@ -1,0 +1,10 @@
+Timestamp: 2025-05-19T21:52:40.701134
+User ID: unknown
+Intent: classify_confirm_order
+User Message: I want to pay you
+LLM Response: {
+  "intent": "confirm_order"
+}
+
+Parsed Response:
+intent: "confirm_order"

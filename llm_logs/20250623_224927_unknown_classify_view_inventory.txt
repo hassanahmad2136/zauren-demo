@@ -1,0 +1,10 @@
+Timestamp: 2025-06-23T22:49:27.264286
+User ID: unknown
+Intent: classify_view_inventory
+User Message: Looks good, do you have something in black
+LLM Response: {
+   "intent": "view_inventory"
+}
+
+Parsed Response:
+intent: "view_inventory"

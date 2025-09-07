@@ -1,0 +1,10 @@
+Timestamp: 2025-06-13T11:15:24.347334
+User ID: unknown
+Intent: classify_view_inventory
+User Message: Muje Shaadi klye kapre chahien
+LLM Response: {
+  "intent": "view_inventory"
+}
+
+Parsed Response:
+intent: "view_inventory"

@@ -1,0 +1,12 @@
+Timestamp: 2025-05-01T11:50:41.931846
+User ID: hassanahmad
+Intent: view_cart
+User Message: Please confirm what I have in cart
+LLM Response: {
+   "reply": "You have 2 Navy Blue Shalwar Kameez in your cart, with a total of Rs. 5600. Your cart is not empty and has items ready for checkout.",
+   "next_action_prompt": "Would you like to proceed with checkout, continue shopping, or modify your cart?"
+}
+
+Parsed Response:
+reply: "You have 2 Navy Blue Shalwar Kameez in your cart, with a total of Rs. 5600. Your cart is not empty and has items ready for checkout."
+next_action_prompt: "Would you like to proceed with checkout, continue shopping, or modify your cart?"

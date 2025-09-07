@@ -1,0 +1,10 @@
+Timestamp: 2025-05-01T12:24:36.111831
+User ID: unknown
+Intent: classify_remove_from_cart
+User Message: 2
+LLM Response: {
+   "intent": "remove_from_cart"
+}
+
+Parsed Response:
+intent: "remove_from_cart"

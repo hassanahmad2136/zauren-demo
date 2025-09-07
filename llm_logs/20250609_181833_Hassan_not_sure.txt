@@ -1,0 +1,18 @@
+Timestamp: 2025-06-09T18:18:33.119536
+User ID: Hassan
+Intent: not_sure
+User Message: I received an audio message but had trouble processing it.
+LLM Response: {
+  "possibilities": ["view_products", "check_cart", "ask_question"],
+  "reply": "Hassan, I'm not sure I understood your audio message. Would you like to explore our kurtas or need assistance with something else?",
+  "suggestions": [
+    "Browse Kurtas",
+    "View Your Cart",
+    "Start a New Search"
+  ]
+}
+
+Parsed Response:
+possibilities: ["view_products", "check_cart", "ask_question"]
+reply: "Hassan, I'm not sure I understood your audio message. Would you like to explore our kurtas or need assistance with something else?"
+suggestions: ["Browse Kurtas", "View Your Cart", "Start a New Search"]

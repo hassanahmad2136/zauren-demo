@@ -1,0 +1,10 @@
+Timestamp: 2025-05-02T19:54:43.679367
+User ID: unknown
+Intent: classify_view_inventory
+User Message: Show products in category: We have a variety of Shalwar Kameez, traditional Pakistani attire.
+LLM Response: {
+    "intent": "view_inventory"
+}
+
+Parsed Response:
+intent: "view_inventory"

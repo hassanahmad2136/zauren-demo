@@ -1,0 +1,16 @@
+Timestamp: 2025-05-01T11:49:36.711374
+User ID: hassanahmad
+Intent: confirm_action_add_to_cart_True
+User Message: Did you add those?
+LLM Response: {
+   "action_type": "add_to_cart",
+   "confirmed": true,
+   "reply": "Yes, I've added 2 Navy Blue Shalwar Kameez to your cart. You can now proceed to checkout or continue shopping. Your total is Rs. 5600.",
+   "next_step": "proceed"
+}
+
+Parsed Response:
+action_type: "add_to_cart"
+confirmed: true
+reply: "Yes, I've added 2 Navy Blue Shalwar Kameez to your cart. You can now proceed to checkout or continue shopping. Your total is Rs. 5600."
+next_step: "proceed"

@@ -1,0 +1,34 @@
+Timestamp: 2025-06-14T21:56:50.489217
+User ID: ali
+Intent: view_inventory
+User Message: fine,
+what do you have today?
+LLM Response: {
+  "filter": {
+    "category_id": null,
+    "category_name": null,
+    "price_range": { "min": null, "max": null },
+    "attributes": { "color": [], "style": [], "occasion": [], "material": [], "embroidery": [] },
+    "sort_by": null,
+    "query": null
+  },
+  "reply": "We have a wide range of traditional Pakistani clothing, including kurtas, shalwar kameez, sherwanis, waistcoats, and accessories.",
+  "personalized": false,
+  "show_categories": true,
+  "show_products": false,
+  "category_details": [
+    {"category_id": "30c1f709-8ae0-405d-9257-ca4b46830522", "reply": "We have various kurtas, perfect for daily wear or special occasions."},
+    {"category_id": "41ab8d7f-6b5d-4dc9-87b3-93bf42a2149b", "reply": "Our shalwar kameez collection includes a variety of colors and patterns."},
+    {"category_id": "73bf3db8-0b10-49b9-85d7-047173c6bc3c", "reply": "Check out our embroidered collection for unique and traditional designs."},
+    {"category_id": "5f3b7efb-f0b4-4c2d-87aa-b8718e39227b", "reply": "We also have a range of waistcoats to complement your outfit."},
+    {"category_id": "fabf500a-e180-4b55-a181-700370780825", "reply": "For formal events, explore our formal wear section."}
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": null}
+reply: "We have a wide range of traditional Pakistani clothing, including kurtas, shalwar kameez, sherwanis, waistcoats, and accessories."
+personalized: false
+show_categories: true
+show_products: false
+category_details: [{"category_id": "30c1f709-8ae0-405d-9257-ca4b46830522", "reply": "We have various kurtas, perfect for daily wear or special occasions."}, {"category_id": "41ab8d7f-6b5d-4dc9-87b3-93bf42a2149b", "reply": "Our shalwar kameez collection includes a variety of colors and patterns."}, {"category_id": "73bf3db8-0b10-49b9-85d7-047173c6bc3c", "reply": "Check out our embroidered collection for unique and traditional designs."}, {"category_id": "5f3b7efb-f0b4-4c2d-87aa-b8718e39227b", "reply": "We also have a range of waistcoats to complement your outfit."}, {"category_id": "fabf500a-e180-4b55-a181-700370780825", "reply": "For formal events, explore our formal wear section."}]

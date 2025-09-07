@@ -1,0 +1,10 @@
+Timestamp: 2025-06-23T22:06:47.097265
+User ID: unknown
+Intent: classify_add_to_cart
+User Message: I am medium sized
+LLM Response: {
+   "intent": "add_to_cart"
+}
+
+Parsed Response:
+intent: "add_to_cart"

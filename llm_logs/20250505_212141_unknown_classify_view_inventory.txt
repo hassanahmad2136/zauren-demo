@@ -1,0 +1,52 @@
+Timestamp: 2025-05-05T21:21:41.875003
+User ID: unknown
+Intent: classify_view_inventory
+User Message: Show products in category: Complementary accessories like khussa, caps, and more
+LLM Response: {
+    "intent": "view_inventory",
+  "categories": [
+    {
+      "name": "Footwear",
+      "products": [
+        {
+          "name": "Brown Leather Khussa",
+          "price": 2300
+        },
+        {
+          "name": "Black Jutt Shoes",
+          "price": 2500
+        }
+      ]
+    },
+    {
+      "name": "Headwear",
+      "products": [
+        {
+          "name": "Black Jinnah Cap",
+          "price": 1500
+        },
+        {
+          "name": "White Sindhi Cap",
+          "price": 1200
+        }
+      ]
+    },
+    {
+      "name": "Scarves",
+      "products": [
+        {
+          "name": "Handwoven Ajrak Scarf",
+          "price": 1800
+        },
+        {
+          "name": "Embroidered Dupatta",
+          "price": 2000
+        }
+      ]
+    }
+  ]
+}
+
+Parsed Response:
+intent: "view_inventory"
+categories: [{"name": "Footwear", "products": [{"name": "Brown Leather Khussa", "price": 2300}, {"name": "Black Jutt Shoes", "price": 2500}]}, {"name": "Headwear", "products": [{"name": "Black Jinnah Cap", "price": 1500}, {"name": "White Sindhi Cap", "price": 1200}]}, {"name": "Scarves", "products": [{"name": "Handwoven Ajrak Scarf", "price": 1800}, {"name": "Embroidered Dupatta", "price": 2000}]}]

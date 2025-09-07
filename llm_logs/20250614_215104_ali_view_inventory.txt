@@ -1,0 +1,36 @@
+Timestamp: 2025-06-14T21:51:04.229245
+User ID: ali
+Intent: view_inventory
+User Message: yeah sure,
+please show some formal
+LLM Response: {
+  "filter": {
+    "category_id": null,
+    "category_name": null,
+    "price_range": { "min": null, "max": null },
+    "attributes": { "color": [], "style": [], "occasion": [], "material": [], "embroidery": [] },
+    "sort_by": null,
+    "query": "formal"
+  },
+  "reply": "",
+  "personalized": false,
+  "show_categories": false,
+  "show_products": true,
+  "category_details": [],
+  "product_details": [
+    {"product_id": "74a9d4f2-dfb0-40fc-b2c1-b59b7ab4bf00", "reply": "Premium black shalwar suit for formal occasions"},
+    {"product_id": "0349cf19-ee39-44d9-96d9-ca4da6cfae5b", "reply": "Elegant navy prince coat with matching shalwar"},
+    {"product_id": "ccb9056c-84e5-47bf-a20d-fee7a8a4c072", "reply": "Pure white formal kurta set with delicate embroidery"},
+    {"product_id": "6715b435-df4f-4f0a-b30a-e5445a56a7fb", "reply": "Modern grey suit with traditional elements for weddings"},
+    {"product_id": "9e52ef98-684c-4ca0-aaef-fff325c3bbca", "reply": "Luxurious maroon jamawar fabric formal set"}
+  ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": "formal"}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "74a9d4f2-dfb0-40fc-b2c1-b59b7ab4bf00", "reply": "Premium black shalwar suit for formal occasions"}, {"product_id": "0349cf19-ee39-44d9-96d9-ca4da6cfae5b", "reply": "Elegant navy prince coat with matching shalwar"}, {"product_id": "ccb9056c-84e5-47bf-a20d-fee7a8a4c072", "reply": "Pure white formal kurta set with delicate embroidery"}, {"product_id": "6715b435-df4f-4f0a-b30a-e5445a56a7fb", "reply": "Modern grey suit with traditional elements for weddings"}, {"product_id": "9e52ef98-684c-4ca0-aaef-fff325c3bbca", "reply": "Luxurious maroon jamawar fabric formal set"}]

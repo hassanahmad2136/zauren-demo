@@ -1,0 +1,10 @@
+Timestamp: 2025-06-23T18:02:58.309712
+User ID: unknown
+Intent: classify_product_info
+User Message: Tell me more about: Luxurious golden brocade sherwani for special ceremonies
+LLM Response: {
+  "intent": "product_info"
+}
+
+Parsed Response:
+intent: "product_info"

@@ -1,0 +1,12 @@
+Timestamp: 2025-05-05T21:03:23.620120
+User ID: unknown
+Intent: classify_confirm_action
+User Message: dont you accept cash on delivery?
+LLM Response: {
+    "intent": "confirm_action",
+  "reply": "COD available. Is COD your preferred payment method?"
+}
+
+Parsed Response:
+intent: "confirm_action"
+reply: "COD available. Is COD your preferred payment method?"

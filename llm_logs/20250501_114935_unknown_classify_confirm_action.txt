@@ -1,0 +1,10 @@
+Timestamp: 2025-05-01T11:49:35.975598
+User ID: unknown
+Intent: classify_confirm_action
+User Message: Did you add those?
+LLM Response: {
+   "intent": "confirm_action"
+}
+
+Parsed Response:
+intent: "confirm_action"

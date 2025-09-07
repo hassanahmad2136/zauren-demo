@@ -1,0 +1,20 @@
+Timestamp: 2025-05-01T12:20:07.848796
+User ID: hassanahmad
+Intent: product_info
+User Message: What is the difference between white and biege
+LLM Response: {
+   "products": ["33051326-dd13-49ce-a881-a89eee848fe5", "d19af692-4a40-4cfd-9a1e-b236480fa8b2"],
+   "attribute_query": "colors",
+   "NEED": "none",
+   "reply": "The main difference between the White and Beige Shalwar Kameez is the color. White is a pure, crisp white, while Beige is a light, neutral beige color. Both are made from high-quality cotton fabric and have the same classic design.",
+   "similar_products": [],
+   "show_images": true
+}
+
+Parsed Response:
+products: ["33051326-dd13-49ce-a881-a89eee848fe5", "d19af692-4a40-4cfd-9a1e-b236480fa8b2"]
+attribute_query: "colors"
+NEED: "none"
+reply: "The main difference between the White and Beige Shalwar Kameez is the color. White is a pure, crisp white, while Beige is a light, neutral beige color. Both are made from high-quality cotton fabric and have the same classic design."
+similar_products: []
+show_images: true

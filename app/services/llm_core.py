@@ -16,7 +16,7 @@ client = Groq(
 )
 
 # Function to safely call the API with retries
-def safe_api_call(messages, model="llama-3.3-70b-versatile", max_retries=2, retry_delay=1):
+def safe_api_call(messages, model="openai/gpt-oss-120b", max_retries=3, retry_delay=2):
     """
     Make an API call to the LLM with retry logic for rate limiting
     
@@ -39,11 +39,14 @@ def safe_api_call(messages, model="llama-3.3-70b-versatile", max_retries=2, retr
             )
             return chat_completion.choices[0].message.content
         except Exception as e:
+            print(f"API call failed with error: {e}")
             retries += 1
             if "429" in str(e) or "Too Many Requests" in str(e):
                 retry_delay *= 2  # Exponential backoff
+                print(f"Rate limit hit. Retrying in {retry_delay} seconds...")
                 time.sleep(retry_delay)
             elif retries < max_retries:
+                print(f"Retrying in {retry_delay} seconds...")
                 time.sleep(retry_delay)
             else:
                 return json.dumps({

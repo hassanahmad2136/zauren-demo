@@ -9,7 +9,6 @@ import json
 import datetime
 import requests
 import time
-import threading
 from typing import List, Dict, Any
 from .llm_core import safe_api_call, prepare_messages
 
@@ -42,18 +41,9 @@ LOG_DIR = os.environ.get('LLM_LOG_DIR', 'llm_logs')
 # Ensure log directory exists
 os.makedirs(LOG_DIR, exist_ok=True)
 
-def threaded_api_call(func):
-    """Decorator to run a function in a background thread."""
-    def wrapper(*args, **kwargs):
-        thread = threading.Thread(target=func, args=args, kwargs=kwargs, daemon=True)
-        thread.start()
-        return thread
-    return wrapper
-
-@threaded_api_call
 def log_response(sender_id, intent, message, response):
     """
-    Log LLM response to a text file asynchronously to avoid blocking main thread
+    Log LLM response to a text file
     
     Args:
         sender_id (str): User identifier (phone number)
@@ -61,39 +51,39 @@ def log_response(sender_id, intent, message, response):
         message (str): The user's original message
         response (str): The LLM's response
     """
-    def _log():
-        try:
-            # Create a timestamped filename
-            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-            # Sanitize sender_id for filename (remove special chars)
-            safe_sender = "".join([c if c.isalnum() else "_" for c in str(sender_id)])
+    try:
+        # Create a timestamped filename
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        # Sanitize sender_id for filename (remove special chars)
+        safe_sender = "".join([c if c.isalnum() else "_" for c in str(sender_id)])
+        
+        # Create unique filename
+        filename = f"{timestamp}_{safe_sender}_{intent}.txt"
+        filepath = os.path.join(LOG_DIR, filename)
+        
+        # Write to file
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(f"Timestamp: {datetime.datetime.now().isoformat()}\n")
+            f.write(f"User ID: {sender_id}\n")
+            f.write(f"Intent: {intent}\n")
+            f.write(f"User Message: {message}\n")
+            f.write(f"LLM Response: {response}\n")
             
-            # Create unique filename
-            filename = f"{timestamp}_{safe_sender}_{intent}.txt"
-            filepath = os.path.join(LOG_DIR, filename)
-            
-            # Write to file
-            with open(filepath, 'w', encoding='utf-8') as f:
-                f.write(f"Timestamp: {datetime.datetime.now().isoformat()}\n")
-                f.write(f"User ID: {sender_id}\n")
-                f.write(f"Intent: {intent}\n")
-                f.write(f"User Message: {message}\n")
-                f.write(f"LLM Response: {response}\n")
+            # Try to parse JSON for more detailed logging
+            try:
+                response_data = json.loads(response)
+                f.write("\nParsed Response:\n")
+                for key, value in response_data.items():
+                    f.write(f"{key}: {json.dumps(value, ensure_ascii=False)}\n")
+            except:
+                pass
                 
-                # Try to parse JSON for more detailed logging
-                try:
-                    response_data = json.loads(response)
-                    f.write("\nParsed Response:\n")
-                    for key, value in response_data.items():
-                        f.write(f"{key}: {json.dumps(value, ensure_ascii=False)}\n")
-                except:
-                    pass
-        except Exception as e:
-            print(f"Error logging response: {e}")
-    _log()
-    return True
+        return True
+    except Exception as e:
+        print(f"Error logging response: {e}")
+        return False
 
-def generate_summary(messages: List[Dict[str, str]], role: str, max_retries: int = 2) -> str:
+def generate_summary(messages: List[Dict[str, str]], role: str, max_retries: int = 3) -> str:
     """
     Generate a summary of conversation messages using Groq API
     
@@ -178,11 +168,13 @@ Your summary should be under 150 words and capture the critical information."""
                 "max_tokens": 300     # Limit summary length
             }
             
+            print(f"🔄 Calling Groq API to summarize {len(messages)} {role} messages")
+            
             response = requests.post(
                 "https://api.groq.com/openai/v1/chat/completions",
                 headers=headers,
                 json=payload,
-                timeout=10  # Lowered timeout for faster failover
+                timeout=30
             )
             
             if response.status_code == 200:
@@ -192,6 +184,7 @@ Your summary should be under 150 words and capture the critical information."""
                 # Clean up the summary
                 summary = summary.strip()
                 if summary:
+                    print(f"✅ Generated summary for {len(messages)} {role} messages ({len(summary)} chars)")
                     return f"Summary of {len(messages)} previous {role} messages: {summary}"
                 else:
                     return f"No meaningful content found in previous {role} messages."
@@ -199,16 +192,19 @@ Your summary should be under 150 words and capture the critical information."""
             elif response.status_code == 429:  # Rate limit
                 retry_count += 1
                 wait_time = 2 ** retry_count  # Exponential backoff
+                print(f"⏱️ Rate limit exceeded, retrying in {wait_time}s (attempt {retry_count}/{max_retries})")
                 time.sleep(wait_time)
                 
             else:
                 # Log the error
                 error_text = f"HTTP {response.status_code}: {response.text}"
+                print(f"❌ Groq API error: {error_text}")
                 
                 # For certain errors, we might want to retry
                 if response.status_code in [500, 502, 503, 504]:  # Server errors
                     retry_count += 1
                     wait_time = 2 ** retry_count
+                    print(f"⏱️ Server error, retrying in {wait_time}s (attempt {retry_count}/{max_retries})")
                     time.sleep(wait_time)
                 else:
                     # For other errors, don't retry
@@ -218,9 +214,11 @@ Your summary should be under 150 words and capture the critical information."""
             last_error = str(e)
             retry_count += 1
             wait_time = 2 ** retry_count
+            print(f"⏱️ Error connecting to Groq, retrying in {wait_time}s (attempt {retry_count}/{max_retries}): {e}")
             time.sleep(wait_time)
     
     # If we exhausted retries
+    print(f"❌ Failed to generate summary after {retry_count} attempts: {last_error}")
     return f"Summary of {len(messages)} previous {role} messages (generation failed after multiple attempts)."
 
 # Export these functions to maintain backward compatibility

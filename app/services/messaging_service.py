@@ -5,11 +5,16 @@ import datetime
 from dotenv import load_dotenv
 import json
 import time
+import threading
+
 # Configure logging
 logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
+
+# Global session for connection reuse
+session = requests.Session()
 
 def mark_message_as_read(phone_number_id, message_id):
     """
@@ -37,7 +42,7 @@ def mark_message_as_read(phone_number_id, message_id):
         "Content-Type": "application/json"
     }
 
-    response = requests.post(url, headers=headers, json=payload, timeout=10)
+    response = session.post(url, headers=headers, json=payload, timeout=5)  # Reduced timeout
 
     if response.status_code == 200:
         logger.info(f"✅ Message {message_id} marked as read successfully!")
@@ -106,7 +111,7 @@ def send_whatsapp_message(id, phone_number_id, recipient_phone, message, enable_
     
     try:
         # Send the request
-        response = requests.post(url, headers=headers, json=payload, timeout=10)
+        response = session.post(url, headers=headers, json=payload, timeout=8)  # Reduced timeout
         
         # Check for successful response
         response.raise_for_status()
@@ -188,7 +193,7 @@ def send_media_message(phone_number_id, recipient_phone, media_type, media_id=No
     
     try:
         # Send the request
-        response = requests.post(url, headers=headers, json=payload, timeout=10)
+        response = session.post(url, headers=headers, json=payload, timeout=8)
         
         # Check for successful response
         response.raise_for_status()
@@ -310,7 +315,7 @@ def send_interactive_message(phone_number_id, recipient_phone, interactive_type,
     
     try:
         # Send the request
-        response = requests.post(url, headers=headers, json=payload, timeout=10)
+        response = session.post(url, headers=headers, json=payload, timeout=8)
         
         # DEBUG: Print response information after sending
         logger.debug("=== WhatsApp API Response Debug ===")
@@ -381,7 +386,7 @@ def send_typing_indicator(phone_number_id, message_id):
     
     try:
         # Send the request
-        response = requests.post(url, headers=headers, json=payload, timeout=10)
+        response = session.post(url, headers=headers, json=payload, timeout=8)
         
         # Check for successful response
         response.raise_for_status()

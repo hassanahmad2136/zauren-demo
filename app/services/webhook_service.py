@@ -11,6 +11,7 @@ import hashlib
 import requests
 import tempfile
 import os
+import threading
 from pathlib import Path
 from dotenv import load_dotenv
 from supabase import create_client, Client
@@ -269,8 +270,35 @@ def handle_cart_updates(user_session, response_data):
                 logger.error(f"❌ Error updating cart (remove): {e}")
 
 # Function to generate the response based on the message
+# Function to generate the response based on the message
 def generate_and_send_response(data, message, sender_id, sender_name, user_session, text):
+    from .fast_response import fast_response
+    
     message_hash = hashlib.md5(f"{sender_id}:{text}:{message.get('id')}".encode()).hexdigest()
+    
+    # Quick intent check for immediate response
+    quick_intent = fast_response.get_quick_intent(text.lower())
+    
+    # Send immediate acknowledgment if we can
+    if quick_intent and quick_intent in ['smalltalk', 'view_inventory', 'view_cart']:
+        immediate_response = fast_response.get_quick_response(quick_intent, sender_name)
+        fast_response.send_immediate_ack(
+            data.get("metadata", {}).get("phone_number_id"),
+            sender_id,
+            immediate_response,
+            message.get("id")
+        )
+        
+        # For simple cases, we can return early
+        if quick_intent == 'smalltalk' and len(text.split()) <= 3:
+            # Save the simple response and return
+            save_conversation_message(
+                session_id=user_session['session_id'],
+                user_id=user_session['user_id'],
+                content=immediate_response,
+                role="assistant"
+            )
+            return
 
     try:
         response_data = generate_llm_response(
@@ -441,7 +469,10 @@ def generate_and_send_response(data, message, sender_id, sender_name, user_sessi
             )
 
 # Main process function, calling all the helper functions
+# Main process function, calling all the helper functions
 def process_message_event(data):
+    from .fast_response import fast_response
+    
     message = data.get('message', {})
     sender = data.get('sender', {})
     sender_id = sender.get("id")
@@ -453,14 +484,38 @@ def process_message_event(data):
     # Log the message
     logger.info(f"📨 Message from {sender_id} ({sender_name}): {text}")
 
-    # Mark message as read
-    mark_message_read(data, message)
-    send_typing_indicator(data['metadata']['phone_number_id'],message['id'])
+    # Mark message as read asynchronously
+    def mark_read_async():
+        try:
+            mark_message_as_read(
+                phone_number_id=data.get("metadata", {}).get("phone_number_id"),
+                message_id=message.get("id")
+            )
+        except Exception as e:
+            logger.error(f"❌ Error marking message as read: {e}")
+    
+    threading.Thread(target=mark_read_async, daemon=True).start()
+    
+    # Send typing indicator asynchronously  
+    def send_typing_async():
+        try:
+            send_typing_indicator(data['metadata']['phone_number_id'], message['id'])
+        except Exception as e:
+            logger.error(f"❌ Error sending typing indicator: {e}")
+    
+    threading.Thread(target=send_typing_async, daemon=True).start()
+
     # Get or create the user session
     user_session = get_or_create_user_session(sender_id, sender_name)
 
-    # Save user message to history
-    save_user_message_to_history(user_session, text)
+    # Save user message to history asynchronously
+    def save_message_async():
+        try:
+            save_user_message_to_history(user_session, text)
+        except Exception as e:
+            logger.error(f"❌ Error saving message: {e}")
+    
+    threading.Thread(target=save_message_async, daemon=True).start()
 
     # Generate and send the response
     generate_and_send_response(data, message, sender_id, sender_name, user_session, text)
@@ -1229,17 +1284,19 @@ def update_cart_remove_products(user_session, response_data):
         # Process each product to remove
         for product in products:
             try:
-                # Get product name
+                # Get product details - handle various formats that might come from LLM
                 if isinstance(product, dict):
                     product_name = product.get('product', '')
+                    quantity_to_remove = int(product.get('quantity', 1))  # Default to removing 1
                 else:
                     product_name = str(product)
+                    quantity_to_remove = 1  # Default to removing 1
                 
                 if not product_name:
                     logger.warning("⚠️ Skipping removal of product with no name")
                     continue
                 
-                logger.info(f"🔄 Removing product: {product_name}")
+                logger.info(f"🔄 Removing {quantity_to_remove} quantity of product: {product_name}")
                 
                 # Check for 'all' to clear the cart
                 if product_name.lower() == 'all':
@@ -1247,20 +1304,36 @@ def update_cart_remove_products(user_session, response_data):
                     logger.info("🧹 Cleared all items from cart")
                     return
                 
-                # Keep track of number of items before removal
-                old_count = len(user_session['cart']['items'])
+                # Find the product in cart and handle quantity removal
+                item_found = False
+                items_to_keep = []
                 
-                # Remove the product
-                user_session['cart']['items'] = [
-                    item for item in user_session['cart']['items']
-                    if isinstance(item, dict) and item.get('name', '').lower() != product_name.lower()
-                ]
+                for item in user_session['cart']['items']:
+                    if not isinstance(item, dict):
+                        items_to_keep.append(item)
+                        continue
+                    
+                    # Check if this is the item to modify
+                    if item.get('name', '').lower() == product_name.lower():
+                        item_found = True
+                        current_quantity = int(item.get('quantity', 0))
+                        
+                        if current_quantity <= quantity_to_remove:
+                            # Remove item completely if requested quantity >= current quantity
+                            logger.info(f"✅ Removed entire item '{product_name}' (had {current_quantity}, requested {quantity_to_remove})")
+                        else:
+                            # Reduce quantity
+                            item['quantity'] = current_quantity - quantity_to_remove
+                            items_to_keep.append(item)
+                            logger.info(f"✅ Reduced '{product_name}' quantity from {current_quantity} to {item['quantity']}")
+                    else:
+                        # Keep items that don't match
+                        items_to_keep.append(item)
                 
-                # Log results
-                new_count = len(user_session['cart']['items'])
-                if new_count < old_count:
-                    logger.info(f"✅ Removed {old_count - new_count} items matching {product_name}")
-                else:
+                # Update cart items
+                user_session['cart']['items'] = items_to_keep
+                
+                if not item_found:
                     logger.warning(f"⚠️ No items found matching {product_name}")
             
             except Exception as e:

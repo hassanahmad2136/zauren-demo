@@ -30,6 +30,7 @@ def transcribe_audio(model_name: str, file_path: str):
         )
     
     # Print and return the transcription result
+    print(json.dumps(transcription, indent=2, default=str))
     return transcription
 
 # Example usage:

@@ -1,0 +1,10 @@
+Timestamp: 2025-09-08T21:50:57.750199
+User ID: unknown
+Intent: classify_add_to_cart
+User Message: can you also add 3 pieces of shalwar kameez
+LLM Response: {
+   "intent": "add_to_cart"
+}
+
+Parsed Response:
+intent: "add_to_cart"

@@ -1,0 +1,53 @@
+Timestamp: 2025-09-11T06:35:39.132418
+User ID: ...
+Intent: view_inventory
+User Message: Any blue kurta?
+LLM Response: {
+   "filter": {
+       "category_id": null,
+       "category_name": null,
+       "price_range": {
+           "min": null,
+           "max": null
+       },
+       "attributes": {
+           "color": [
+               "blue"
+           ],
+           "style": [],
+           "occasion": [],
+           "material": [],
+           "embroidery": []
+       },
+       "sort_by": null,
+       "query": "blue kurta"
+   },
+   "reply": "",
+   "personalized": false,
+   "show_categories": false,
+   "show_products": true,
+   "category_details": [],
+   "product_details": [
+       {
+           "product_id": "e6b0e0ca-b1ea-4a2f-adb4-2a1034d08987",
+           "reply": "This Blue Denim Kurta is a denim garment with side pockets."
+       },
+       {
+           "product_id": "553f48f2-a15d-4a82-bb99-495444791f4b",
+           "reply": "This Navy Blue Embroidered Kurta is a traditional clothing item made of high-quality materials, featuring intricate white thread embroidery."
+       },
+       {
+           "product_id": "2ac45e16-cc09-44b5-b386-2bd163ab29ec",
+           "reply": "Although not entirely blue, this Green Striped Kurta has vertical stripes and might be of interest to those looking for a blue-themed outfit."
+       }
+   ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": ["blue"], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": "blue kurta"}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "e6b0e0ca-b1ea-4a2f-adb4-2a1034d08987", "reply": "This Blue Denim Kurta is a denim garment with side pockets."}, {"product_id": "553f48f2-a15d-4a82-bb99-495444791f4b", "reply": "This Navy Blue Embroidered Kurta is a traditional clothing item made of high-quality materials, featuring intricate white thread embroidery."}, {"product_id": "2ac45e16-cc09-44b5-b386-2bd163ab29ec", "reply": "Although not entirely blue, this Green Striped Kurta has vertical stripes and might be of interest to those looking for a blue-themed outfit."}]

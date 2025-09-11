@@ -125,11 +125,345 @@ def search_products(search_term: str) -> Dict[str, Any]:
     try:
         supabase = get_supabase_client()
         
-        # PostgreSQL ILIKE for case-insensitive search
+        # PostgreSQL ILIKE for case-insensitive search with fuzzy matching
+        # Search in name, description, color, material, style, occasion
         response = supabase.table('products')\
             .select('*, categories(id, name)')\
-            .or_(f'name.ilike.%{search_term}%,description.ilike.%{search_term}%')\
+            .or_(f'name.ilike.%{search_term}%,description.ilike.%{search_term}%,color.ilike.%{search_term}%,material.ilike.%{search_term}%,style.ilike.%{search_term}%,occasion.ilike.%{search_term}%')\
+            .limit(20)\
             .execute()
+        
+        return {
+            'status': 'success',
+            'data': response.data,
+            'error': None
+        }
+    except Exception as e:
+        return {
+            'status': 'error',
+            'data': None,
+            'error': str(e)
+        }
+
+def advanced_product_search(filters: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Advanced product search with multiple filters
+    
+    Args:
+        filters: Dictionary containing search criteria:
+            - search_terms: List of terms to search for
+            - colors: List of colors to filter by
+            - categories: List of category IDs
+            - price_range: Dict with 'min' and 'max' price
+            - materials: List of materials
+            - occasions: List of occasions
+            - limit: Maximum number of results (default 20)
+    
+    Returns:
+        Dict with status, data, and error information
+    """
+    try:
+        supabase = get_supabase_client()
+        
+        # Start building the query
+        query = supabase.table('products').select('*, categories(id, name)')
+        
+        # Search terms - check name, description, and attributes
+        search_terms = filters.get('search_terms', [])
+        if search_terms:
+            search_conditions = []
+            for term in search_terms:
+                search_conditions.extend([
+                    f'name.ilike.%{term}%',
+                    f'description.ilike.%{term}%',
+                    f'color.ilike.%{term}%',
+                    f'material.ilike.%{term}%',
+                    f'style.ilike.%{term}%',
+                    f'occasion.ilike.%{term}%'
+                ])
+            
+            if search_conditions:
+                query = query.or_(','.join(search_conditions))
+        
+        # Color filter
+        colors = filters.get('colors', [])
+        if colors:
+            color_conditions = [f'color.ilike.%{color}%' for color in colors]
+            query = query.or_(','.join(color_conditions))
+        
+        # Category filter
+        categories = filters.get('categories', [])
+        if categories:
+            query = query.in_('category_id', categories)
+        
+        # Price range filter
+        price_range = filters.get('price_range', {})
+        if price_range.get('min') is not None:
+            query = query.gte('fixed_price', price_range['min'])
+        if price_range.get('max') is not None:
+            query = query.lte('fixed_price', price_range['max'])
+        
+        # Material filter
+        materials = filters.get('materials', [])
+        if materials:
+            material_conditions = [f'material.ilike.%{material}%' for material in materials]
+            query = query.or_(','.join(material_conditions))
+        
+        # Occasion filter
+        occasions = filters.get('occasions', [])
+        if occasions:
+            occasion_conditions = [f'occasion.ilike.%{occasion}%' for occasion in occasions]
+            query = query.or_(','.join(occasion_conditions))
+        
+        # Limit results
+        limit = filters.get('limit', 20)
+        query = query.limit(limit)
+        
+        # Execute query
+        response = query.execute()
+        
+        return {
+            'status': 'success',
+            'data': response.data,
+            'error': None
+        }
+    except Exception as e:
+        return {
+            'status': 'error',
+            'data': None,
+            'error': str(e)
+        }
+
+def strict_product_search(search_terms: List[str], exact_match: bool = True) -> Dict[str, Any]:
+    """
+    Strict product search that only returns exact matches
+    
+    Args:
+        search_terms: List of terms that must match exactly
+        exact_match: If True, uses exact matching; if False, uses fuzzy matching
+        
+    Returns:
+        Dict with status, data, and error information
+    """
+    try:
+        supabase = get_supabase_client()
+        
+        if not search_terms:
+            return {
+                'status': 'success',
+                'data': [],
+                'error': None
+            }
+        
+        # Start with all products
+        query = supabase.table('products').select('*, categories(id, name)')
+        
+        if exact_match:
+            # Enhanced strict matching with special color validation
+            conditions = []
+            for term in search_terms:
+                term_lower = term.lower()
+                
+                # Special strict color matching with shade support
+                if term_lower == 'blue':
+                    # Include all legitimate blue shades
+                    blue_variations = ['blue', 'navy', 'royal blue', 'sky blue', 'light blue', 'dark blue', 'midnight blue']
+                    blue_conditions = []
+                    for variation in blue_variations:
+                        blue_conditions.extend([
+                            f'name.ilike.*{variation}*',
+                            f'color.ilike.*{variation}*'
+                        ])
+                    conditions.append(f"({','.join(blue_conditions)})")
+                    
+                elif term_lower == 'green':
+                    # Include all legitimate green shades
+                    green_variations = ['green', 'olive', 'emerald', 'forest green', 'mint green', 'dark green', 'light green']
+                    green_conditions = []
+                    for variation in green_variations:
+                        green_conditions.extend([
+                            f'name.ilike.*{variation}*',
+                            f'color.ilike.*{variation}*'
+                        ])
+                    conditions.append(f"({','.join(green_conditions)})")
+                    
+                elif term_lower == 'red':
+                    # Include all legitimate red shades
+                    red_variations = ['red', 'maroon', 'crimson', 'burgundy', 'wine red', 'cherry red', 'deep red']
+                    red_conditions = []
+                    for variation in red_variations:
+                        red_conditions.extend([
+                            f'name.ilike.*{variation}*',
+                            f'color.ilike.*{variation}*'
+                        ])
+                    conditions.append(f"({','.join(red_conditions)})")
+                    
+                elif term_lower == 'white':
+                    # Include all legitimate white shades
+                    white_variations = ['white', 'ivory', 'cream', 'off-white', 'pearl white', 'bone white']
+                    white_conditions = []
+                    for variation in white_variations:
+                        white_conditions.extend([
+                            f'name.ilike.*{variation}*',
+                            f'color.ilike.*{variation}*'
+                        ])
+                    conditions.append(f"({','.join(white_conditions)})")
+                    
+                elif term_lower == 'black':
+                    # Include all legitimate black shades
+                    black_variations = ['black', 'charcoal', 'jet black', 'midnight black', 'coal black']
+                    black_conditions = []
+                    for variation in black_variations:
+                        black_conditions.extend([
+                            f'name.ilike.*{variation}*',
+                            f'color.ilike.*{variation}*'
+                        ])
+                    conditions.append(f"({','.join(black_conditions)})")
+                    
+                elif term_lower in ['brown', 'beige']:
+                    # Include all legitimate brown shades
+                    brown_variations = ['brown', 'beige', 'tan', 'khaki', 'chocolate', 'coffee brown']
+                    brown_conditions = []
+                    for variation in brown_variations:
+                        brown_conditions.extend([
+                            f'name.ilike.*{variation}*',
+                            f'color.ilike.*{variation}*'
+                        ])
+                    conditions.append(f"({','.join(brown_conditions)})")
+                    
+                elif term_lower in ['grey', 'gray']:
+                    # Include all legitimate grey shades
+                    grey_variations = ['grey', 'gray', 'silver', 'charcoal grey', 'light grey', 'dark grey']
+                    grey_conditions = []
+                    for variation in grey_variations:
+                        grey_conditions.extend([
+                            f'name.ilike.*{variation}*',
+                            f'color.ilike.*{variation}*'
+                        ])
+                    conditions.append(f"({','.join(grey_conditions)})")
+                    
+                elif term_lower in ['navy', 'maroon', 'olive']:
+                    # Handle specific shade requests
+                    conditions.extend([
+                        f'name.ilike.*{term}*',
+                        f'color.ilike.*{term}*',
+                        f'description.ilike.*{term}*'
+                    ])
+                    
+                elif term_lower in ['cotton', 'silk', 'velvet', 'linen', 'wool', 'denim', 'leather']:
+                    # For materials, require exact match
+                    conditions.append(f'material.ilike.{term}')
+                    conditions.append(f'description.ilike.*{term}*')
+                    
+                elif term_lower in ['embroidered', 'embroidery', 'plain']:
+                    # For styles, check both name and style field
+                    conditions.append(f'name.ilike.*{term}*')
+                    conditions.append(f'style.ilike.*{term}*')
+                    conditions.append(f'description.ilike.*{term}*')
+                    
+                elif term_lower in ['formal', 'casual', 'wedding']:
+                    # For occasions, require exact match
+                    conditions.append(f'occasion.ilike.{term}')
+                    conditions.append(f'description.ilike.*{term}*')
+                    
+                else:
+                    # General terms
+                    conditions.extend([
+                        f'name.ilike.*{term}*',
+                        f'description.ilike.*{term}*'
+                    ])
+            
+            if conditions:
+                query = query.or_(','.join(conditions))
+        else:
+            # Use fuzzy matching
+            conditions = []
+            for term in search_terms:
+                conditions.extend([
+                    f'name.ilike.%{term}%',
+                    f'description.ilike.%{term}%',
+                    f'color.ilike.%{term}%',
+                    f'material.ilike.%{term}%',
+                    f'style.ilike.%{term}%',
+                    f'occasion.ilike.%{term}%'
+                ])
+            
+            if conditions:
+                query = query.or_(','.join(conditions))
+        
+        # Limit results
+        query = query.limit(15)
+        
+        # Execute query
+        response = query.execute()
+        
+        # If exact_match is True, filter results more strictly
+        if exact_match and response.data:
+            filtered_results = []
+            for product in response.data:
+                product_matches = True  # Start with True and validate each requirement
+                
+                for term in search_terms:
+                    term_lower = term.lower()
+                    product_name = product.get('name', '').lower()
+                    product_desc = product.get('description', '').lower()
+                    product_color = product.get('color', '').lower()
+                    product_material = product.get('material', '').lower()
+                    product_style = product.get('style', '').lower()
+                    product_occasion = product.get('occasion', '').lower()
+                    
+                    term_matched = False
+                    
+                    # Strict color validation
+                    if term_lower in ['blue', 'green', 'red', 'black', 'white', 'navy', 'maroon', 'grey', 'gray', 'brown', 'beige']:
+                        # Color must be primary (in name) and not mixed with other colors
+                        if term_lower == 'blue':
+                            # Special validation for blue - reject if mixed with other colors
+                            if ('blue' in product_name and 
+                                not any(other_color in product_name for other_color in ['green', 'teal', 'navy', 'purple', 'olive'] if other_color != 'blue')):
+                                term_matched = True
+                            elif (product_color == 'blue' and 
+                                  not any(other_color in product_desc[:100] for other_color in ['green', 'teal', 'hint', 'accent', 'touch'])):
+                                term_matched = True
+                        else:
+                            # For other colors, check if it's the primary color
+                            if term_lower in product_name or product_color == term_lower:
+                                term_matched = True
+                    
+                    # Strict material validation
+                    elif term_lower in ['cotton', 'silk', 'velvet', 'linen', 'wool', 'denim', 'leather']:
+                        if product_material == term_lower or term_lower in product_desc:
+                            term_matched = True
+                    
+                    # Strict style validation
+                    elif term_lower in ['embroidered', 'embroidery']:
+                        if any(embr_term in product_name or embr_term in product_desc for embr_term in ['embroidered', 'embroidery']):
+                            term_matched = True
+                    elif term_lower == 'plain':
+                        # Plain means NO embroidery or patterns
+                        if not any(pattern_term in product_name or pattern_term in product_desc 
+                                 for pattern_term in ['embroidered', 'embroidery', 'pattern', 'printed', 'design']):
+                            term_matched = True
+                    
+                    # Strict occasion validation
+                    elif term_lower in ['formal', 'casual', 'wedding']:
+                        if product_occasion == term_lower or term_lower in product_desc:
+                            term_matched = True
+                    
+                    # General term matching
+                    else:
+                        if term_lower in product_name or term_lower in product_desc:
+                            term_matched = True
+                    
+                    # If any term doesn't match, exclude this product
+                    if not term_matched:
+                        product_matches = False
+                        break
+                
+                if product_matches:
+                    filtered_results.append(product)
+            
+            response.data = filtered_results
         
         return {
             'status': 'success',

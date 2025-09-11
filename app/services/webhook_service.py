@@ -8,6 +8,7 @@ import logging
 import datetime
 import time
 import hashlib
+from typing import Dict, Any, List, Tuple
 import requests
 import tempfile
 import os
@@ -15,6 +16,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from supabase import create_client, Client
 import uuid
+
+from app.utils.match import find_matching_products, safe_type_conversion
 
 from .LLM import (
     classify_intent,
@@ -253,22 +256,63 @@ def save_user_message_to_history(user_session, text):
         )
 
 # Function to handle cart updates based on the response data
-def handle_cart_updates(user_session, response_data):
-    if 'products' in response_data:
-        if response_data.get('intent') == 'add_to_cart':
-            try:
-                update_cart_add_products(user_session, response_data)
-                update_user_session(user_session['user_id'], {'cart': user_session['cart']})
-            except Exception as e:
-                logger.error(f"❌ Error updating cart (add): {e}")
-        elif response_data.get('intent') == 'remove_from_cart':
-            try:
-                update_cart_remove_products(user_session, response_data)
-                update_user_session(user_session['user_id'], {'cart': user_session['cart']})
-            except Exception as e:
-                logger.error(f"❌ Error updating cart (remove): {e}")
-
-# Function to generate the response based on the message
+def handle_cart_updates(user_session: Dict, response_data: Dict) -> Dict:
+    """
+    Enhanced cart update handler with proper status tracking and user feedback
+    """
+    update_status = {
+        "success": False,
+        "message": "",
+        "cart_changed": False,
+        "errors": []
+    }
+    
+    try:
+        intent = response_data.get('intent', '').lower()
+        
+        # Only process if there are products in the response
+        if 'products' in response_data or response_data.get('NEED'):
+            
+            if intent == 'add_to_cart':
+                try:
+                    # Assuming you have this function implemented
+                    status = update_cart_add_products(user_session, response_data)
+                    update_status.update(status)
+                    
+                    if status.get("cart_updated"):
+                        update_user_session(user_session['user_id'], {'cart': user_session['cart']})
+                        update_status["cart_changed"] = True
+                        
+                except Exception as e:
+                    error_msg = f"Error adding to cart: {e}"
+                    logger.error(f"❌ {error_msg}")
+                    update_status["errors"].append(error_msg)
+                    
+            elif intent == 'remove_from_cart':
+                try:
+                    status = update_cart_remove_products(user_session, response_data)
+                    update_status.update(status)
+                    
+                    if status.get("cart_updated"):
+                        update_user_session(user_session['user_id'], {'cart': user_session['cart']})
+                        update_status["cart_changed"] = True
+                        
+                except Exception as e:
+                    error_msg = f"Error removing from cart: {e}"
+                    logger.error(f"❌ {error_msg}")
+                    update_status["errors"].append(error_msg)
+        
+        # Set overall success
+        update_status["success"] = update_status["cart_changed"] and len(update_status["errors"]) == 0
+        
+        return update_status
+        
+    except Exception as e:
+        logger.error(f"❌ Critical error in handle_cart_updates: {e}")
+        update_status["errors"].append(f"System error: {str(e)}")
+        return update_status
+    
+    # Function to generate the response based on the message
 def generate_and_send_response(data, message, sender_id, sender_name, user_session, text):
     message_hash = hashlib.md5(f"{sender_id}:{text}:{message.get('id')}".encode()).hexdigest()
 
@@ -323,20 +367,25 @@ def generate_and_send_response(data, message, sender_id, sender_name, user_sessi
                         
                     
                     current_id += f"-1"
-                    # Generate unique ID for different buttons
-                    current_id_next = f"{current_id}-next"
-                    current_id_addtocart = f"{current_id}-addtocart"
-                    current_id_details = f"{current_id}-details"
-                    # current_id_previous = f"{current_id}-previous"
+                    # Generate unique ID for different buttons (consistent with secondary_id pattern)
+                    total_products = len(response_data.get("product_details", []))
+                    # If only one product, Next button points to itself (circular)
+                    next_product_index = 2 if total_products > 1 else 1
+                    current_id_next = f"{unique_id}-{next_product_index}-next"
+                    current_id_addtocart = f"{unique_id}-1-addtocart"  # First "Add to Cart" is for product 1
+                    current_id_details = f"{unique_id}-1-details"  # First "Details" is for product 1
 
                     for i in range(1, len(response_data.get("product_details")) + 1):
                         # Append the order number to the unique ID
                         uniqueid = unique_id + f"-{i}"
                         supabase_client = create_client(os.getenv("INVENTORY_SUPABASE_URL"), os.getenv("INVENTORY_SUPABASE_KEY"))
                         
+                        # Calculate next product index (wrap around to first if last item)
+                        next_index = i + 1 if i < len(response_data.get("product_details")) else 1
+                        
                         response = supabase_client.table('interactive_messages').insert({
                             'id': uniqueid,
-                            'secondary_id': f"{unique_id}-{i-1}-next",
+                            'secondary_id': f"{unique_id}-{next_index}-next",
                             'media_id': create_client(os.getenv("INVENTORY_SUPABASE_URL"), os.getenv("INVENTORY_SUPABASE_KEY")).table("products").select("image_path").eq("id", response_data.get("product_details")[i-1]['product_id']).execute().data[0]["image_path"],
                             'body': f"{response_data.get("product_details")[i-1]['reply']}",
                             'footer': f"Navigate with the buttons below",
@@ -375,10 +424,13 @@ def generate_and_send_response(data, message, sender_id, sender_name, user_sessi
                     # Append message order number
                     current_id += f"-1"
                     
-                    # Generate unique ID for different buttons
-                    current_id_next = f"{current_id}-next"
-                    current_id_show_products = f"{current_id}-showproducts"
-                    current_id_explore = f"{current_id}-explore"
+                    # Generate unique ID for different buttons (consistent with secondary_id pattern)
+                    total_categories = len(response_data.get("category_details", []))
+                    # If only one category, Next button points to itself (circular)
+                    next_category_index = 2 if total_categories > 1 else 1
+                    current_id_next = f"{unique_id}-{next_category_index}-next"
+                    current_id_show_products = f"{unique_id}-1-showproducts"  # First "Show Products" is for category 1
+                    current_id_explore = f"{unique_id}-1-explore"  # First "Explore" is for category 1
                     
                     # Save category data to database for retrieval in button handlers
                     for i in range(1, len(response_data.get("category_details", [])) + 1):
@@ -386,9 +438,12 @@ def generate_and_send_response(data, message, sender_id, sender_name, user_sessi
                         uniqueid = unique_id + f"-{i}"
                         supabase_client = create_client(os.getenv("INVENTORY_SUPABASE_URL"), os.getenv("INVENTORY_SUPABASE_KEY"))
                         
+                        # Calculate next category index (wrap around to first if last item)
+                        next_category_index = i + 1 if i < len(response_data.get("category_details", [])) else 1
+                        
                         response = supabase_client.table('interactive_messages').insert({
                             'id': uniqueid,
-                            'secondary_id': f"{unique_id}-{i-1}-next",
+                            'secondary_id': f"{unique_id}-{next_category_index}-next",
                             'media_id': create_client(os.getenv("INVENTORY_SUPABASE_URL"), os.getenv("INVENTORY_SUPABASE_KEY")).table("categories").select("image_path").eq("id", response_data.get("category_details")[i-1]['category_id']).execute().data[0]["image_path"],
                             'body': f"{response_data.get('category_details')[i-1]['reply']}",
                             'footer': f"Navigate with the buttons below",
@@ -996,7 +1051,18 @@ def process_button_event(button_payload, sender_id, phone_number_id, message, na
 
 
 def update_cart_add_products(user_session, response_data):
-    """Helper function to add products to cart from LLM response"""
+    """Helper function to add products to cart from LLM response - MODIFIED to return status"""
+    
+    # Initialize status tracking
+    operation_status = {
+        "success": False,
+        "added_items": [],
+        "errors": [],
+        "needs_clarification": False,
+        "user_message": "",
+        "cart_updated": False
+    }
+    
     try:
         # Import the get_product_details function (add this at the top of your file)
         from .db_inventory import get_product_details
@@ -1004,13 +1070,16 @@ def update_cart_add_products(user_session, response_data):
         # Check if the response contains a "NEED" key with non-empty value
         if "NEED" in response_data and response_data["NEED"]:
             logger.info(f"🔄 LLM needs more information: {response_data.get('NEED')}")
-            return
+            operation_status["needs_clarification"] = True
+            operation_status["user_message"] = response_data.get("reply", "Please provide more details.")
+            return operation_status
         
         # Get the products from the response
         products = response_data.get('products', [])
         if not products:
             logger.warning("⚠️ No products found in response data")
-            return
+            operation_status["user_message"] = response_data.get("reply", "No products specified for addition.")
+            return operation_status
             
         logger.info(f"🔄 Processing {len(products)} products for cart addition")
         
@@ -1041,10 +1110,12 @@ def update_cart_add_products(user_session, response_data):
                     variant = ''
                 else:
                     logger.warning(f"⚠️ Unexpected product format: {type(product)}")
+                    operation_status["errors"].append(f"Invalid product format: {type(product)}")
                     continue
                 
                 if not product_name:
                     logger.warning("⚠️ Skipping product with no name")
+                    operation_status["errors"].append("Product name missing")
                     continue
                 
                 logger.info(f"🔄 Adding product: {product_name}, quantity: {quantity}")
@@ -1113,6 +1184,13 @@ def update_cart_add_products(user_session, response_data):
                         new_item['variant'] = variant
                         
                     user_session['cart']['items'].append(new_item)
+                    operation_status["added_items"].append({
+                        "product_name": product_name,
+                        "quantity": quantity,
+                        "price": price_to_use,
+                        "action": "added_placeholder"
+                    })
+                    operation_status["cart_updated"] = True
                     logger.info(f"✅ Added placeholder product to cart: {product_name}, price: {price_to_use}")
                     continue
                     
@@ -1150,7 +1228,16 @@ def update_cart_add_products(user_session, response_data):
                 
                 if existing_product:
                     # Update quantity of existing product
-                    existing_product['quantity'] = int(existing_product.get('quantity', 0)) + quantity
+                    old_quantity = int(existing_product.get('quantity', 0))
+                    existing_product['quantity'] = old_quantity + quantity
+                    operation_status["added_items"].append({
+                        "product_name": product_name,
+                        "quantity": quantity,
+                        "price": price_to_use,
+                        "action": "updated_quantity",
+                        "total_quantity": existing_product['quantity']
+                    })
+                    operation_status["cart_updated"] = True
                     logger.info(f"✅ Updated quantity for {product_name} to {existing_product['quantity']}")
                 else:
                     # Add new product to cart
@@ -1176,113 +1263,199 @@ def update_cart_add_products(user_session, response_data):
                         new_item['category'] = found_product['categories'].get('name', '')
                         
                     user_session['cart']['items'].append(new_item)
+                    operation_status["added_items"].append({
+                        "product_name": product_name,
+                        "quantity": quantity,
+                        "price": price_to_use,
+                        "action": "added_new"
+                    })
+                    operation_status["cart_updated"] = True
                     logger.info(f"✅ Added new product to cart: {product_name}, price: {price_to_use}")
             
             except Exception as e:
-                logger.error(f"❌ Error processing product {product}: {str(e)}")
+                error_msg = f"Error processing product {product}: {str(e)}"
+                logger.error(f"❌ {error_msg}")
+                operation_status["errors"].append(error_msg)
         
-        # Calculate cart total
-        total = 0
-        for item in user_session['cart']['items']:
-            if isinstance(item, dict):
-                price = float(item.get('price', 0))
-                quantity = int(item.get('quantity', 0))
-                total += price * quantity
+        # Calculate cart total if cart was updated
+        if operation_status["cart_updated"]:
+            total = 0
+            for item in user_session['cart']['items']:
+                if isinstance(item, dict):
+                    price = float(item.get('price', 0))
+                    quantity = int(item.get('quantity', 0))
+                    total += price * quantity
+            
+            user_session['cart']['total'] = total
+            logger.info(f"✅ Cart updated with {len(user_session['cart']['items'])} items, total: {total}")
+            
+            # Debug - log the entire cart
+            logger.info(f"📦 Current cart state: {json.dumps(user_session['cart'])}")
         
-        user_session['cart']['total'] = total
-        logger.info(f"✅ Cart updated with {len(user_session['cart']['items'])} items, total: {total}")
+        # Set success status
+        operation_status["success"] = len(operation_status["added_items"]) > 0
+        operation_status["user_message"] = response_data.get("reply", "Products added to cart successfully.")
         
-        # Debug - log the entire cart
-        logger.info(f"📦 Current cart state: {json.dumps(user_session['cart'])}")
+        return operation_status
         
     except Exception as e:
         logger.error(f"❌ Error in update_cart_add_products: {str(e)}")
         # Even if error, try to return a valid cart
         if not isinstance(user_session.get('cart'), dict):
             user_session['cart'] = {'items': [], 'total': 0}
+        
+        operation_status["errors"].append(f"System error: {str(e)}")
+        return operation_status
 
 
-def update_cart_remove_products(user_session, response_data):
-    """Helper function to remove products from cart based on LLM response"""
+def update_cart_remove_products(user_session: Dict, response_data: Dict) -> Dict:
+    """
+    Enhanced function to remove products from cart based on LLM response
+    Returns status information about the operation
+    """
+    operation_status = {
+        "success": False,
+        "removed_items": [],
+        "errors": [],
+        "needs_clarification": False,
+        "user_message": "",
+        "cart_updated": False
+    }
+    
     try:
-        # Check if the response contains a "NEED" key with non-empty value
+        # Check if LLM needs more information
         if "NEED" in response_data and response_data["NEED"]:
             logger.info(f"🔄 LLM needs more information: {response_data.get('NEED')}")
-            return
-        
-        # Get the products from the response
-        products = response_data.get('products', [])
-        if not products:
-            logger.warning("⚠️ No products found in response data for removal")
-            return
-            
-        logger.info(f"🔄 Processing {len(products)} products for cart removal")
-        
+            operation_status["needs_clarification"] = True
+            operation_status["user_message"] = response_data.get("reply", "Please provide more details.")
+            return operation_status
+
         # Initialize cart if needed
         if not isinstance(user_session.get('cart'), dict):
             user_session['cart'] = {'items': [], 'total': 0}
-            return
         if not isinstance(user_session['cart'].get('items'), list):
             user_session['cart']['items'] = []
-            return
-        
-        # Process each product to remove
-        for product in products:
-            try:
-                # Get product name
-                if isinstance(product, dict):
-                    product_name = product.get('product', '')
-                else:
-                    product_name = str(product)
-                
-                if not product_name:
-                    logger.warning("⚠️ Skipping removal of product with no name")
-                    continue
-                
-                logger.info(f"🔄 Removing product: {product_name}")
-                
-                # Check for 'all' to clear the cart
-                if product_name.lower() == 'all':
-                    user_session['cart'] = {'items': [], 'total': 0}
-                    logger.info("🧹 Cleared all items from cart")
-                    return
-                
-                # Keep track of number of items before removal
-                old_count = len(user_session['cart']['items'])
-                
-                # Remove the product
-                user_session['cart']['items'] = [
-                    item for item in user_session['cart']['items']
-                    if isinstance(item, dict) and item.get('name', '').lower() != product_name.lower()
-                ]
-                
-                # Log results
-                new_count = len(user_session['cart']['items'])
-                if new_count < old_count:
-                    logger.info(f"✅ Removed {old_count - new_count} items matching {product_name}")
-                else:
-                    logger.warning(f"⚠️ No items found matching {product_name}")
-            
-            except Exception as e:
-                logger.error(f"❌ Error removing product {product}: {str(e)}")
-        
-        # Calculate cart total
-        total = 0
-        for item in user_session['cart']['items']:
-            if isinstance(item, dict):
-                price = float(item.get('price', 0))
-                quantity = int(item.get('quantity', 0))
-                total += price * quantity
-        
-        user_session['cart']['total'] = total
-        logger.info(f"✅ Cart updated after removal, {len(user_session['cart']['items'])} items remain, total: {total}")
-        
-        # Debug - log the entire cart
-        logger.info(f"📦 Current cart state: {json.dumps(user_session['cart'])}")
-        
-    except Exception as e:
-        logger.error(f"❌ Error in update_cart_remove_products: {e}")
 
+        # Get products to remove from response
+        products_to_remove = response_data.get('products', [])
+        if not products_to_remove:
+            logger.warning("⚠️ No products specified for removal")
+            operation_status["user_message"] = response_data.get("reply", "No products specified for removal.")
+            return operation_status
+
+        logger.info(f"🔄 Processing {len(products_to_remove)} products for removal")
+        
+        # Process each product removal
+        for product_spec in products_to_remove:
+            try:
+                # Extract product information with validation
+                if isinstance(product_spec, dict):
+                    product_name = product_spec.get('product_name', product_spec.get('product', ''))
+                    product_id = product_spec.get('product_id')
+                    quantity_to_remove = product_spec.get('quantity_to_remove', 'all')
+                else:
+                    product_name = str(product_spec)
+                    product_id = None
+                    quantity_to_remove = 'all'
+
+                if not product_name:
+                    operation_status["errors"].append("Product name missing")
+                    continue
+
+                logger.info(f"🔄 Processing removal: {product_name} (qty: {quantity_to_remove})")
+
+                # Handle special case: clear all cart
+                if product_name.upper() == 'CLEAR_ALL' or product_name.lower() in ['all', 'everything']:
+                    removed_count = len(user_session['cart']['items'])
+                    user_session['cart'] = {'items': [], 'total': 0}
+                    operation_status["removed_items"].append({
+                        "product_name": "All items",
+                        "quantity": removed_count,
+                        "action": "cleared_cart"
+                    })
+                    operation_status["cart_updated"] = True
+                    logger.info("🧹 Cleared entire cart")
+                    continue
+
+                # Find matching products in cart
+                matching_items = find_matching_products(product_name, user_session['cart']['items'])
+                
+                if not matching_items:
+                    error_msg = f"Product '{product_name}' not found in cart"
+                    operation_status["errors"].append(error_msg)
+                    logger.warning(f"⚠️ {error_msg}")
+                    continue
+
+                # Use the best match (highest similarity score)
+                best_match, similarity = matching_items[0]
+                
+                # Handle quantity removal
+                current_quantity = safe_type_conversion(best_match.get('quantity', 0), int, 0)
+                
+                if quantity_to_remove == 'all':
+                    quantity_to_remove = current_quantity
+                else:
+                    quantity_to_remove = safe_type_conversion(quantity_to_remove, int, 0)
+
+                if quantity_to_remove <= 0:
+                    operation_status["errors"].append(f"Invalid quantity for {product_name}")
+                    continue
+
+                if quantity_to_remove >= current_quantity:
+                    # Remove entire item
+                    user_session['cart']['items'] = [
+                        item for item in user_session['cart']['items'] 
+                        if item is not best_match
+                    ]
+                    operation_status["removed_items"].append({
+                        "product_name": best_match.get('name', product_name),
+                        "quantity": current_quantity,
+                        "action": "removed_completely"
+                    })
+                    logger.info(f"✅ Completely removed {best_match.get('name')} (qty: {current_quantity})")
+                else:
+                    # Reduce quantity
+                    best_match['quantity'] = current_quantity - quantity_to_remove
+                    operation_status["removed_items"].append({
+                        "product_name": best_match.get('name', product_name),
+                        "quantity": quantity_to_remove,
+                        "action": "reduced_quantity",
+                        "remaining": best_match['quantity']
+                    })
+                    logger.info(f"✅ Reduced {best_match.get('name')} quantity by {quantity_to_remove} (remaining: {best_match['quantity']})")
+
+                operation_status["cart_updated"] = True
+
+            except Exception as e:
+                error_msg = f"Error processing {product_name}: {str(e)}"
+                operation_status["errors"].append(error_msg)
+                logger.error(f"❌ {error_msg}")
+
+        # Recalculate cart total
+        if operation_status["cart_updated"]:
+            total = 0
+            for item in user_session['cart']['items']:
+                if isinstance(item, dict):
+                    price = safe_type_conversion(item.get('price', 0), float, 0)
+                    quantity = safe_type_conversion(item.get('quantity', 0), int, 0)
+                    total += price * quantity
+
+            user_session['cart']['total'] = total
+            logger.info(f"✅ Cart updated: {len(user_session['cart']['items'])} items, total: ${total:.2f}")
+
+        # Set overall success status
+        operation_status["success"] = len(operation_status["removed_items"]) > 0
+        operation_status["user_message"] = response_data.get("reply", "Cart update completed.")
+        
+        # Log final cart state
+        logger.info(f"📦 Final cart: {json.dumps(user_session['cart'], indent=2)}")
+        
+        return operation_status
+
+    except Exception as e:
+        logger.error(f"❌ Critical error in update_cart_remove_products: {e}")
+        operation_status["errors"].append(f"System error: {str(e)}")
+        return operation_status
 
 def process_generic_event(data):
     """Handle other event types."""

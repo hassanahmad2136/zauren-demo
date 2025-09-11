@@ -12,13 +12,16 @@ import time
 import threading
 from typing import List, Dict, Any
 from .llm_core import safe_api_call, prepare_messages
-
+import logging
+logger = logging.getLogger(__name__)
 # Import from shopping modules
 from .llm_shopping_browse import (
     handle_product_info_impl,
     handle_view_inventory_impl,
     handle_NOT_SURE_impl
 )
+# Import optimized product search
+from .llm_product_search import handle_product_info_optimized
 from .llm_shopping_cart_add import (
     handle_add_to_cart_impl
 )
@@ -310,14 +313,25 @@ def handle_add_to_cart(message, cart_json, inventory_json, conversation_history,
     return response
 
 def handle_remove_from_cart(message, cart_json, conversation_history, user_name=None):
-    """Handle requests to remove products from the cart"""
-    response = handle_remove_from_cart_impl(message, cart_json, conversation_history, user_name)
-    log_response(user_name, "remove_from_cart", message, response)
-    return response
+    """Handle requests to remove products from the cart with error handling"""
+    try:
+        response = handle_remove_from_cart_impl(message, cart_json, conversation_history, user_name)
+        log_response(user_name, "remove_from_cart", message, response)
+        return response
+    except Exception as e:
+        logger.error(f"❌ Error in handle_remove_from_cart: {e}")
+        return json.dumps({
+            "intent": "remove_from_cart",
+            "reply": f"Sorry {user_name}, I had trouble processing your request. Please try again.",
+            "NEED": ["retry"],
+            "error": str(e)
+        })
+
 
 def handle_product_info(message, inventory, conversation_history, user_name=None):
-    """Handle requests for product information"""
-    response = handle_product_info_impl(message, inventory, conversation_history, user_name)
+    """Handle requests for product information using optimized search"""
+    # Use optimized approach that doesn't require full inventory
+    response = handle_product_info_optimized(message, conversation_history, user_name)
     log_response(user_name, "product_info", message, response)
     return response
 

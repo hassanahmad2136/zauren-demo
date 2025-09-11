@@ -1,0 +1,10 @@
+Timestamp: 2025-09-11T06:33:29.980750
+User ID: unknown
+Intent: classify_view_inventory
+User Message: Any shoes for formal occasion
+LLM Response: {
+   "intent": "view_inventory"
+}
+
+Parsed Response:
+intent: "view_inventory"

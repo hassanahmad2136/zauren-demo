@@ -1,0 +1,51 @@
+Timestamp: 2025-09-11T06:33:31.978311
+User ID: ...
+Intent: view_inventory
+User Message: Any shoes for formal occasion
+LLM Response: {
+   "filter": {
+       "category_id": null,
+       "category_name": null,
+       "price_range": {
+           "min": null,
+           "max": null
+       },
+       "attributes": {
+           "color": [],
+           "style": [],
+           "occasion": ["formal"],
+           "material": [],
+           "embroidery": []
+       },
+       "sort_by": null,
+       "query": "shoes for formal occasion"
+   },
+   "reply": "",
+   "personalized": false,
+   "show_categories": false,
+   "show_products": true,
+   "category_details": [],
+   "product_details": [
+       {
+           "product_id": "69a7d9ac-2756-4c83-94dd-08972c5309f1",
+           "reply": "This Brown Leather Khussa is perfect for formal occasions."
+       },
+       {
+           "product_id": "6936e121-5ed5-44c1-82f7-4a5857184acc",
+           "reply": "This Maroon Embroidered Khussa is a great choice for formal events."
+       },
+       {
+           "product_id": "7421d9b3-c3c8-4db8-99df-c55149df616e",
+           "reply": "This Black Leather Khussa is suitable for formal wear."
+       }
+   ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": [], "style": [], "occasion": ["formal"], "material": [], "embroidery": []}, "sort_by": null, "query": "shoes for formal occasion"}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "69a7d9ac-2756-4c83-94dd-08972c5309f1", "reply": "This Brown Leather Khussa is perfect for formal occasions."}, {"product_id": "6936e121-5ed5-44c1-82f7-4a5857184acc", "reply": "This Maroon Embroidered Khussa is a great choice for formal events."}, {"product_id": "7421d9b3-c3c8-4db8-99df-c55149df616e", "reply": "This Black Leather Khussa is suitable for formal wear."}]

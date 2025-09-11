@@ -1,0 +1,57 @@
+Timestamp: 2025-09-11T06:11:32.232237
+User ID: ...
+Intent: view_inventory
+User Message: And anything in green
+LLM Response: {
+   "filter": {
+       "category_id": null,
+       "category_name": null,
+       "price_range": {
+           "min": null,
+           "max": null
+       },
+       "attributes": {
+           "color": [
+               "green"
+           ],
+           "style": [],
+           "occasion": [],
+           "material": [],
+           "embroidery": []
+       },
+       "sort_by": null,
+       "query": "green"
+   },
+   "reply": "",
+   "personalized": false,
+   "show_categories": false,
+   "show_products": true,
+   "category_details": [],
+   "product_details": [
+       {
+           "product_id": "2ac45e16-cc09-44b5-b386-2bd163ab29ec",
+           "reply": "This Green Striped Kurta is a traditional-style shirt made from high-quality materials."
+       },
+       {
+           "product_id": "f33bcf4a-ac22-472c-b636-0e0abc8bc67e",
+           "reply": "This Beige Embroidered Waistcoat is not green but has a green version available in our store, would you like to check it out?"
+       },
+       {
+           "product_id": "a323267f-cf60-414b-8416-e74737d25004",
+           "reply": "The Green Silk Waistcoat is a perfect choice to add a touch of elegance to your outfit."
+       },
+       {
+           "product_id": "40931594-e3c7-47e8-8327-769b09943f47",
+           "reply": "This Olive Green Casual Set is a great option for casual gatherings and meetings."
+       }
+   ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": ["green"], "style": [], "occasion": [], "material": [], "embroidery": []}, "sort_by": null, "query": "green"}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "2ac45e16-cc09-44b5-b386-2bd163ab29ec", "reply": "This Green Striped Kurta is a traditional-style shirt made from high-quality materials."}, {"product_id": "f33bcf4a-ac22-472c-b636-0e0abc8bc67e", "reply": "This Beige Embroidered Waistcoat is not green but has a green version available in our store, would you like to check it out?"}, {"product_id": "a323267f-cf60-414b-8416-e74737d25004", "reply": "The Green Silk Waistcoat is a perfect choice to add a touch of elegance to your outfit."}, {"product_id": "40931594-e3c7-47e8-8327-769b09943f47", "reply": "This Olive Green Casual Set is a great option for casual gatherings and meetings."}]

@@ -1,0 +1,55 @@
+Timestamp: 2025-09-11T06:09:31.603534
+User ID: ...
+Intent: view_inventory
+User Message: Do you have anything to wear for casual meetings something in blue
+LLM Response: {
+   "filter": {
+       "category_id": null,
+       "category_name": null,
+       "price_range": {
+           "min": null,
+           "max": null
+       },
+       "attributes": {
+           "color": ["blue"],
+           "style": ["casual"],
+           "occasion": ["meeting"],
+           "material": [],
+           "embroidery": []
+       },
+       "sort_by": null,
+       "query": "blue casual wear"
+   },
+   "reply": "",
+   "personalized": false,
+   "show_categories": false,
+   "show_products": true,
+   "category_details": [],
+   "product_details": [
+       {
+           "product_id": "0d16fef3-09ff-4a55-91a2-7f23a5bf11c7",
+           "reply": "This Blue Denim Shalwar is a great casual option for meetings."
+       },
+       {
+           "product_id": "e6b0e0ca-b1ea-4a2f-adb4-2a1034d08987",
+           "reply": "The Blue Denim Kurta is a stylish and comfortable choice for casual meetings."
+       },
+       {
+           "product_id": "2ac45e16-cc09-44b5-b386-2bd163ab29ec",
+           "reply": "This Green Striped Kurta has a hint of blue and is perfect for casual gatherings."
+       },
+       {
+           "product_id": "657c6da2-efc0-460e-b19e-b2baed546b2a",
+           "reply": "The Grey Melange T-shirt Kurta has a blue tone and is suitable for everyday wear."
+       }
+   ]
+}
+
+Parsed Response:
+filter: {"category_id": null, "category_name": null, "price_range": {"min": null, "max": null}, "attributes": {"color": ["blue"], "style": ["casual"], "occasion": ["meeting"], "material": [], "embroidery": []}, "sort_by": null, "query": "blue casual wear"}
+reply: ""
+personalized: false
+show_categories: false
+show_products: true
+category_details: []
+product_details: [{"product_id": "0d16fef3-09ff-4a55-91a2-7f23a5bf11c7", "reply": "This Blue Denim Shalwar is a great casual option for meetings."}, {"product_id": "e6b0e0ca-b1ea-4a2f-adb4-2a1034d08987", "reply": "The Blue Denim Kurta is a stylish and comfortable choice for casual meetings."}, {"product_id": "2ac45e16-cc09-44b5-b386-2bd163ab29ec", "reply": "This Green Striped Kurta has a hint of blue and is perfect for casual gatherings."}, {"product_id": "657c6da2-efc0-460e-b19e-b2baed546b2a", "reply": "The Grey Melange T-shirt Kurta has a blue tone and is suitable for everyday wear."}]

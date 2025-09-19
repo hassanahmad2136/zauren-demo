@@ -57,6 +57,8 @@ def main():
     logger.info("🚀 Starting Waitress production server...")
     logger.info(f"👥 Optimized for 30+ concurrent WhatsApp users")
     logger.info(f"🌐 Server will be available at http://0.0.0.0:{port}")
+    logger.info(f"🔍 PORT environment variable: {os.getenv('PORT', 'not set')}")
+    logger.info(f"🔍 Using port: {port}")
 
     # Start Waitress server with optimized settings for concurrency
     serve(

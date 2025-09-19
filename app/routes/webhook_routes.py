@@ -9,6 +9,12 @@ logger = logging.getLogger(__name__)
 
 webhook_bp = Blueprint('webhook', __name__)
 
+@webhook_bp.route('/', methods=['GET'])
+@webhook_bp.route('/health', methods=['GET'])
+def health_check():
+    """Health check endpoint for Render"""
+    return {'status': 'healthy', 'service': 'ECS WhatsApp Bot'}, 200
+
 @webhook_bp.route('/webhook', methods=['GET'])
 def verify_webhook():
     """

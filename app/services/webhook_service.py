@@ -1112,17 +1112,17 @@ def process_button_event(button_payload, sender_id, phone_number_id, message, na
                 # Build buttons based on navigation position
                 if has_next:
                     buttons = [
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index + 1), "next"])}", "title": "Next ➡️"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "addtocart"])}", "title": "Add to Cart"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "details"])}", "title": "Details"}}
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index + 1), 'next'])}", "title": "Next ➡️"}},
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index), 'addtocart'])}", "title": "Add to Cart"}},
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index), 'details'])}", "title": "Details"}}
                     ]
                     footer_message = f"Product {current_index} • Swipe for more"
                 else:
                     # Last item - show Start Over
                     buttons = [
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + ["1", "next"])}", "title": "Start Over 🔄"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "addtocart"])}", "title": "Add to Cart"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "details"])}", "title": "Details"}}
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + ['1', 'next'])}", "title": "Start Over 🔄"}},
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index), 'addtocart'])}", "title": "Add to Cart"}},
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index), 'details'])}", "title": "Details"}}
                     ]
                     footer_message = "End of products • Tap Start Over to begin"
                 
@@ -1138,16 +1138,16 @@ def process_button_event(button_payload, sender_id, phone_number_id, message, na
                 # Build buttons for category navigation
                 if has_next:
                     buttons = [
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index + 1), "next"])}", "title": "Next ➡️"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "showproducts"])}", "title": "Show Products"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "explore"])}", "title": "Explore"}}
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index + 1), 'next'])}", "title": "Next ➡️"}},
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index), 'showproducts'])}", "title": "Show Products"}},
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index), 'explore'])}", "title": "Explore"}}
                     ]
                     footer_message = f"Category {current_index} • More categories available"
                 else:
                     buttons = [
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + ["1", "next"])}", "title": "Start Over 🔄"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "showproducts"])}", "title": "Show Products"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "explore"])}", "title": "Explore"}}
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + ['1', 'next'])}", "title": "Start Over 🔄"}},
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index), 'showproducts'])}", "title": "Show Products"}},
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index), 'explore'])}", "title": "Explore"}}
                     ]
                     footer_message = "End of categories • Tap Start Over to begin"
                     
@@ -1163,16 +1163,16 @@ def process_button_event(button_payload, sender_id, phone_number_id, message, na
                 # Build buttons for cart navigation
                 if has_next:
                     buttons = [
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index + 1), "next"])}", "title": "Next ➡️"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "remove"])}", "title": "Remove"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "checkout"])}", "title": "Checkout"}}
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index + 1), 'next'])}", "title": "Next ➡️"}},
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index), 'remove'])}", "title": "Remove"}},
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index), 'checkout'])}", "title": "Checkout"}}
                     ]
                     footer_message = f"Cart item {current_index} • More items in cart"
                 else:
                     buttons = [
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + ["1", "next"])}", "title": "Start Over 🔄"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "remove"])}", "title": "Remove"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "checkout"])}", "title": "Checkout"}}
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + ['1', 'next'])}", "title": "Start Over 🔄"}},
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index), 'remove'])}", "title": "Remove"}},
+                        {"type": "reply", "reply": {"id": f"{'-'.join(base_parts + [str(current_index), 'checkout'])}", "title": "Checkout"}}
                     ]
                     footer_message = "Last cart item • Tap Start Over to review"
             else:

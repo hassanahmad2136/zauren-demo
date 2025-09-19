@@ -1,9 +1,0 @@
-Timestamp: 2025-05-01T02:29:40.495205
-User ID: hassanahmad
-Intent: view_inventory
-User Message: Next
-LLM Response: {"error": "Sorry, I'm having trouble connecting. Please try again in a moment.", "reply": "Sorry, I'm having trouble connecting. Please try again in a moment."}
-
-Parsed Response:
-error: "Sorry, I'm having trouble connecting. Please try again in a moment."
-reply: "Sorry, I'm having trouble connecting. Please try again in a moment."

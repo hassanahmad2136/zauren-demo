@@ -1,10 +1,37 @@
-flask==2.0.1
-Werkzeug==2.0.1
-pytest==6.2.5
-python-dotenv==0.19.0
-requests
-supabase
-psycopg2-binary
-groq
-gunicorn
-fuzzywuzzy
+# Core Flask and Web Framework
+flask>=2.3.0
+waitress>=2.1.2
+
+# Database and Storage
+supabase>=1.0.0
+pinecone-client>=3.0.0
+
+# HTTP Requests and Networking
+requests>=2.31.0
+httpx>=0.27.0
+aiohttp>=3.8.0
+
+# AI and Machine Learning
+openai>=1.0.0
+sentence-transformers>=2.2.0
+scikit-learn>=1.3.0
+numpy>=1.24.0
+pandas>=2.0.0
+
+# Text Processing
+fuzzywuzzy>=0.18.0
+python-Levenshtein>=0.21.0
+
+# Environment and Configuration
+python-dotenv>=1.0.0
+
+# Security and Validation
+guardrails-ai>=0.6.0
+cryptography>=41.0.0
+
+# Audio Processing
+groq>=0.4.0
+
+# Utilities
+pytz>=2023.0
+typing-extensions>=4.8.0

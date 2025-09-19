@@ -18,6 +18,15 @@ from supabase import create_client, Client
 import uuid
 
 from app.utils.match import find_matching_products, safe_type_conversion
+from app.utils.search_match import find_matching_products as find_matching_products_alt
+
+def _is_valid_uuid(value):
+    """Check if a value is a valid UUID"""
+    try:
+        uuid.UUID(str(value))
+        return True
+    except (ValueError, TypeError):
+        return False
 
 from .LLM import (
     classify_intent,
@@ -61,9 +70,31 @@ load_dotenv()
 # Global inventory - will be initialized during startup
 global_inventory = None
 
+# Skip heavy imports if we're starting with fast mode
+if os.getenv('SKIP_EMBEDDINGS_ON_STARTUP', 'false').lower() == 'true':
+    logger.info("⚡ Fast startup mode - skipping heavy database operations")
+    # Initialize with minimal inventory immediately
+    global_inventory = {
+        'products': [
+            {'id': 'sample1', 'name': 'Sample Product', 'category': 'sample', 'price': 10.0, 'stock': 1}
+        ]
+    }
+
 # Message deduplication cache
 processed_messages = {}
 DUPLICATE_MESSAGE_TIMEOUT = 60  # seconds
+
+# Initialize search functionality
+search_engine = None
+
+try:
+    from app.utils.search import FlaskConversationSearcher
+    search_engine = FlaskConversationSearcher()
+    search_engine.initialize()
+    logger.info("✅ Search engine initialized successfully")
+except Exception as e:
+    logger.error(f"❌ Error initializing search engine: {e}")
+    search_engine = None
 
 def download_media_file(media_id, media_type="audio"):
     """
@@ -313,166 +344,440 @@ def handle_cart_updates(user_session: Dict, response_data: Dict) -> Dict:
         return update_status
     
     # Function to generate the response based on the message
+def _is_valid_uuid(uuid_str):
+    """Helper function to validate UUID format"""
+    try:
+        import uuid
+        uuid.UUID(uuid_str)
+        return True
+    except (ValueError, TypeError, AttributeError):
+        return False
+
+
 def generate_and_send_response(data, message, sender_id, sender_name, user_session, text):
+    import hashlib
+    import uuid
+    import time
+    import os
+    from supabase import create_client
+    
     message_hash = hashlib.md5(f"{sender_id}:{text}:{message.get('id')}".encode()).hexdigest()
 
     try:
         response_data = generate_llm_response(
-            text, 
-            sender_name, 
-            user_session['cart'], 
+            text,
+            sender_name,
+            user_session['cart'],
             global_inventory,
-            user_session['conversation_history']
+            user_session['conversation_history'],
+            max_retries=3,
+            user_id=sender_id
         )
-        
+
+        # Handle case where generate_llm_response returns None
+        if response_data is None:
+            response_data = {
+                'intent': 'smalltalk',
+                'reply': f"Hi {sender_name}, I'm having trouble processing your message right now. Please try again in a moment."
+            }
+
         if isinstance(response_data, str):
             reply_text = response_data
         else:
             reply_text = response_data.get('reply', f"Hi {sender_name}, thanks for your message!")
             handle_cart_updates(user_session, response_data)
-        interactive_message = (False,"")
+        
+        interactive_message = (False, "")
         try:
             if response_data.get('intent') == 'view_inventory':
-                if response_data.get("show_products") == True: 
-                    interactive_message = (True,"product")
-                if response_data.get("show_categories") == True:
-                    interactive_message = (True,"category")
+                # Check if we have actual product details before setting interactive message
+                if response_data.get("show_products") == True and response_data.get("product_details"):
+                    interactive_message = (True, "product")
+                elif response_data.get("show_categories") == True and response_data.get("category_details"):
+                    interactive_message = (True, "category")
+            elif response_data.get('intent') == 'view_cart':
+                if response_data.get("show_cart_interactive") == True and response_data.get("cart_items"):
+                    interactive_message = (True, "cart")
         except:
-            interactive_message = False
+            interactive_message = (False, "")
 
         if message_hash not in processed_messages:
             processed_messages[message_hash] = {'time': time.time(), 'status': 'processed'}
+            
             # Send WhatsApp message
             if not interactive_message[0]:
                 send_whatsapp_message(
                     phone_number_id=data.get("metadata", {}).get("phone_number_id"),
                     recipient_phone=sender_id,
                     message=reply_text,
-                    id = message.get("id", None)
+                    id=message.get("id", None)
                 )
             else:
                 if interactive_message[1] == "product":
-                    
+                    # Safety check: Ensure product_details exists and is not None
+                    product_details = response_data.get("product_details", [])
+                    if not product_details:
+                        logger.warning("⚠️ No product_details found in response_data, skipping interactive message creation")
+                        send_whatsapp_message(
+                            phone_number_id=data.get("metadata", {}).get("phone_number_id"),
+                            recipient_phone=sender_id,
+                            message=reply_text,
+                            id=message.get("id", None)
+                        )
+                        return
 
-                    # Generate a random UUID (UUID4)
-                    unique_id = uuid.uuid4()
-                    current_id = str(unique_id)
-                    # Convert the UUID to a string
-                    unique_id = str(unique_id)
-                    # Append sender ID
-                    unique_id += f"-{sender_id}"
-                    current_id += f"-{sender_id}"
-                    # Append message order number
+                    # Generate a random UUID
+                    unique_id = str(uuid.uuid4()) + f"-{sender_id}"
                     
-                        
+                    # Store all products in database with correct indexing
+                    supabase_client = create_client(os.getenv("INVENTORY_SUPABASE_URL"), os.getenv("INVENTORY_SUPABASE_KEY"))
                     
-                    current_id += f"-1"
-                    # Generate unique ID for different buttons (consistent with secondary_id pattern)
-                    total_products = len(response_data.get("product_details", []))
-                    # If only one product, Next button points to itself (circular)
-                    next_product_index = 2 if total_products > 1 else 1
-                    current_id_next = f"{unique_id}-{next_product_index}-next"
-                    current_id_addtocart = f"{unique_id}-1-addtocart"  # First "Add to Cart" is for product 1
-                    current_id_details = f"{unique_id}-1-details"  # First "Details" is for product 1
-
-                    for i in range(1, len(response_data.get("product_details")) + 1):
-                        # Append the order number to the unique ID
-                        uniqueid = unique_id + f"-{i}"
-                        supabase_client = create_client(os.getenv("INVENTORY_SUPABASE_URL"), os.getenv("INVENTORY_SUPABASE_KEY"))
+                    for i in range(len(product_details)):
+                        # Database entries use 1-based indexing
+                        db_index = i + 1
+                        uniqueid = f"{unique_id}-{db_index}"
                         
-                        # Calculate next product index (wrap around to first if last item)
-                        next_index = i + 1 if i < len(response_data.get("product_details")) else 1
+                        # For secondary_id: store the current item's index
+                        secondary_id = f"{unique_id}-{db_index}-next"
                         
-                        response = supabase_client.table('interactive_messages').insert({
-                            'id': uniqueid,
-                            'secondary_id': f"{unique_id}-{next_index}-next",
-                            'media_id': create_client(os.getenv("INVENTORY_SUPABASE_URL"), os.getenv("INVENTORY_SUPABASE_KEY")).table("products").select("image_path").eq("id", response_data.get("product_details")[i-1]['product_id']).execute().data[0]["image_path"],
-                            'body': f"{response_data.get("product_details")[i-1]['reply']}",
-                            'footer': f"Navigate with the buttons below",
-                            'buttons': "{'next': 'next', 'addtocart': 'addtocart', 'details': 'details'}"
-                        }).execute()
+                        current_product = product_details[i]
                         
-                        if response.data and len(response.data) > 0:
-                            user_data = response.data[0]
-                            logger.info(f"✅ Interactive Message created with ID: {user_data['id']}")
+                        # Handle both 'id' and 'product_id' field names for compatibility
+                        product_id_value = current_product.get('product_id') or current_product.get('id')
+                        
+                        # Fetch product data from database
+                        product_result = supabase_client.table("products").select(
+                            "images, description, title, available_sizes, colors, regular_price, sale_price"
+                        ).eq("id", product_id_value).execute()
+                        
+                        product_image = None
+                        product_description = current_product.get('reply', current_product.get('title', 'Product Details'))
+                        
+                        if product_result.data and len(product_result.data) > 0:
+                            product_data = product_result.data[0]
                             
-                    send_interactive_message(
-                        phone_number_id=data.get("metadata", {}).get("phone_number_id"),
-                        recipient_phone=sender_id,
-                        interactive_type="button",
-                        header={"type": "image", "image": {"link": create_client(os.getenv("INVENTORY_SUPABASE_URL"), os.getenv("INVENTORY_SUPABASE_KEY")).table("products").select("image_path").eq("id", response_data.get("product_details")[0]['product_id']).execute().data[0]["image_path"]}},
-                        body={"text": f"{response_data.get("product_details")[0]['reply']}"},
-                        footer={"text": f"Navigate with the buttons below"},
-                        action={"buttons": [
-                            {"type": "reply", "reply": {"id": f"{current_id_next}", "title": "Next"}},
-                            {"type": "reply", "reply": {"id": f"{current_id_addtocart}", "title": "Add to Cart"}},
-                            {"type": "reply", "reply": {"id": f"{current_id_details}", "title": "Details"}}
-                        ]},
-                        id = message.get("id", None)
-                    )
-
-                    
-                elif interactive_message[1] == "category":
-                    # Generate a random UUID (UUID4)
-                    unique_id = uuid.uuid4()
-                    current_id = str(unique_id)
-                    # Convert the UUID to a string
-                    unique_id = str(unique_id)
-                    # Append sender ID
-                    unique_id += f"-{sender_id}"
-                    current_id += f"-{sender_id}"
-                    # Append message order number
-                    current_id += f"-1"
-                    
-                    # Generate unique ID for different buttons (consistent with secondary_id pattern)
-                    total_categories = len(response_data.get("category_details", []))
-                    # If only one category, Next button points to itself (circular)
-                    next_category_index = 2 if total_categories > 1 else 1
-                    current_id_next = f"{unique_id}-{next_category_index}-next"
-                    current_id_show_products = f"{unique_id}-1-showproducts"  # First "Show Products" is for category 1
-                    current_id_explore = f"{unique_id}-1-explore"  # First "Explore" is for category 1
-                    
-                    # Save category data to database for retrieval in button handlers
-                    for i in range(1, len(response_data.get("category_details", [])) + 1):
-                        # Append the order number to the unique ID
-                        uniqueid = unique_id + f"-{i}"
-                        supabase_client = create_client(os.getenv("INVENTORY_SUPABASE_URL"), os.getenv("INVENTORY_SUPABASE_KEY"))
+                            # Get the last image for interactive message
+                            if product_data.get("images"):
+                                product_images = product_data["images"]
+                                product_image = product_images[-1] if product_images else None
+                            
+                            # Build comprehensive product description
+                            title = product_data.get("title", "Product")
+                            description = product_data.get("description", "")
+                            colors = product_data.get("colors", [])
+                            sizes = product_data.get("available_sizes", [])
+                            regular_price = float(product_data.get("regular_price", 0)) if product_data.get("regular_price") else 0
+                            sale_price = float(product_data.get("sale_price", 0)) if product_data.get("sale_price") else 0
+                            
+                            product_description = f"*{title}*\n\n"
+                            if description:
+                                product_description += f"{description}\n\n"
+                            
+                            # Add price information
+                            if sale_price and sale_price > 0 and sale_price < regular_price:
+                                product_description += f"💰 *Price:* PKR {sale_price} _(was PKR {regular_price})_\n"
+                            elif regular_price and regular_price > 0:
+                                product_description += f"💰 *Price:* PKR {regular_price}\n"
+                            
+                            # Add colors if available
+                            if colors and len(colors) > 0:
+                                colors_text = ", ".join(colors[:5])
+                                if len(colors) > 5:
+                                    colors_text += f" (+{len(colors)-5} more)"
+                                product_description += f"🎨 *Colors:* {colors_text}\n"
+                            
+                            # Add sizes if available
+                            if sizes and len(sizes) > 0:
+                                sizes_text = ", ".join(map(str, sizes[:8]))
+                                if len(sizes) > 8:
+                                    sizes_text += f" (+{len(sizes)-8} more)"
+                                product_description += f"👠 *Sizes:* {sizes_text}"
                         
-                        # Calculate next category index (wrap around to first if last item)
-                        next_category_index = i + 1 if i < len(response_data.get("category_details", [])) else 1
+                        # Validate product_id is a proper UUID
+                        product_id = current_product.get('product_id') or current_product.get('id')
+                        if product_id and not _is_valid_uuid(product_id):
+                            logger.warning(f"Invalid product_id format: {product_id}, setting to None")
+                            product_id = None
                         
+                        # Insert into database
                         response = supabase_client.table('interactive_messages').insert({
                             'id': uniqueid,
-                            'secondary_id': f"{unique_id}-{next_category_index}-next",
-                            'media_id': create_client(os.getenv("INVENTORY_SUPABASE_URL"), os.getenv("INVENTORY_SUPABASE_KEY")).table("categories").select("image_path").eq("id", response_data.get("category_details")[i-1]['category_id']).execute().data[0]["image_path"],
-                            'body': f"{response_data.get('category_details')[i-1]['reply']}",
-                            'footer': f"Navigate with the buttons below",
-                            'buttons': "{'next': 'next', 'showproducts': 'showproducts', 'explore': 'explore'}"
+                            'secondary_id': secondary_id,
+                            'media_id': product_image,
+                            'body': product_description,
+                            'footer': f"Product {db_index} of {len(product_details)}",
+                            'buttons': "{'next': 'next', 'addtocart': 'addtocart', 'details': 'details'}",
+                            'product_id': product_id
                         }).execute()
                         
                         if response.data and len(response.data) > 0:
-                            user_data = response.data[0]
-                            logger.info(f"✅ Interactive Message created with ID: {user_data['id']}")
+                            logger.info(f"✅ Product {db_index} stored with secondary_id: {secondary_id}")
                     
-                    # Initial category display - show first category
-                    category_text = ""
-                    if response_data.get("category_details") and len(response_data.get("category_details")) > 0:
-                        category_text = response_data.get("category_details")[0]['reply']
+                    # Now prepare and send the first product display
+                    # Show the first item (index 1)
+                    # Query the database to get the first item we just stored
+                    first_item_response = supabase_client.table('interactive_messages').select(
+                        'body', 'media_id', 'footer'
+                    ).eq('secondary_id', f"{unique_id}-1-next").execute()
+                    
+                    if first_item_response.data and len(first_item_response.data) > 0:
+                        first_item_data = first_item_response.data[0]
+                        first_product_description = first_item_data['body']
+                        first_product_image = first_item_data['media_id']
+                        
+                        # Send product images if available
+                        first_product_id = product_details[0].get('product_id') or product_details[0].get('id')
+                        if first_product_id:
+                            first_product_result = supabase_client.table("products").select("images").eq(
+                                "id", first_product_id
+                            ).execute()
+                            
+                            if first_product_result.data and len(first_product_result.data) > 0:
+                                first_product_images = first_product_result.data[0].get("images", [])
+                                
+                                # Send first 4 images as separate messages
+                                if first_product_images and len(first_product_images) > 0:
+                                    images_to_send = min(4, len(first_product_images) - 1) if len(first_product_images) > 1 else 0
+                                    
+                                    for i in range(images_to_send):
+                                        image_url = first_product_images[i]
+                                        if image_url:
+                                            try:
+                                                from app.services.messaging_service import send_media_message
+                                                send_media_message(
+                                                    phone_number_id=data.get("metadata", {}).get("phone_number_id"),
+                                                    recipient_phone=sender_id,
+                                                    media_type="image",
+                                                    media_url=image_url,
+                                                    caption=f"Product Image {i+1}/{len(first_product_images)}"
+                                                )
+                                                time.sleep(0.5)
+                                            except Exception as e:
+                                                logger.error(f"Failed to send product image {i+1}: {e}")
+                    else:
+                        # Fallback if database query fails
+                        first_product_description = reply_text
+                        first_product_image = None
+                    
+                    # Prepare buttons for first product
+                    total_products = len(product_details)
+                    
+                    buttons = []
+                    if total_products > 1:
+                        # Show next button pointing to second item
+                        buttons.append({"type": "reply", "reply": {"id": f"{unique_id}-2-next", "title": "Next ➡️"}})
+                    buttons.extend([
+                        {"type": "reply", "reply": {"id": f"{unique_id}-1-addtocart", "title": "Add to Cart"}},
+                        {"type": "reply", "reply": {"id": f"{unique_id}-1-details", "title": "Details"}}
+                    ])
                     
                     send_interactive_message(
                         phone_number_id=data.get("metadata", {}).get("phone_number_id"),
                         recipient_phone=sender_id,
                         interactive_type="button",
-                        header={"type": "image", "image": {"link": create_client(os.getenv("INVENTORY_SUPABASE_URL"), os.getenv("INVENTORY_SUPABASE_KEY")).table("categories").select("image_path").eq("id", response_data.get("category_details")[0]['category_id']).execute().data[0]["image_path"]}},
-                        body={"text": category_text},
-                        footer={"text": f"Navigate with the buttons below"},
-                        action={"buttons": [
-                            {"type": "reply", "reply": {"id": f"{current_id_next}", "title": "Next"}},
-                            {"type": "reply", "reply": {"id": f"{current_id_show_products}", "title": "Show Products"}},
-                            {"type": "reply", "reply": {"id": f"{current_id_explore}", "title": "Explore"}}
-                        ]}
-                        , id = message.get("id", None)
+                        header={"type": "image", "image": {"link": first_product_image}} if first_product_image else None,
+                        body={"text": first_product_description},
+                        footer={"text": f"Product 1 of {total_products}"},
+                        action={"buttons": buttons},
+                        id=message.get("id", None)
                     )
+                
+                elif interactive_message[1] == "category":
+                    # Safety check: Ensure category_details exists and is not None
+                    category_details = response_data.get("category_details", [])
+                    if not category_details:
+                        logger.warning("⚠️ No category_details found in response_data, skipping interactive message creation")
+                        send_whatsapp_message(
+                            phone_number_id=data.get("metadata", {}).get("phone_number_id"),
+                            recipient_phone=sender_id,
+                            message=reply_text,
+                            id=message.get("id", None)
+                        )
+                        return
+
+                    # Generate a random UUID
+                    unique_id = str(uuid.uuid4()) + f"-{sender_id}"
+                    
+                    # Store all categories in database with correct indexing
+                    supabase_client = create_client(os.getenv("INVENTORY_SUPABASE_URL"), os.getenv("INVENTORY_SUPABASE_KEY"))
+                    
+                    for i in range(len(category_details)):
+                        # Database entries use 1-based indexing
+                        db_index = i + 1
+                        uniqueid = f"{unique_id}-{db_index}"
+                        
+                        # For secondary_id: store the current item's index
+                        secondary_id = f"{unique_id}-{db_index}-next"
+                        
+                        current_category = category_details[i]
+                        
+                        # Categories use placeholder images
+                        category_image = "https://via.placeholder.com/400x400/f0f0f0/666666?text=Category"
+                        
+                        # Validate category_id
+                        category_id = current_category.get('category_id')
+                        if category_id and not _is_valid_uuid(category_id):
+                            logger.warning(f"Invalid category_id format: {category_id}, setting to None")
+                            category_id = None
+                        
+                        # Insert into database
+                        response = supabase_client.table('interactive_messages').insert({
+                            'id': uniqueid,
+                            'secondary_id': secondary_id,
+                            'media_id': category_image,
+                            'body': f"{current_category['reply']}",
+                            'footer': f"Category {db_index} of {len(category_details)}",
+                            'buttons': "{'next': 'next', 'showproducts': 'showproducts', 'explore': 'explore'}",
+                            'category_id': category_id
+                        }).execute()
+                        
+                        if response.data and len(response.data) > 0:
+                            logger.info(f"✅ Category {db_index} stored with secondary_id: {secondary_id}")
+                    
+                    # Send placeholder image for categories
+                    placeholder_image = "https://via.placeholder.com/400x400/f0f0f0/666666?text=Category"
+                    
+                    try:
+                        from app.services.messaging_service import send_media_message
+                        send_media_message(
+                            phone_number_id=data.get("metadata", {}).get("phone_number_id"),
+                            recipient_phone=sender_id,
+                            media_type="image",
+                            media_url=placeholder_image,
+                            caption="Category"
+                        )
+                    except Exception as e:
+                        logger.error(f"Failed to send category placeholder image: {e}")
+                    
+                    # Prepare first category display
+                    category_text = category_details[0]['reply']
+                    total_categories = len(category_details)
+                    
+                    # Prepare buttons for first category
+                    buttons = []
+                    if total_categories > 1:
+                        buttons.append({"type": "reply", "reply": {"id": f"{unique_id}-2-next", "title": "Next ➡️"}})
+                    buttons.extend([
+                        {"type": "reply", "reply": {"id": f"{unique_id}-1-showproducts", "title": "Show Products"}},
+                        {"type": "reply", "reply": {"id": f"{unique_id}-1-explore", "title": "Explore"}}
+                    ])
+                    
+                    send_interactive_message(
+                        phone_number_id=data.get("metadata", {}).get("phone_number_id"),
+                        recipient_phone=sender_id,
+                        interactive_type="button",
+                        header={"type": "image", "image": {"link": placeholder_image}},
+                        body={"text": category_text},
+                        footer={"text": f"Category 1 of {total_categories}"},
+                        action={"buttons": buttons},
+                        id=message.get("id", None)
+                    )
+
+                elif interactive_message[1] == "cart":
+                    # Handle cart interactive messages
+                    cart_items = response_data.get("cart_items", [])
+
+                    if cart_items and len(cart_items) > 0:
+                        # Generate unique UUID for cart navigation
+                        unique_id = str(uuid.uuid4()) + f"-{sender_id}"
+                        
+                        supabase_client = create_client(os.getenv("INVENTORY_SUPABASE_URL"), os.getenv("INVENTORY_SUPABASE_KEY"))
+                        
+                        # Store all cart items in database with correct indexing
+                        for i, item in enumerate(cart_items):
+                            db_index = i + 1
+                            item_id = f"{unique_id}-{db_index}"
+                            secondary_id = f"{unique_id}-{db_index}-next"
+                            
+                            # Create description for this item
+                            item_desc = f"*{item.get('product_name', 'Cart Item')}*\n\n"
+                            if item.get('size'):
+                                item_desc += f"👠 Size: {item['size']}\n"
+                            if item.get('color'):
+                                item_desc += f"🎨 Color: {item['color']}\n"
+                            item_desc += f"📦 Quantity: {item.get('quantity', 1)}\n"
+                            item_desc += f"💰 Price: PKR {item.get('price', 0)} each\n"
+                            item_desc += f"💳 Total: PKR {item.get('item_total', 0)}"
+                            
+                            # Get product image for this item
+                            item_image = None
+                            if item.get('product_id'):
+                                item_product_result = supabase_client.table("products").select("images").eq(
+                                    "id", item['product_id']
+                                ).execute()
+                                
+                                if item_product_result.data and len(item_product_result.data) > 0:
+                                    item_product_data = item_product_result.data[0]
+                                    if item_product_data.get("images"):
+                                        item_image = item_product_data["images"][-1]
+                            
+                            # Store in interactive_messages table
+                            response = supabase_client.table('interactive_messages').insert({
+                                'id': item_id,
+                                'secondary_id': secondary_id,
+                                'media_id': item_image,
+                                'body': item_desc,
+                                'footer': f"Cart item {db_index} of {len(cart_items)}",
+                                'buttons': "{'next': 'next', 'remove': 'remove', 'checkout': 'checkout'}",
+                                'product_id': item.get('product_id')
+                            }).execute()
+                            
+                            if response.data and len(response.data) > 0:
+                                logger.info(f"✅ Cart item {db_index} stored with secondary_id: {secondary_id}")
+                        
+                        # Prepare first cart item display
+                        first_item = cart_items[0]
+                        first_product_id = first_item.get('product_id')
+                        first_product_image = None
+                        
+                        if first_product_id:
+                            product_result = supabase_client.table("products").select("images, title").eq(
+                                "id", first_product_id
+                            ).execute()
+                            
+                            if product_result.data and len(product_result.data) > 0:
+                                product_data = product_result.data[0]
+                                if product_data.get("images"):
+                                    first_product_image = product_data["images"][-1]
+                        
+                        # Create cart item description
+                        cart_description = f"*{first_item.get('product_name', 'Cart Item')}*\n\n"
+                        if first_item.get('size'):
+                            cart_description += f"👠 Size: {first_item['size']}\n"
+                        if first_item.get('color'):
+                            cart_description += f"🎨 Color: {first_item['color']}\n"
+                        cart_description += f"📦 Quantity: {first_item.get('quantity', 1)}\n"
+                        cart_description += f"💰 Price: PKR {first_item.get('price', 0)} each\n"
+                        cart_description += f"💳 Total: PKR {first_item.get('item_total', 0)}"
+                        
+                        # Prepare buttons for first cart item
+                        total_items = len(cart_items)
+                        buttons = []
+                        if total_items > 1:
+                            buttons.append({"type": "reply", "reply": {"id": f"{unique_id}-2-next", "title": "Next ➡️"}})
+                        buttons.extend([
+                            {"type": "reply", "reply": {"id": f"{unique_id}-1-remove", "title": "Remove"}},
+                            {"type": "reply", "reply": {"id": f"{unique_id}-1-checkout", "title": "Checkout"}}
+                        ])
+                        
+                        send_interactive_message(
+                            phone_number_id=data.get("metadata", {}).get("phone_number_id"),
+                            recipient_phone=sender_id,
+                            interactive_type="button",
+                            header={"type": "image", "image": {"link": first_product_image}} if first_product_image else None,
+                            body={"text": cart_description},
+                            footer={"text": f"Cart item 1 of {total_items}"},
+                            action={"buttons": buttons},
+                            id=message.get("id", None)
+                        )
+                    else:
+                        # No cart items - send simple text message
+                        send_whatsapp_message(
+                            phone_number_id=data.get("metadata", {}).get("phone_number_id"),
+                            recipient_phone=sender_id,
+                            message=reply_text,
+                            id=message.get("id", None)
+                        )
 
             # Save assistant response to conversation history in database
             save_conversation_message(
@@ -492,10 +797,9 @@ def generate_and_send_response(data, message, sender_id, sender_name, user_sessi
                 phone_number_id=data.get("metadata", {}).get("phone_number_id"),
                 recipient_phone=sender_id,
                 message=f"Sorry, I'm having technical difficulties. Please try again in a moment.",
-                id = message.get("id", None)
+                id=message.get("id", None)
             )
 
-# Main process function, calling all the helper functions
 def process_message_event(data):
     message = data.get('message', {})
     sender = data.get('sender', {})
@@ -527,10 +831,21 @@ def process_message_event(data):
 def initialize_global_inventory():
     """Initialize the global inventory from the database"""
     global global_inventory
-    
+
+    # Skip initialization if embeddings are skipped to speed up startup
+    if os.getenv('SKIP_EMBEDDINGS_ON_STARTUP', 'false').lower() == 'true':
+        logger.info("⏩ Skipping global inventory initialization (SKIP_EMBEDDINGS_ON_STARTUP=true)")
+        # Set a minimal inventory for testing
+        global_inventory = {
+            'products': [
+                {'id': 'sample1', 'name': 'Sample Product', 'category': 'sample', 'price': 10.0, 'stock': 1}
+            ]
+        }
+        return
+
     try:
         logger.info("🔄 Initializing global inventory...")
-        
+
         # Get categories and products from database
         categories_result = get_all_categories()
         products_result = get_all_products()
@@ -671,8 +986,7 @@ def process_webhook_event(data):
                             button_payload = interactive.get("button_reply", {}).get("id")
                             sender_id = button_event.get("from")
                             name = value.get("contacts", [{}])[0].get("profile", {}).get("name")
-                            process_button_event(button_payload, sender_id, phone_number_id, button_event,name)
-
+                            process_button_event(button_payload, sender_id, phone_number_id, button_event, name)
                             
                 # Process other event types
                 else:
@@ -680,6 +994,7 @@ def process_webhook_event(data):
     
     response["event_type"] = event_type
     return response
+
 
 def process_button_event(button_payload, sender_id, phone_number_id, message, name):
     """Process button press events"""
@@ -700,208 +1015,226 @@ def process_button_event(button_payload, sender_id, phone_number_id, message, na
     
     # Extract the action from button payload
     if "next" in button_payload:
-        is_last = True
-        response = supabase_client.table('interactive_messages').select('footer', 'body', 'buttons').eq(
-            'secondary_id',
-            "-".join(button_payload.split("-")[:-2] + [str(int(button_payload.split("-")[-2]) + 1), "next"])
-        ).execute()
-
-        if response.data and len(response.data) > 0:
-            is_last = False
         # Handle Next button - show next product or category
         next_parts = button_payload.split("-")
         
-        # The index in the button payload is already the correct one
-        logger.info(f"📊 Button payload: {button_payload}")
+        logger.info(f"📊 Next button pressed with payload: {button_payload}")
         
-        # Query the table to find next item
-        response = supabase_client.table('interactive_messages').select('footer', 'body', 'buttons', 'media_id').eq('secondary_id', button_payload).execute()
+        # Extract base parts and indices
+        base_parts = next_parts[:-2]  # Everything except index and action
+        current_index = int(next_parts[-2])  # The index from the button
         
-        # Log the response for debugging
-        logger.info(f"📊 Next item query response: {response.data}")
+        # Query for the item at current_index (this is the item to show)
+        current_secondary_id = "-".join(base_parts + [str(current_index), "next"])
+        logger.info(f"📊 Looking for item with secondary_id: {current_secondary_id}")
         
-        if response.data and len(response.data) > 0 and not is_last:
-            next_item = response.data[0]
+        # Get the current item to display
+        response = supabase_client.table('interactive_messages').select(
+            'footer', 'body', 'buttons', 'media_id', 'product_id', 'category_id'
+        ).eq('secondary_id', current_secondary_id).execute()
+        
+        logger.info(f"📊 Current item query response: {response.data}")
+        
+        if response.data and len(response.data) > 0:
+            current_item = response.data[0]
             
-            # Validate the data before sending
-            body_text = next_item.get('body', '').strip()
-            footer_text = next_item.get('footer', '').strip()
-            buttons_data = next_item.get('buttons', '')
-            id = next_item.get('media_id', '')
+            # Check if there's a next item (for the Next button)
+            next_secondary_id = "-".join(base_parts + [str(current_index + 1), "next"])
+            next_response = supabase_client.table('interactive_messages').select('id').eq(
+                'secondary_id', next_secondary_id
+            ).execute()
             
-            # Check if body_text is empty - this might be causing the 400 error
+            has_next = bool(next_response.data and len(next_response.data) > 0)
+            logger.info(f"📊 Has next item: {has_next} (checked for: {next_secondary_id})")
+            
+            # Get item details
+            body_text = current_item.get('body', '').strip()
+            buttons_data = current_item.get('buttons', '')
+            media_id = current_item.get('media_id', '')
+            
+            # Validate body text
             if not body_text:
-                logger.error(f"❌ Empty body text found for next item: {button_payload}")
-                # Fallback to a generic message
-                body_text = "Loading next item..."
+                logger.error(f"❌ Empty body text found for item: {current_secondary_id}")
+                body_text = "Loading item..."
             
-            # Extract the base parts and current index from the button payload
-            base_parts = next_parts[:-2]  # Everything except the last two parts (index and action)
-            current_index = int(next_parts[-2])  # The current index
-            
-            # When moving to next item, we're now showing the next item (current_index)
-            # All buttons should use this index for Add to Cart and Details
-            # But Next button uses current_index + 1
-            show_index = current_index
-
-            # Save navigation event to conversation history
+            # Save navigation event
             save_conversation_message(
                 session_id=user_session['session_id'],
                 user_id=user_session['user_id'],
                 content="[Clicked Next button]",
                 role="user"
             )
-
-            # Check if this is product or category navigation
-            if "addtocart" in buttons_data:
-                # This is product navigation
-                # Save what the user is now viewing
+            
+            # Determine if this is product, category, or cart navigation
+            is_product_nav = "addtocart" in buttons_data
+            is_category_nav = "showproducts" in buttons_data
+            is_cart_nav = "remove" in buttons_data and "checkout" in buttons_data
+            
+            if is_product_nav:
+                # Product navigation
                 save_conversation_message(
                     session_id=user_session['session_id'],
                     user_id=user_session['user_id'],
-                    content=f"Now viewing: {body_text}",
+                    content=f"Now viewing: {body_text[:50]}...",
                     role="assistant"
                 )
                 
-                send_interactive_message(
-                    phone_number_id=phone_number_id,
-                    recipient_phone=sender_id,
-                    interactive_type="button",
-                    header={
-                        "type": "image",
-                        "image": {"link": id}
-                    },
-                    body={"text": body_text},
-                    footer={"text": "Navigate with the buttons below"},
-                    action={"buttons": [
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(show_index + 1), "next"])}", "title": "Next"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(show_index+1), "addtocart"])}", "title": "Add to Cart"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(show_index+1), "details"])}", "title": "Details"}}
-                    ]}
-                )
-            elif "showproducts" in buttons_data:
-                # This is category navigation
-                # Save what the user is now viewing
+                # Send product images if available
+                current_product_id = current_item.get('product_id')
+                if current_product_id:
+                    try:
+                        product_images_response = supabase_client.table("products").select(
+                            "images"
+                        ).eq("id", current_product_id).execute()
+                        
+                        if product_images_response.data and len(product_images_response.data) > 0:
+                            product_images = product_images_response.data[0].get("images", [])
+                            
+                            # Send product images
+                            if len(product_images) > 0:
+                                for i, image_url in enumerate(product_images[:4]):  # Send max 4 images
+                                    if image_url:
+                                        try:
+                                            from app.services.messaging_service import send_media_message
+                                            send_media_message(
+                                                phone_number_id=phone_number_id,
+                                                recipient_phone=sender_id,
+                                                media_type="image",
+                                                media_url=image_url,
+                                                caption=f"Image {i+1}/{min(4, len(product_images))}"
+                                            )
+                                            time.sleep(0.5)
+                                        except Exception as e:
+                                            logger.error(f"Failed to send product image {i+1}: {e}")
+                    except Exception as e:
+                        logger.error(f"Error fetching product images: {e}")
+                
+                # Build buttons based on navigation position
+                if has_next:
+                    buttons = [
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index + 1), "next"])}", "title": "Next ➡️"}},
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "addtocart"])}", "title": "Add to Cart"}},
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "details"])}", "title": "Details"}}
+                    ]
+                    footer_message = f"Product {current_index} • Swipe for more"
+                else:
+                    # Last item - show Start Over
+                    buttons = [
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + ["1", "next"])}", "title": "Start Over 🔄"}},
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "addtocart"])}", "title": "Add to Cart"}},
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "details"])}", "title": "Details"}}
+                    ]
+                    footer_message = "End of products • Tap Start Over to begin"
+                
+            elif is_category_nav:
+                # Category navigation
                 save_conversation_message(
                     session_id=user_session['session_id'],
                     user_id=user_session['user_id'],
-                    content=f"Now viewing category: {body_text}",
+                    content=f"Now viewing category: {body_text[:50]}...",
                     role="assistant"
                 )
                 
-                send_interactive_message(
-                    phone_number_id=phone_number_id,
-                    recipient_phone=sender_id,
-                    interactive_type="button",
-                    header={
-                        "type": "image",
-                        "image": {"link": id}
-                    },
-                    body={"text": body_text},
-                    footer={"text": "Navigate with the buttons below"},
-                    action={"buttons": [
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(show_index + 1), "next"])}", "title": "Next"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(show_index+1), "showproducts"])}", "title": "Show Products"}},
-                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(show_index+1), "explore"])}", "title": "Explore"}}
-                    ]}
+                # Build buttons for category navigation
+                if has_next:
+                    buttons = [
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index + 1), "next"])}", "title": "Next ➡️"}},
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "showproducts"])}", "title": "Show Products"}},
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "explore"])}", "title": "Explore"}}
+                    ]
+                    footer_message = f"Category {current_index} • More categories available"
+                else:
+                    buttons = [
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + ["1", "next"])}", "title": "Start Over 🔄"}},
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "showproducts"])}", "title": "Show Products"}},
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "explore"])}", "title": "Explore"}}
+                    ]
+                    footer_message = "End of categories • Tap Start Over to begin"
+                    
+            elif is_cart_nav:
+                # Cart navigation
+                save_conversation_message(
+                    session_id=user_session['session_id'],
+                    user_id=user_session['user_id'],
+                    content=f"Viewing cart item {current_index}",
+                    role="assistant"
                 )
+                
+                # Build buttons for cart navigation
+                if has_next:
+                    buttons = [
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index + 1), "next"])}", "title": "Next ➡️"}},
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "remove"])}", "title": "Remove"}},
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "checkout"])}", "title": "Checkout"}}
+                    ]
+                    footer_message = f"Cart item {current_index} • More items in cart"
+                else:
+                    buttons = [
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + ["1", "next"])}", "title": "Start Over 🔄"}},
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "remove"])}", "title": "Remove"}},
+                        {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index), "checkout"])}", "title": "Checkout"}}
+                    ]
+                    footer_message = "Last cart item • Tap Start Over to review"
+            else:
+                # Unknown navigation type
+                buttons = [
+                    {"type": "reply", "reply": {"id": "browse_more", "title": "Browse More"}}
+                ]
+                footer_message = "Navigation"
+            
+            # Send the interactive message
+            send_interactive_message(
+                phone_number_id=phone_number_id,
+                recipient_phone=sender_id,
+                interactive_type="button",
+                header={
+                    "type": "image",
+                    "image": {"link": media_id}
+                } if media_id else None,
+                body={"text": body_text},
+                footer={"text": footer_message},
+                action={"buttons": buttons}
+            )
         else:
-            # No more items to show, show end of list message
-            logger.info(f"📊 No more items found. Showing end of list message.")
-            
-            # Extract parts from the button payload
-            base_parts = next_parts[:-2]
-            current_index = int(next_parts[-2])
-            
-            # Get current item data by constructing the right ID
-            current_item_id = "-".join(base_parts + [str(current_index)])
-            
-            # Get current item data for fallback
-            curr_response = supabase_client.table('interactive_messages').select('buttons', 'body', 'footer','media_id').eq('id', current_item_id).execute()
-            
-            if curr_response.data and len(curr_response.data) > 0:
-                button_data = curr_response.data[0].get('buttons', '')
-                body_text = curr_response.data[0].get('body', 'End of list')
-                footer_text = curr_response.data[0].get('footer', '')
-                id = curr_response.data[0].get('media_id', '')
-                
-                # Save navigation event to conversation history
-                save_conversation_message(
-                    session_id=user_session['session_id'],
-                    user_id=user_session['user_id'],
-                    content="[Clicked Next button - reached end of list]",
-                    role="user"
-                )
-                
-                # Check if this is product or category navigation
-                if "addtocart" in button_data:
-                    # This is product list end
-                    save_conversation_message(
-                        session_id=user_session['session_id'],
-                        user_id=user_session['user_id'],
-                        content=f"You've reached the end of the product list. Current product: {body_text}",
-                        role="assistant"
-                    )
-                    
-                    send_interactive_message(
-                        phone_number_id=phone_number_id,
-                        recipient_phone=sender_id,
-                        interactive_type="button",
-                        header={
-                            "type": "image",
-                            "image": {"link": id}
-                        },
-                        body={"text": body_text},
-                        footer={"text": "End of product list. What would you like to do?"},
-                        action={"buttons": [
-                            {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index+1), "addtocart"])}", "title": "Add to Cart"}},
-                            {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index+1), "details"])}", "title": "Details"}},
-                            {"type": "reply", "reply": {"id": "browse_more", "title": "Browse More"}}
-                        ]}
-                    )
-                elif "showproducts" in button_data:
-                    # This is category list end
-                    save_conversation_message(
-                        session_id=user_session['session_id'],
-                        user_id=user_session['user_id'],
-                        content=f"You've reached the end of the category list. Current category: {body_text}",
-                        role="assistant"
-                    )
-                    
-                    send_interactive_message(
-                        phone_number_id=phone_number_id,
-                        recipient_phone=sender_id,
-                        interactive_type="button",
-                        header={
-                            "type": "image",
-                            "image": {"link": id}
-                        },
-                        body={"text": body_text},
-                        footer={"text": "End of category list. What would you like to do?"},
-                        action={"buttons": [
-                            {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index+1), "showproducts"])}", "title": "Show Products"}},
-                            {"type": "reply", "reply": {"id": f"{"-".join(base_parts + [str(current_index+1), "explore"])}", "title": "Explore"}},
-                            {"type": "reply", "reply": {"id": "browse_more", "title": "Browse More"}}
-                        ]}
-                    )
-
-    if "addtocart" in button_payload:
-        # Get the current product info
-        product_response = supabase_client.table('interactive_messages').select('body').eq('secondary_id', "-".join(button_payload.split("-")[:-2]+[str(int(button_payload.split("-")[-2])-1),"next"])).execute()
+            # No item found - this shouldn't happen with proper data
+            logger.error(f"❌ No item found for secondary_id: {current_secondary_id}")
+            send_text_message(
+                phone_number_id=phone_number_id,
+                recipient_phone=sender_id,
+                message_text="Sorry, I couldn't find that item. Please try browsing again."
+            )
+    
+    elif "addtocart" in button_payload:
+        # Extract the current index from button payload
+        parts = button_payload.split("-")
+        current_index = int(parts[-2])
+        base_parts = parts[:-2]
+        
+        # Get the product info using the correct secondary_id
+        product_secondary_id = "-".join(base_parts + [str(current_index), "next"])
+        product_response = supabase_client.table('interactive_messages').select(
+            'body', 'product_id'
+        ).eq('secondary_id', product_secondary_id).execute()
+        
         product_text = ""
+        product_id = None
         if product_response.data and len(product_response.data) > 0:
             product_text = product_response.data[0]['body']
+            product_id = product_response.data[0].get('product_id')
         
         # Save button click as user action
         save_conversation_message(
             session_id=user_session['session_id'],
             user_id=user_session['user_id'],
-            content=f"[Clicked Add to Cart button for: {product_text}]",
+            content=f"[Clicked Add to Cart button]",
             role="user"
         )
         
         # Save user message to conversation history
-        user_message = f"Add to cart: {product_text}"
+        if product_id:
+            user_message = f"Add to cart product_id: {product_id}"
+        else:
+            user_message = f"Add to cart: {product_text[:100]}"
         save_conversation_message(
             session_id=user_session['session_id'],
             user_id=user_session['user_id'],
@@ -920,22 +1253,28 @@ def process_button_event(button_payload, sender_id, phone_number_id, message, na
         generate_and_send_response(data, message, sender_id, name, user_session, user_message)
 
     elif "details" in button_payload:
-        # Get the current product info
-        product_response = supabase_client.table('interactive_messages').select('body').eq('secondary_id', "-".join(button_payload.split("-")[:-2]+[str(int(button_payload.split("-")[-2])-1),"next"])).execute()
+        # Similar structure to addtocart
+        parts = button_payload.split("-")
+        current_index = int(parts[-2])
+        base_parts = parts[:-2]
+        
+        product_secondary_id = "-".join(base_parts + [str(current_index), "next"])
+        product_response = supabase_client.table('interactive_messages').select('body').eq(
+            'secondary_id', product_secondary_id
+        ).execute()
+        
         product_text = ""
         if product_response.data and len(product_response.data) > 0:
             product_text = product_response.data[0]['body']
         
-        # Save button click as user action
         save_conversation_message(
             session_id=user_session['session_id'],
             user_id=user_session['user_id'],
-            content=f"[Clicked Details button for: {product_text}]",
+            content=f"[Clicked Details button]",
             role="user"
         )
         
-        # Save user message to conversation history
-        user_message = f"Tell me more about: {product_text}"
+        user_message = f"Tell me more about: {product_text[:100]}"
         save_conversation_message(
             session_id=user_session['session_id'],
             user_id=user_session['user_id'],
@@ -943,33 +1282,36 @@ def process_button_event(button_payload, sender_id, phone_number_id, message, na
             role="user"
         )
         
-        # Create data structure similar to process_message_event
         data = {
             "metadata": {
                 "phone_number_id": phone_number_id
             }
         }
         
-        # Now call generate_and_send_response to process the product details request
         generate_and_send_response(data, message, sender_id, name, user_session, user_message)
         
     elif "showproducts" in button_payload:
-        # Handle show products button press
-        response = supabase_client.table('interactive_messages').select('body').eq('secondary_id', "-".join(button_payload.split("-")[:-2]+[str(int(button_payload.split("-")[-2])-1),"next"])).execute()
+        parts = button_payload.split("-")
+        current_index = int(parts[-2])
+        base_parts = parts[:-2]
+        
+        category_secondary_id = "-".join(base_parts + [str(current_index), "next"])
+        response = supabase_client.table('interactive_messages').select('body').eq(
+            'secondary_id', category_secondary_id
+        ).execute()
+        
         category_text = ""
         if response.data and len(response.data) > 0:
             category_text = response.data[0]['body']
         
-        # Save button click as user action
         save_conversation_message(
             session_id=user_session['session_id'],
             user_id=user_session['user_id'],
-            content=f"[Clicked Show Products button for category: {category_text}]",
+            content=f"[Clicked Show Products button]",
             role="user"
         )
         
-        # Save user message to conversation history
-        user_message = f"Show products in category: {category_text}"
+        user_message = f"Show products in category: {category_text[:100]}"
         save_conversation_message(
             session_id=user_session['session_id'],
             user_id=user_session['user_id'],
@@ -977,33 +1319,36 @@ def process_button_event(button_payload, sender_id, phone_number_id, message, na
             role="user"
         )
         
-        # Create data structure similar to process_message_event
         data = {
             "metadata": {
                 "phone_number_id": phone_number_id
             }
         }
         
-        # Now call generate_and_send_response to process the show products request
         generate_and_send_response(data, message, sender_id, name, user_session, user_message)
         
     elif "explore" in button_payload:
-        # Handle explore button press
-        response = supabase_client.table('interactive_messages').select('body').eq('secondary_id', "-".join(button_payload.split("-")[:-2]+[str(int(button_payload.split("-")[-2])-1),"next"])).execute()
+        parts = button_payload.split("-")
+        current_index = int(parts[-2])
+        base_parts = parts[:-2]
+        
+        category_secondary_id = "-".join(base_parts + [str(current_index), "next"])
+        response = supabase_client.table('interactive_messages').select('body').eq(
+            'secondary_id', category_secondary_id
+        ).execute()
+        
         category_text = ""
         if response.data and len(response.data) > 0:
             category_text = response.data[0]['body']
         
-        # Save button click as user action
         save_conversation_message(
             session_id=user_session['session_id'],
             user_id=user_session['user_id'],
-            content=f"[Clicked Explore button for category: {category_text}]",
+            content=f"[Clicked Explore button]",
             role="user"
         )
         
-        # Save user message to conversation history
-        user_message = f"Tell me more about category: {category_text}"
+        user_message = f"Tell me more about category: {category_text[:100]}"
         save_conversation_message(
             session_id=user_session['session_id'],
             user_id=user_session['user_id'],
@@ -1011,19 +1356,15 @@ def process_button_event(button_payload, sender_id, phone_number_id, message, na
             role="user"
         )
         
-        # Create data structure similar to process_message_event
         data = {
             "metadata": {
                 "phone_number_id": phone_number_id
             }
         }
         
-        # Now call generate_and_send_response to process the explore category request
         generate_and_send_response(data, message, sender_id, name, user_session, user_message)
         
     elif "browse_more" in button_payload:
-        # Handle browse more button press - takes user back to category view
-        # Save button click as user action
         save_conversation_message(
             session_id=user_session['session_id'],
             user_id=user_session['user_id'],
@@ -1039,20 +1380,78 @@ def process_button_event(button_payload, sender_id, phone_number_id, message, na
             role="user"
         )
         
-        # Create data structure similar to process_message_event
         data = {
             "metadata": {
                 "phone_number_id": phone_number_id
             }
         }
         
-        # Now call generate_and_send_response to process the browse more request
         generate_and_send_response(data, message, sender_id, name, user_session, user_message)
 
+    elif "remove" in button_payload:
+        parts = button_payload.split("-")
+        current_index = int(parts[-2])
+        base_parts = parts[:-2]
+        
+        cart_secondary_id = "-".join(base_parts + [str(current_index), "next"])
+        cart_response = supabase_client.table('interactive_messages').select('body').eq(
+            'secondary_id', cart_secondary_id
+        ).execute()
+        
+        cart_item_text = ""
+        if cart_response.data and len(cart_response.data) > 0:
+            cart_item_text = cart_response.data[0]['body']
+
+        save_conversation_message(
+            session_id=user_session['session_id'],
+            user_id=user_session['user_id'],
+            content=f"[Clicked Remove Item button]",
+            role="user"
+        )
+
+        user_message = f"Remove from cart: {cart_item_text[:100]}"
+        save_conversation_message(
+            session_id=user_session['session_id'],
+            user_id=user_session['user_id'],
+            content=user_message,
+            role="user"
+        )
+
+        data = {
+            "metadata": {
+                "phone_number_id": phone_number_id
+            }
+        }
+
+        generate_and_send_response(data, message, sender_id, name, user_session, user_message)
+
+    elif "checkout" in button_payload:
+        save_conversation_message(
+            session_id=user_session['session_id'],
+            user_id=user_session['user_id'],
+            content="[Clicked Checkout button]",
+            role="user"
+        )
+
+        user_message = "I want to checkout"
+        save_conversation_message(
+            session_id=user_session['session_id'],
+            user_id=user_session['user_id'],
+            content=user_message,
+            role="user"
+        )
+
+        data = {
+            "metadata": {
+                "phone_number_id": phone_number_id
+            }
+        }
+
+        generate_and_send_response(data, message, sender_id, name, user_session, user_message)
 
 def update_cart_add_products(user_session, response_data):
-    """Helper function to add products to cart from LLM response - MODIFIED to return status"""
-    
+    """Helper function to add products to cart from LLM response using CartManager"""
+
     # Initialize status tracking
     operation_status = {
         "success": False,
@@ -1062,249 +1461,118 @@ def update_cart_add_products(user_session, response_data):
         "user_message": "",
         "cart_updated": False
     }
-    
+
     try:
-        # Import the get_product_details function (add this at the top of your file)
-        from .db_inventory import get_product_details
-        
+        from .cart_manager import get_cart_manager
+
         # Check if the response contains a "NEED" key with non-empty value
         if "NEED" in response_data and response_data["NEED"]:
             logger.info(f"🔄 LLM needs more information: {response_data.get('NEED')}")
             operation_status["needs_clarification"] = True
             operation_status["user_message"] = response_data.get("reply", "Please provide more details.")
             return operation_status
-        
+
         # Get the products from the response
         products = response_data.get('products', [])
         if not products:
             logger.warning("⚠️ No products found in response data")
             operation_status["user_message"] = response_data.get("reply", "No products specified for addition.")
             return operation_status
-            
+
         logger.info(f"🔄 Processing {len(products)} products for cart addition")
-        
-        # Initialize cart if needed
-        if not isinstance(user_session.get('cart'), dict):
-            user_session['cart'] = {'items': [], 'total': 0}
-        if not isinstance(user_session['cart'].get('items'), list):
-            user_session['cart']['items'] = []
-        
+
+        # Get cart manager instance
+        cart_manager = get_cart_manager()
+
+        # Get current cart JSON
+        current_cart_json = user_session.get('cart_json', '{}')
+
         # Process each product
         for product in products:
             try:
-                # Get product details - handle various formats that might come from LLM
+                # Extract product information from LLM response
                 if isinstance(product, dict):
                     product_name = product.get('product', '')
-                    product_id = product.get('product_id', None)
-                    product_price = product.get('price', None)  # Get price if provided in response
+                    product_id = product.get('product_id') or product.get('id')
                     quantity = int(product.get('quantity', 1))
-                    description = product.get('description', '')
-                    variant = product.get('variant', '')
-                elif isinstance(product, str):
-                    # If product is a simple string
-                    product_name = product
-                    product_id = None
-                    product_price = None
-                    quantity = 1
-                    description = ''
-                    variant = ''
+                    size = product.get('size', '')
+                    color = product.get('color', '')
                 else:
                     logger.warning(f"⚠️ Unexpected product format: {type(product)}")
                     operation_status["errors"].append(f"Invalid product format: {type(product)}")
                     continue
-                
+
+                # Validate required fields
+                if not product_id:
+                    logger.warning(f"⚠️ Product ID missing for {product_name}")
+                    operation_status["errors"].append(f"Product ID missing for {product_name}")
+                    continue
+
                 if not product_name:
-                    logger.warning("⚠️ Skipping product with no name")
+                    logger.warning("⚠️ Product name missing")
                     operation_status["errors"].append("Product name missing")
                     continue
-                
-                logger.info(f"🔄 Adding product: {product_name}, quantity: {quantity}")
-                
-                # Find product in database using product_id if available
-                found_product = None
-                if product_id:
-                    product_result = get_product_details(product_id)
-                    
-                    if product_result['status'] == 'success' and product_result['data']:
-                        found_product = product_result['data']
-                        product_price = found_product.get('unit_price')  # Update price if found
-                        logger.info(f"📦 Found product by ID: {found_product.get('name')}")
-                
-                # If product not found by ID or ID not provided
-                if not found_product:
-                    # We need to use the global inventory to find by name
-                    # Handle global_inventory as string (JSON) if needed
-                    inventory_dict = global_inventory
-                    if isinstance(global_inventory, str):
-                        try:
-                            inventory_dict = json.loads(global_inventory)
-                        except json.JSONDecodeError:
-                            logger.error("❌ Failed to parse global_inventory as JSON")
-                            inventory_dict = {"products": []}
-                    
-                    # Safe check for inventory structure
-                    if isinstance(inventory_dict, dict):
-                        inventory_products = inventory_dict.get('products', [])
-                        
-                        # Try to find by name
-                        for p in inventory_products:
-                            if not isinstance(p, dict):
-                                continue
-                            p_name = p.get('name', '')
-                            if p_name and p_name.lower() == product_name.lower():
-                                # Found by name, now get details by ID
-                                p_id = p.get('id', '')
-                                if p_id:
-                                    product_result = get_product_details(p_id)
-                                    if product_result['status'] == 'success' and product_result['data']:
-                                        found_product = product_result['data']
-                                        logger.info(f"📦 Found product by name: {found_product.get('name')}, price: {found_product.get('price')}")
-                                        break
-                
-                if not found_product:
-                    logger.warning(f"⚠️ Product not found in database: {product_name}")
-                    # Add a placeholder product if not found - use price from response if available
-                    price_to_use = 0.0
-                    if product_price is not None:
-                        try:
-                            price_to_use = float(product_price)
-                        except (ValueError, TypeError):
-                            logger.warning(f"⚠️ Invalid price in product data: {product_price}")
-                    
-                    new_item = {
-                        'id': product_id or f"placeholder_{product_name.replace(' ', '_')}",
-                        'name': product_name,
-                        'quantity': quantity,
-                        'price': price_to_use
-                    }
-                    # Add description and variant if available
-                    if description:
-                        new_item['description'] = description
-                    if variant:
-                        new_item['variant'] = variant
-                        
-                    user_session['cart']['items'].append(new_item)
-                    operation_status["added_items"].append({
-                        "product_name": product_name,
-                        "quantity": quantity,
-                        "price": price_to_use,
-                        "action": "added_placeholder"
-                    })
-                    operation_status["cart_updated"] = True
-                    logger.info(f"✅ Added placeholder product to cart: {product_name}, price: {price_to_use}")
+
+                if not size:
+                    logger.warning(f"⚠️ Size missing for {product_name}")
+                    operation_status["errors"].append(f"Size required for {product_name}")
                     continue
-                    
-                # Check if product already in cart
-                existing_product = None
-                for item in user_session['cart']['items']:
-                    if not isinstance(item, dict):
-                        continue  # Skip if not a dictionary
-                    
-                    # Match by ID if available, otherwise by name
-                    if product_id and item.get('id') == product_id:
-                        existing_product = item
-                        break
-                    elif item.get('name', '').lower() == product_name.lower():
-                        existing_product = item
-                        break
-                
-                # Get the price to use (with priority order)
-                price_to_use = 0.0
-                # 1. Try price from database
-                if found_product.get('price') is not None:
-                    try:
-                        price_to_use = float(found_product['price'])
-                        logger.info(f"📦 Using price from database: {price_to_use}")
-                    except (ValueError, TypeError):
-                        logger.warning(f"⚠️ Invalid price in database: {found_product.get('price')}")
-                
-                # 2. If database price is 0 or invalid, try price from response
-                if price_to_use == 0.0 and product_price is not None:
-                    try:
-                        price_to_use = float(product_price)
-                        logger.info(f"📦 Using price from response: {price_to_use}")
-                    except (ValueError, TypeError):
-                        logger.warning(f"⚠️ Invalid price in response: {product_price}")
-                
-                if existing_product:
-                    # Update quantity of existing product
-                    old_quantity = int(existing_product.get('quantity', 0))
-                    existing_product['quantity'] = old_quantity + quantity
+
+                logger.info(f"🔄 Adding to cart: {product_name} (ID: {product_id}), Size: {size}, Color: {color}, Qty: {quantity}")
+
+                # Use CartManager to add the product
+                result = cart_manager.add_to_cart(
+                    cart_json=current_cart_json,
+                    product_id=product_id,
+                    product_name=product_name,
+                    color=color,
+                    size=size,
+                    quantity=quantity
+                )
+
+                if result['status'] == 'success':
+                    # Update current cart JSON for next iteration
+                    current_cart_json = result['cart']
+
                     operation_status["added_items"].append({
                         "product_name": product_name,
+                        "product_id": product_id,
                         "quantity": quantity,
-                        "price": price_to_use,
-                        "action": "updated_quantity",
-                        "total_quantity": existing_product['quantity']
+                        "size": size,
+                        "color": color,
+                        "action": "added_successfully"
                     })
                     operation_status["cart_updated"] = True
-                    logger.info(f"✅ Updated quantity for {product_name} to {existing_product['quantity']}")
+                    logger.info(f"✅ {result['message']}")
+
                 else:
-                    # Add new product to cart
-                    new_item = {
-                        'id': found_product.get('id', f"product_{product_name.replace(' ', '_')}"),
-                        'name': found_product.get('name', product_name),
-                        'quantity': quantity,
-                        'price': price_to_use  # Use the determined price
-                    }
-                    # Add description and variant if available from database or provided
-                    if found_product.get('description'):
-                        new_item['description'] = found_product['description']
-                    elif description:
-                        new_item['description'] = description
-                        
-                    if found_product.get('variant'):
-                        new_item['variant'] = found_product['variant']
-                    elif variant:
-                        new_item['variant'] = variant
-                        
-                    # Add category if available
-                    if found_product.get('categories') and isinstance(found_product['categories'], dict):
-                        new_item['category'] = found_product['categories'].get('name', '')
-                        
-                    user_session['cart']['items'].append(new_item)
-                    operation_status["added_items"].append({
-                        "product_name": product_name,
-                        "quantity": quantity,
-                        "price": price_to_use,
-                        "action": "added_new"
-                    })
-                    operation_status["cart_updated"] = True
-                    logger.info(f"✅ Added new product to cart: {product_name}, price: {price_to_use}")
-            
+                    logger.error(f"❌ Failed to add {product_name}: {result['message']}")
+                    operation_status["errors"].append(f"Failed to add {product_name}: {result['message']}")
+
+                    # If color/size not available, include available options
+                    if 'available_colors' in result:
+                        operation_status["errors"].append(f"Available colors: {', '.join(result['available_colors'])}")
+                    if 'available_sizes' in result:
+                        operation_status["errors"].append(f"Available sizes: {', '.join(result['available_sizes'])}")
+
             except Exception as e:
-                error_msg = f"Error processing product {product}: {str(e)}"
-                logger.error(f"❌ {error_msg}")
-                operation_status["errors"].append(error_msg)
-        
-        # Calculate cart total if cart was updated
+                logger.error(f"❌ Error processing product {product}: {e}")
+                operation_status["errors"].append(f"Error processing product: {str(e)}")
+
+        # Update user session with new cart
         if operation_status["cart_updated"]:
-            total = 0
-            for item in user_session['cart']['items']:
-                if isinstance(item, dict):
-                    price = float(item.get('price', 0))
-                    quantity = int(item.get('quantity', 0))
-                    total += price * quantity
-            
-            user_session['cart']['total'] = total
-            logger.info(f"✅ Cart updated with {len(user_session['cart']['items'])} items, total: {total}")
-            
-            # Debug - log the entire cart
-            logger.info(f"📦 Current cart state: {json.dumps(user_session['cart'])}")
-        
+            user_session['cart_json'] = current_cart_json
+
         # Set success status
         operation_status["success"] = len(operation_status["added_items"]) > 0
-        operation_status["user_message"] = response_data.get("reply", "Products added to cart successfully.")
-        
+        operation_status["user_message"] = response_data.get("reply", "Products processed successfully.")
+
         return operation_status
-        
+
     except Exception as e:
-        logger.error(f"❌ Error in update_cart_add_products: {str(e)}")
-        # Even if error, try to return a valid cart
-        if not isinstance(user_session.get('cart'), dict):
-            user_session['cart'] = {'items': [], 'total': 0}
-        
-        operation_status["errors"].append(f"System error: {str(e)}")
+        logger.error(f"❌ Error in update_cart_add_products: {e}")
+        operation_status["errors"].append(f"Cart update failed: {str(e)}")
+        operation_status["user_message"] = "Sorry, there was an error updating your cart."
         return operation_status
 
 
@@ -1461,7 +1729,278 @@ def process_generic_event(data):
     """Handle other event types."""
     logger.info(f"⚠️ Unhandled event: {json.dumps(data, indent=2)}")
 
-def generate_llm_response(text, sender_name, cart=None, inventory=None, conversation_history=None, max_retries=3):
+def format_applied_filters_footer(filters: Dict) -> str:
+    """Format applied filters for display in footer"""
+    if not filters:
+        return ""
+
+    filter_parts = []
+
+    # Price range
+    price_range = filters.get('price_range', {})
+    if price_range and (price_range.get('min') is not None or price_range.get('max') is not None):
+        min_price = price_range.get('min')
+        max_price = price_range.get('max')
+        if min_price is not None and max_price is not None:
+            filter_parts.append(f"Price: ₹{min_price}-₹{max_price}")
+        elif min_price is not None:
+            filter_parts.append(f"Price: ₹{min_price}+")
+        elif max_price is not None:
+            filter_parts.append(f"Price: Under ₹{max_price}")
+
+    # Colors
+    colors = filters.get('colors', [])
+    if colors and isinstance(colors, list) and len(colors) > 0:
+        if len(colors) == 1:
+            filter_parts.append(f"Color: {colors[0]}")
+        else:
+            filter_parts.append(f"Colors: {', '.join(colors[:3])}")
+
+    # Sizes
+    sizes = filters.get('sizes', [])
+    if sizes and isinstance(sizes, list) and len(sizes) > 0:
+        if len(sizes) == 1:
+            filter_parts.append(f"Size: {sizes[0]}")
+        else:
+            filter_parts.append(f"Sizes: {', '.join(map(str, sizes[:3]))}")
+
+    # Materials
+    materials = filters.get('materials', [])
+    if materials and isinstance(materials, list) and len(materials) > 0:
+        if len(materials) == 1:
+            filter_parts.append(f"Material: {materials[0]}")
+        else:
+            filter_parts.append(f"Materials: {', '.join(materials[:2])}")
+
+    # Occasions
+    occasions = filters.get('occasions', [])
+    if occasions and isinstance(occasions, list) and len(occasions) > 0:
+        if len(occasions) == 1:
+            filter_parts.append(f"Occasion: {occasions[0]}")
+        else:
+            filter_parts.append(f"Occasions: {', '.join(occasions[:2])}")
+
+    if filter_parts:
+        return f"🔍 Applied filters: {' | '.join(filter_parts)}"
+
+    return ""
+
+def handle_view_inventory_with_search(user_id: str, message: str, user_name: str = "Customer"):
+    """Handle view inventory using search.py instead of LLM"""
+    global search_engine
+
+    try:
+        # Check if user is asking for non-footwear items
+        non_footwear_keywords = [
+            "clothes", "clothing", "cotton", "fabric", "shirts", "pants", "dress", "kurta", "kameez",
+            "suit", "dupatta", "scarf", "lawn", "cambric", "voile", "linen", "silk", "chiffon"
+        ]
+
+        is_non_footwear_query = any(keyword.lower() in message.lower() for keyword in non_footwear_keywords)
+
+        if is_non_footwear_query:
+            # Get categories for interactive messages even for non-footwear responses
+            try:
+                categories_result = get_all_categories()
+                category_details = []
+                if categories_result['status'] == 'success':
+                    categories = categories_result['data']
+                    for category in categories:
+                        category_details.append({
+                            "category_id": category.get('id'),
+                            "reply": f"{category.get('name', 'Unknown Category')} - {category.get('description', 'Premium footwear collection')}"
+                        })
+            except Exception as e:
+                logger.error(f"Error loading categories for non-footwear response: {e}")
+                category_details = []
+
+            return {
+                "intent": "view_inventory",
+                "reply": f"Hi {user_name}, I appreciate your interest! However, we are ECS - Ehsan Chappal Store and we specialize exclusively in footwear. We don't carry clothing items like cotton clothes or fabric suits.\n\nWe have a beautiful collection of:\n- Ladies shoes\n- Chappals\n- Sandals\n- Slippers\n\nWould you like to see our footwear collection instead?",
+                "show_products": False,
+                "show_categories": True,
+                "category_details": category_details
+            }
+
+        # Check if this is a general query (should show categories)
+        general_queries = [
+            "kya hai", "kya kya hai", "kya he", "kya kya he", "what do you have",
+            "what products", "view inventory", "inventory", "categories", 
+            "what is available", "acha apke pas kya kya he"
+        ]
+
+        # Special handling for "show me" - only treat as general if not followed by specific terms
+        show_me_pattern = "show me"
+        specific_product_terms = [
+            "heels", "sandals", "slippers", "shoes", "boots", "flats", "pumps", 
+            "loafers", "sneakers", "khussas", "chappals", "mules"
+        ]
+        
+        is_general_query = any(query.lower() in message.lower() for query in general_queries)
+        
+        # Check for "show me" with specific product terms
+        if show_me_pattern.lower() in message.lower():
+            # If "show me" is followed by a specific product term, treat as specific search
+            has_specific_term = any(term.lower() in message.lower() for term in specific_product_terms)
+            if has_specific_term:
+                is_general_query = False
+            else:
+                # "show me" without specific terms is general
+                is_general_query = True
+        
+        # Also check for single word "products" - if user just says "products", show categories
+        if message.lower().strip() == "products":
+            is_general_query = True
+
+        if is_general_query:
+            # Show categories for general queries
+            try:
+                categories_result = get_all_categories()
+                if categories_result['status'] == 'success':
+                    categories = categories_result['data']
+                    category_list = []
+                    category_details = []
+                    
+                    for i, category in enumerate(categories, 1):
+                        category_list.append(f"{i}. {category.get('name', 'Unknown Category')}")
+                        if category.get('description'):
+                            category_list.append(f"   {category.get('description')}")
+                        
+                        # Build category_details for interactive messages
+                        category_details.append({
+                            "category_id": category.get('id'),
+                            "reply": f"{category.get('name', 'Unknown Category')} - {category.get('description', 'Premium footwear collection')}"
+                        })
+
+                    reply_text = f"Hi {user_name}, here are our product categories:\n\n" + "\n".join(category_list)
+                    reply_text += f"\n\nWe have {len(categories)} categories available. Please let me know what type of footwear you're looking for!"
+
+                    return {
+                        "intent": "view_inventory",
+                        "reply": reply_text,
+                        "show_products": False,
+                        "show_categories": True,
+                        "category_details": category_details
+                    }
+                else:
+                    return {
+                        "intent": "view_inventory",
+                        "reply": f"Hi {user_name}, we have a wide selection of footwear including shoes, sandals, slippers, and more. What type are you looking for?",
+                        "show_products": False,
+                        "show_categories": True,
+                        "category_details": []
+                    }
+            except Exception as e:
+                logger.error(f"Error loading categories: {e}")
+                return {
+                    "intent": "view_inventory",
+                    "reply": f"Hi {user_name}, we have a variety of footwear available. What type are you interested in?",
+                    "show_products": False,
+                    "show_categories": True,
+                    "category_details": []
+                }
+
+        # For specific queries, continue with search
+        if search_engine is None:
+            logger.warning("⚠️ Search engine not initialized, using fallback response")
+            return {
+                "intent": "view_inventory",
+                "reply": f"Hi {user_name}, I'm setting up the inventory search. Please try again in a moment.",
+                "show_products": False,
+                "show_categories": False
+            }
+
+        # Use the search engine to find products with conversation context
+        # For WhatsApp integration, we'll pass the conversation history from the user session
+        from .session_manager_conversation import get_user_session
+        try:
+            user_session = get_user_session(user_id, user_name)
+            conversation_history = user_session.get('conversation_history', [])
+        except:
+            conversation_history = []
+
+        search_result = search_engine.conversation_search(user_id, message, top_k=25, external_conversation=conversation_history)
+
+        # Handle case where search_result is None (connection failure)
+        if search_result and search_result.get("success") and search_result.get("products"):
+            products = search_result["products"]
+            total_found = search_result.get("total_found", len(products))
+
+            # Format response
+            if total_found == 0:
+                reply_text = f"Hi {user_name}, I couldn't find any products matching '{message}'. Please try a different search term."
+            else:
+                # Create a formatted product list
+                product_list = []
+                for i, product in enumerate(products[:10], 1):  # Show max 10 products
+                    price_text = f"₹{product.get('price', 'N/A')}"
+                    if product.get('sale_price') and product.get('is_on_sale'):
+                        price_text = f"₹{product.get('sale_price')} (was ₹{product.get('price')})"
+
+                    product_text = f"{i}. {product.get('title', 'Unknown Product')}\n   Price: {price_text}"
+
+                    if product.get('colors'):
+                        colors = product.get('colors')
+                        if isinstance(colors, list):
+                            color_text = ', '.join(colors[:3])  # Show max 3 colors
+                            if len(colors) > 3:
+                                color_text += f" (+{len(colors)-3} more)"
+                        else:
+                            color_text = str(colors)
+                        product_text += f"\n   Colors: {color_text}"
+
+                    if product.get('available_sizes'):
+                        sizes = product.get('available_sizes')
+                        if isinstance(sizes, list):
+                            size_text = ', '.join(map(str, sizes[:5]))  # Show max 5 sizes
+                            if len(sizes) > 5:
+                                size_text += f" (+{len(sizes)-5} more)"
+                        else:
+                            size_text = str(sizes)
+                        product_text += f"\n   Sizes: {size_text}"
+
+                    product_list.append(product_text)
+
+                reply_text = f"Hi {user_name}, I found {total_found} products"
+                if search_result.get("enhanced_query") and search_result.get("enhanced_query") != message:
+                    reply_text += f" for '{search_result.get('enhanced_query')}'"
+                reply_text += ":\n\n" + "\n\n".join(product_list)
+
+                if total_found > 10:
+                    reply_text += f"\n\n... and {total_found - 10} more products. Try being more specific to see fewer results."
+
+                # Add applied filters footer for interactive messages
+                if search_result.get("specifications") and search_result.get("specifications", {}).get("filters"):
+                    filters_footer = format_applied_filters_footer(search_result["specifications"]["filters"])
+                    if filters_footer:
+                        reply_text += f"\n\n{filters_footer}"
+        else:
+            # Handle case where search_result is None or unsuccessful
+            if search_result:
+                error_msg = search_result.get("error", "Search failed")
+            else:
+                error_msg = "Connection failed"
+            reply_text = f"Hi {user_name}, I'm having trouble searching the inventory: {error_msg}. Please try again in a moment."
+
+        return {
+            "intent": "view_inventory",
+            "reply": reply_text,
+            "show_products": True,
+            "show_categories": False,
+            "product_details": search_result.get("products", [])[:10] if search_result and search_result.get("success") else [],
+            "applied_filters": search_result.get("specifications", {}).get("filters", {}) if search_result and search_result.get("success") else {}
+        }
+
+    except Exception as e:
+        logger.error(f"❌ Error in handle_view_inventory_with_search: {e}")
+        return {
+            "intent": "view_inventory",
+            "reply": f"Hi {user_name}, I'm having technical difficulties searching the inventory. Please try again.",
+            "show_products": False,
+            "show_categories": False
+        }
+
+def generate_llm_response(text, sender_name, cart=None, inventory=None, conversation_history=None, max_retries=3, user_id=None):
     """
     Generate a response using LLM.py functions with retry logic for rate limiting
     
@@ -1503,7 +2042,9 @@ def generate_llm_response(text, sender_name, cart=None, inventory=None, conversa
                 response = handle_smalltalk(text, sender_name, conversation_history)
                 
             elif intent == "view_inventory":
-                response = handle_view_inventory(text, inventory_json, conversation_history, sender_name)
+                # Use enhanced search-based handler instead of LLM to handle large inventory efficiently
+                search_response = handle_view_inventory_with_search(user_id or "unknown", text, sender_name)
+                response = json.dumps(search_response)
                 
             elif intent == "add_to_cart":
                 response = handle_add_to_cart(text, cart_json, inventory_json, conversation_history, sender_name)

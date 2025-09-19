@@ -278,7 +278,7 @@ def send_interactive_message(phone_number_id, recipient_phone, interactive_type,
     
     if footer:
         interactive_obj["footer"] = footer
-        print("abcx",interactive_obj["footer"]["text"])
+        logger.debug(f"Footer text: {interactive_obj['footer']['text']}")
         if len(interactive_obj["footer"]["text"]) > 60:
             logger.error("Footer text exceeds maximum length of 60 characters")
             interactive_obj["footer"]["text"] = interactive_obj["footer"]["text"][:60]
@@ -301,21 +301,19 @@ def send_interactive_message(phone_number_id, recipient_phone, interactive_type,
             payload["context"] = {}
         payload["context"]["message_id"] = id
     
-    # DEBUG: Print request information before sending
-    logger.info("=== WhatsApp API Request Debug ===")
-    logger.info(f"URL: {url}")
-    logger.info(f"Headers: {headers}")
-    logger.info(f"Payload: {json.dumps(payload, indent=2)}")
-    logger.info("===============================")
+    # Request debug information
+    logger.debug("=== WhatsApp API Request Debug ===")
+    logger.debug(f"URL: {url}")
+    logger.debug(f"Payload: {json.dumps(payload, indent=2)}")
+    logger.debug("===============================")
     
     try:
         # Send the request
         response = requests.post(url, headers=headers, json=payload, timeout=10)
         
-        # DEBUG: Print response information after sending
+        # Response debug information
         logger.debug("=== WhatsApp API Response Debug ===")
         logger.debug(f"Status Code: {response.status_code}")
-        logger.debug(f"Response Headers: {dict(response.headers)}")
         logger.debug(f"Response Body: {response.text}")
         logger.debug("==============================")
         

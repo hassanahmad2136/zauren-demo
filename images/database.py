@@ -30,11 +30,12 @@ def upload_to_cloudinary(image_path, public_id):
         return None
 
 # --- Update Supabase Record ---
-def update_supabase_image_path(product_id, image_url):
+def update_supabase_product_images(product_id, image_url):
     try:
+        # Update the images array - add the new image URL to the array
         response = requests.patch(
             f"{SUPABASE_URL}/rest/v1/products?id=eq.{product_id}",
-            json={"image_path": image_url},
+            json={"images": [image_url]},  # Set as array with single image URL
             headers={
                 "apikey": SUPABASE_API_KEY,
                 "Authorization": f"Bearer {SUPABASE_API_KEY}",
@@ -44,11 +45,11 @@ def update_supabase_image_path(product_id, image_url):
             timeout=10
         )
         if response.status_code in [200, 204]:
-            pass
+            print(f"✅ Updated product {product_id} with image: {image_url}")
         else:
-            pass
+            print(f"❌ Failed to update product {product_id}: {response.status_code}")
     except Exception as e:
-        pass
+        print(f"❌ Error updating product {product_id}: {e}")
 
 # --- Process Images ---
 def process_images(folder_path):
@@ -58,7 +59,7 @@ def process_images(folder_path):
             file_path = os.path.join(folder_path, filename)
             image_url = upload_to_cloudinary(file_path, public_id=product_id)
             if image_url:
-                update_supabase_image_path(product_id, image_url)
+                update_supabase_product_images(product_id, image_url)
 
 # --- Run ---
 if __name__ == "__main__":

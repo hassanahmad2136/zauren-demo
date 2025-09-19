@@ -51,7 +51,7 @@ def upload_media_to_whatsapp(
     # Use placeholder image if requested
     if use_placeholder:
         # Get a placeholder image from placeholder.com
-        placeholder_url = "https://placehold.co/800x600.png"
+        placeholder_url = "https://placehold.co/800x800/EEE/31343C.png"
         print(f"Fetching placeholder image from: {placeholder_url}")
         
         # Download the placeholder image

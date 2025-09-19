@@ -133,40 +133,98 @@ def create_user_session(user_id):
         logger.error(f"❌ Error creating session: {e}")
         raise
 
+def is_session_expired(session_data, timeout_hours=8):
+    """
+    Check if a session has expired based on last interaction
+
+    Args:
+        session_data (dict): Session data
+        timeout_hours (int): Number of hours after which session expires (default: 8)
+
+    Returns:
+        bool: True if session is expired, False otherwise
+    """
+    try:
+        last_interaction = session_data.get('last_interaction')
+        if not last_interaction:
+            return True  # No last interaction means expired
+
+        last_interaction_time = datetime.datetime.fromisoformat(last_interaction.replace('Z', '+00:00'))
+        current_time = datetime.datetime.now(datetime.timezone.utc)
+
+        # Calculate time difference
+        time_diff = current_time - last_interaction_time
+        hours_since_last_interaction = time_diff.total_seconds() / 3600
+
+        logger.info(f"⏰ Session last activity: {hours_since_last_interaction:.1f} hours ago")
+
+        return hours_since_last_interaction > timeout_hours
+
+    except Exception as e:
+        logger.error(f"❌ Error checking session expiry: {e}")
+        return True  # Assume expired on error
+
+def expire_session(session_id):
+    """
+    Mark a session as inactive/expired
+
+    Args:
+        session_id (str): Session ID to expire
+    """
+    try:
+        logger.info(f"⏰ Expiring session: {session_id}")
+
+        supabase_client.table('sessions').update({
+            'is_active': False,
+            'session_end': datetime.datetime.now().isoformat()
+        }).eq('id', session_id).execute()
+
+        logger.info(f"✅ Session expired: {session_id}")
+
+    except Exception as e:
+        logger.error(f"❌ Error expiring session: {e}")
+
 def get_active_user_session(user_id):
     """
-    Get the active session for a user
-    
+    Get the active session for a user, checking for expiry
+
     Args:
         user_id (str): User ID
-        
+
     Returns:
-        dict or None: Session data if found, None otherwise
+        dict or None: Session data if found and not expired, None otherwise
     """
     try:
         logger.info(f"🔍 Looking up active session for user: {user_id}")
-        
+
         # Get all active sessions for user
         response = supabase_client.table('sessions') \
             .select('*') \
             .eq('user_id', user_id) \
             .eq('is_active', True) \
             .execute()
-        
+
         if response.data and len(response.data) > 0:
             # Sort manually by last_interaction in descending order and take the first one
             sorted_sessions = sorted(
-                response.data, 
+                response.data,
                 key=lambda x: x.get('last_interaction', ''),
                 reverse=True
             )
             session = sorted_sessions[0]
+
+            # Check if session has expired (8 hours of inactivity)
+            if is_session_expired(session, timeout_hours=8):
+                logger.info(f"⏰ Session {session['id']} has expired, marking as inactive")
+                expire_session(session['id'])
+                return None
+
             logger.info(f"✅ Found active session with ID: {session['id']}")
             return session
         else:
             logger.info(f"ℹ️ No active session found for user: {user_id}")
             return None
-    
+
     except Exception as e:
         logger.error(f"❌ Error retrieving active session: {e}")
         return None

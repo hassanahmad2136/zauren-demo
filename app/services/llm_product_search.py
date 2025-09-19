@@ -7,15 +7,18 @@ import json
 import re
 from typing import List, Dict, Any, Optional
 from .llm_core import safe_api_call, prepare_messages
+from .guardrails_config import validate_llm_response
 from .db_inventory import search_products, get_product_details, strict_product_search
+from .product_search_enhanced import search_products_enhanced
+from .price_manager import get_price_manager
 
 
 class ProductSearchOptimizer:
     """Optimizes product searches for large inventories"""
     
     def __init__(self):
-        self.max_search_results = 20  # Limit initial search results
-        self.max_llm_products = 15    # Maximum products to send to LLM
+        self.max_search_results = 15  # Limit initial search results from semantic search
+        self.max_llm_products = 10    # Maximum products to send to LLM
     
     def extract_search_terms(self, message: str) -> List[str]:
         """Extract relevant search terms from user message using LLM"""
@@ -45,52 +48,67 @@ class ProductSearchOptimizer:
             terms = json.loads(response)
             return terms if isinstance(terms, list) else []
         except:
-            # Fallback: simple exact keyword extraction
-            keywords = ['kurta', 'shalwar', 'kameez', 'waistcoat', 'sherwani', 'black', 'white', 'blue', 'red', 'green', 'yellow', 'brown', 'grey', 'navy', 'maroon', 'embroidered', 'plain', 'formal', 'casual', 'wedding', 'cotton', 'silk', 'velvet', 'linen']
+            # Fallback: simple exact keyword extraction for ECS chappal store
+            keywords = ['chappal', 'khussa', 'sandal', 'shoe', 'slipper', 'peshawari', 'kolhapuri', 'formal', 'casual', 'leather', 'synthetic', 'black', 'white', 'brown', 'tan', 'beige', 'size', 'comfortable', 'wedding', 'office', 'daily', 'traditional', 'modern']
             found_terms = [word for word in keywords if word.lower() in message.lower()]
             return found_terms[:3]
     
     def search_relevant_products(self, search_terms: List[str]) -> List[Dict]:
-        """Search database for products matching the terms with strict matching"""
-        # Check cache first
-        cache_key = tuple(search_terms)
-        cached_results = search_cache.get(cache_key)
-        if cached_results is not None:
-            return cached_results
-        
+        """Search database for products using enhanced semantic search"""
+        try:
+            # Use enhanced search with semantic capabilities
+            query = ' '.join(search_terms)
+            result = search_products_enhanced(query, limit=self.max_search_results)
+
+            if result.get('status') == 'success' and result.get('data'):
+                products = []
+                for item in result['data']:
+                    # Handle different result structures from enhanced search
+                    if 'product' in item:
+                        products.append(item['product'])
+                    else:
+                        products.append(item)
+                return products
+
+            # Fallback to traditional search if enhanced search fails
+            return self._fallback_search(search_terms)
+
+        except Exception as e:
+            print(f"Enhanced search failed, using fallback: {e}")
+            return self._fallback_search(search_terms)
+
+    def _fallback_search(self, search_terms: List[str]) -> List[Dict]:
+        """Fallback to traditional search methods"""
         # First try strict search for exact matches
         strict_search_result = strict_product_search(search_terms, exact_match=True)
         all_results = []
         seen_ids = set()
-        
+
         if strict_search_result['status'] == 'success' and strict_search_result['data']:
             for product in strict_search_result['data']:
                 if product['id'] not in seen_ids:
                     all_results.append(product)
                     seen_ids.add(product['id'])
-                    
+
                     if len(all_results) >= self.max_search_results:
                         break
-        
+
         # If we don't have enough results from strict search, try fuzzy search
         if len(all_results) < 5:  # Minimum threshold
             for term in search_terms:
                 if len(all_results) >= self.max_search_results:
                     break
-                    
+
                 search_result = search_products(term)
                 if search_result['status'] == 'success' and search_result['data']:
                     for product in search_result['data']:
                         if product['id'] not in seen_ids:
                             all_results.append(product)
                             seen_ids.add(product['id'])
-                            
+
                             if len(all_results) >= self.max_search_results:
                                 break
-        
-        # Cache the results
-        search_cache.set(cache_key, all_results)
-        
+
         return all_results
     
     def create_focused_inventory(self, products: List[Dict]) -> str:
@@ -98,17 +116,37 @@ class ProductSearchOptimizer:
         focused_products = []
         
         for product in products[:self.max_llm_products]:
+            # Get price manager for effective pricing
+            price_manager = get_price_manager()
+            effective_price = price_manager.get_effective_price(product)
+
             focused_product = {
                 "id": product.get("id"),
-                "name": product.get("name"),
+                "product_id": product.get("product_id"),
+                "name": product.get("title") or product.get("name"),
                 "description": product.get("description"),
-                "fixed_price": product.get("fixed_price"),
+                "price": product.get("price"),
+                "regular_price": product.get("regular_price"),
+                "sale_price": product.get("sale_price"),
+                "effective_price": effective_price,
+                "discount_percentage": product.get("discount_percentage"),
+                "is_on_sale": product.get("is_on_sale", False),
+                "sku": product.get("sku"),
                 "quantity": product.get("quantity", 0),
                 "category": product.get("categories", {}).get("name") if product.get("categories") else None,
                 "material": product.get("material"),
-                "color": product.get("color"),
+                "colors": product.get("colors", []),
+                "sizes": product.get("sizes", []),
+                "available_sizes": product.get("available_sizes", []),
+                "out_of_stock_sizes": product.get("out_of_stock_sizes", []),
+                "size_availability": product.get("size_availability", {}),
                 "style": product.get("style"),
-                "occasion": product.get("occasion")
+                "brand": product.get("brand"),
+                "images": product.get("images", []),
+                "image_count": product.get("image_count", 0),
+                "url": product.get("url"),
+                "product_sections": product.get("product_sections", {}),
+                "other_options": product.get("other_options", [])
             }
             focused_products.append(focused_product)
         
@@ -137,7 +175,7 @@ def handle_product_info_optimized(message: str, conversation_history: List[Dict]
             "products": [],
             "attribute_query": "clarification",
             "NEED": "search_terms",
-            "reply": f"Hi {user_name}, could you please be more specific about what product you're looking for? For example, mention the type (kurta, shalwar kameez), color, or style.",
+            "reply": f"Hi {user_name}, could you please be more specific about what footwear you're looking for? For example, mention the type (chappal, khussa, sandal, formal shoes), color, size, or style from ECS Ehsan Chappal Store.",
             "similar_products": [],
             "show_images": False
         })
@@ -150,7 +188,7 @@ def handle_product_info_optimized(message: str, conversation_history: List[Dict]
             "products": [],
             "attribute_query": "availability",
             "NEED": None,
-            "reply": f"Sorry {user_name}, I couldn't find any products matching '{', '.join(search_terms)}'. Could you try different keywords or browse our categories?",
+            "reply": f"Sorry {user_name}, I couldn't find any footwear matching '{', '.join(search_terms)}' at ECS Ehsan Chappal Store. Could you try different keywords like 'chappal', 'sandal', or 'formal shoes'?",
             "similar_products": [],
             "show_images": False
         })
@@ -160,8 +198,7 @@ def handle_product_info_optimized(message: str, conversation_history: List[Dict]
     
     # Step 4: Send to LLM for detailed analysis
     system_prompt = f"""
-    PRICES ARE FIXED, NO LOYALTY POINTS, NO DISCOUNTS, NO OFFERS, NO COUPONS, NO FREE SHIPPING, NO CASH ON DELIVERY, NO RETURNS, NO EXCHANGES, NO REFUNDS, NO CANCELLATIONS.
-    You are a WhatsApp shopping assistant for a Pakistani clothing e-commerce store specializing in traditional attire.
+    You are a WhatsApp shopping assistant for ECS - Ehsan Chappal Store, Pakistan's premier footwear destination specializing in traditional chappals, modern sandals, formal shoes, and quality footwear for all occasions.
 
     You've determined the user wants information about specific products (product_info intent).
 
@@ -299,6 +336,9 @@ def handle_product_info_optimized(message: str, conversation_history: List[Dict]
     
     messages = prepare_messages(system_prompt, message, conversation_history)
     llm_response = safe_api_call(messages)
+
+    # Apply GuardRails validation for product information
+    llm_response = validate_llm_response(llm_response, "product_info", {"inventory": focused_inventory})
     
     # Additional validation of LLM recommendations
     if llm_response and 'products' in llm_response:
@@ -371,9 +411,9 @@ def validate_product_recommendations(product_ids, search_terms: List[str], user_
                 products = inventory_data.get('products', [])
             
             for product in products:
-                if product.get('id') == product_id:
+                if product.get('id') == product_id or product.get('product_id') == product_id:
                     product_found = True
-                    product_name = product.get('name', '').lower()
+                    product_name = (product.get('name') or product.get('title') or '').lower()
                     product_desc = product.get('description', '').lower()
                     product_text = f"{product_name} {product_desc}"
                     

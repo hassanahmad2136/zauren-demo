@@ -8,19 +8,27 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-# Initialize Supabase client
+# Global client for connection reuse
+_supabase_client = None
+
 def get_supabase_client() -> Client:
     """
-    Initialize and return a Supabase client using environment variables
+    Initialize and return a Supabase client using environment variables.
+    Uses connection pooling for better concurrent performance.
     """
-    # Get credentials from environment variables
-    supabase_url = os.getenv("INVENTORY_SUPABASE_URL")
-    supabase_key = os.getenv("INVENTORY_SUPABASE_KEY")
-    
-    if not supabase_url or not supabase_key:
-        raise ValueError("INVENTORY_SUPABASE_URL and INVENTORY_SUPABASE_KEY environment variables must be set")
-    
-    return create_client(supabase_url, supabase_key)
+    global _supabase_client
+
+    if _supabase_client is None:
+        # Get credentials from environment variables
+        supabase_url = os.getenv("INVENTORY_SUPABASE_URL")
+        supabase_key = os.getenv("INVENTORY_SUPABASE_KEY")
+
+        if not supabase_url or not supabase_key:
+            raise ValueError("INVENTORY_SUPABASE_URL and INVENTORY_SUPABASE_KEY environment variables must be set")
+
+        _supabase_client = create_client(supabase_url, supabase_key)
+
+    return _supabase_client
 
 # Function to get all categories
 def get_all_categories() -> Dict[str, Any]:
@@ -49,26 +57,26 @@ def get_all_categories() -> Dict[str, Any]:
 # Function to get all products
 def get_all_products(include_categories: bool = True) -> Dict[str, Any]:
     """
-    Fetch all products from the database
-    
+    Fetch all products from the database with new schema support
+
     Args:
         include_categories: If True, includes the related category information
-        
+
     Returns:
         Dict with status, data, and error information
     """
     try:
         supabase = get_supabase_client()
         query = supabase.table('products')
-        
+
         if include_categories:
             # Include the related category data in the response
             query = query.select('*, categories(id, name, description)')
         else:
             query = query.select('*')
-            
+
         response = query.execute()
-        
+
         return {
             'status': 'success',
             'data': response.data,
@@ -126,10 +134,10 @@ def search_products(search_term: str) -> Dict[str, Any]:
         supabase = get_supabase_client()
         
         # PostgreSQL ILIKE for case-insensitive search with fuzzy matching
-        # Search in name, description, color, material, style, occasion
+        # Search in title, description, colors array, material, style, occasion
         response = supabase.table('products')\
             .select('*, categories(id, name)')\
-            .or_(f'name.ilike.%{search_term}%,description.ilike.%{search_term}%,color.ilike.%{search_term}%,material.ilike.%{search_term}%,style.ilike.%{search_term}%,occasion.ilike.%{search_term}%')\
+            .or_(f'title.ilike.%{search_term}%,description.ilike.%{search_term}%,colors::text.ilike.%{variation}%,material.ilike.%{search_term}%,style.ilike.%{search_term}%,occasion.ilike.%{search_term}%')\
             .limit(20)\
             .execute()
         
@@ -168,15 +176,20 @@ def advanced_product_search(filters: Dict[str, Any]) -> Dict[str, Any]:
         # Start building the query
         query = supabase.table('products').select('*, categories(id, name)')
         
+        # Build all filter conditions properly to avoid conflicting OR clauses
+        
+        # Start with base query
+        base_filters = []
+        
         # Search terms - check name, description, and attributes
         search_terms = filters.get('search_terms', [])
         if search_terms:
             search_conditions = []
             for term in search_terms:
                 search_conditions.extend([
-                    f'name.ilike.%{term}%',
+                    f'title.ilike.%{term}%',
                     f'description.ilike.%{term}%',
-                    f'color.ilike.%{term}%',
+                    f'colors::text.ilike.%{term}%',
                     f'material.ilike.%{term}%',
                     f'style.ilike.%{term}%',
                     f'occasion.ilike.%{term}%'
@@ -185,33 +198,35 @@ def advanced_product_search(filters: Dict[str, Any]) -> Dict[str, Any]:
             if search_conditions:
                 query = query.or_(','.join(search_conditions))
         
-        # Color filter
+        # Color filter - use separate query if search conditions were already applied
         colors = filters.get('colors', [])
-        if colors:
-            color_conditions = [f'color.ilike.%{color}%' for color in colors]
+        if colors and not search_terms:  # Only if no search terms to avoid OR conflict
+            color_conditions = [f'colors::text.ilike.%{color}%' for color in colors]
             query = query.or_(','.join(color_conditions))
         
-        # Category filter
+        # Category filter (use AND condition)
         categories = filters.get('categories', [])
         if categories:
             query = query.in_('category_id', categories)
         
-        # Price range filter
+        # Price range filter - use proper AND conditions
         price_range = filters.get('price_range', {})
         if price_range.get('min') is not None:
-            query = query.gte('fixed_price', price_range['min'])
+            min_price = price_range["min"]
+            query = query.gte('regular_price', min_price)
         if price_range.get('max') is not None:
-            query = query.lte('fixed_price', price_range['max'])
+            max_price = price_range["max"]
+            query = query.lte('regular_price', max_price)
         
-        # Material filter
+        # Material filter - only if no other OR conditions applied
         materials = filters.get('materials', [])
-        if materials:
+        if materials and not search_terms and not colors:
             material_conditions = [f'material.ilike.%{material}%' for material in materials]
             query = query.or_(','.join(material_conditions))
         
-        # Occasion filter
+        # Occasion filter - only if no other OR conditions applied
         occasions = filters.get('occasions', [])
-        if occasions:
+        if occasions and not search_terms and not colors and not materials:
             occasion_conditions = [f'occasion.ilike.%{occasion}%' for occasion in occasions]
             query = query.or_(','.join(occasion_conditions))
         
@@ -271,8 +286,8 @@ def strict_product_search(search_terms: List[str], exact_match: bool = True) -> 
                     blue_conditions = []
                     for variation in blue_variations:
                         blue_conditions.extend([
-                            f'name.ilike.*{variation}*',
-                            f'color.ilike.*{variation}*'
+                            f'title.ilike.*{variation}*',
+                            f'colors::text.ilike.%{variation}%'
                         ])
                     conditions.append(f"({','.join(blue_conditions)})")
                     
@@ -282,8 +297,8 @@ def strict_product_search(search_terms: List[str], exact_match: bool = True) -> 
                     green_conditions = []
                     for variation in green_variations:
                         green_conditions.extend([
-                            f'name.ilike.*{variation}*',
-                            f'color.ilike.*{variation}*'
+                            f'title.ilike.*{variation}*',
+                            f'colors::text.ilike.%{variation}%'
                         ])
                     conditions.append(f"({','.join(green_conditions)})")
                     
@@ -293,8 +308,8 @@ def strict_product_search(search_terms: List[str], exact_match: bool = True) -> 
                     red_conditions = []
                     for variation in red_variations:
                         red_conditions.extend([
-                            f'name.ilike.*{variation}*',
-                            f'color.ilike.*{variation}*'
+                            f'title.ilike.*{variation}*',
+                            f'colors::text.ilike.%{variation}%'
                         ])
                     conditions.append(f"({','.join(red_conditions)})")
                     
@@ -304,8 +319,8 @@ def strict_product_search(search_terms: List[str], exact_match: bool = True) -> 
                     white_conditions = []
                     for variation in white_variations:
                         white_conditions.extend([
-                            f'name.ilike.*{variation}*',
-                            f'color.ilike.*{variation}*'
+                            f'title.ilike.*{variation}*',
+                            f'colors::text.ilike.%{variation}%'
                         ])
                     conditions.append(f"({','.join(white_conditions)})")
                     
@@ -315,8 +330,8 @@ def strict_product_search(search_terms: List[str], exact_match: bool = True) -> 
                     black_conditions = []
                     for variation in black_variations:
                         black_conditions.extend([
-                            f'name.ilike.*{variation}*',
-                            f'color.ilike.*{variation}*'
+                            f'title.ilike.*{variation}*',
+                            f'colors::text.ilike.%{variation}%'
                         ])
                     conditions.append(f"({','.join(black_conditions)})")
                     
@@ -326,8 +341,8 @@ def strict_product_search(search_terms: List[str], exact_match: bool = True) -> 
                     brown_conditions = []
                     for variation in brown_variations:
                         brown_conditions.extend([
-                            f'name.ilike.*{variation}*',
-                            f'color.ilike.*{variation}*'
+                            f'title.ilike.*{variation}*',
+                            f'colors::text.ilike.%{variation}%'
                         ])
                     conditions.append(f"({','.join(brown_conditions)})")
                     
@@ -337,16 +352,16 @@ def strict_product_search(search_terms: List[str], exact_match: bool = True) -> 
                     grey_conditions = []
                     for variation in grey_variations:
                         grey_conditions.extend([
-                            f'name.ilike.*{variation}*',
-                            f'color.ilike.*{variation}*'
+                            f'title.ilike.*{variation}*',
+                            f'colors::text.ilike.%{variation}%'
                         ])
                     conditions.append(f"({','.join(grey_conditions)})")
                     
                 elif term_lower in ['navy', 'maroon', 'olive']:
                     # Handle specific shade requests
                     conditions.extend([
-                        f'name.ilike.*{term}*',
-                        f'color.ilike.*{term}*',
+                        f'title.ilike.*{term}*',
+                        f'colors::text.ilike.%{term}%',
                         f'description.ilike.*{term}*'
                     ])
                     
@@ -356,8 +371,8 @@ def strict_product_search(search_terms: List[str], exact_match: bool = True) -> 
                     conditions.append(f'description.ilike.*{term}*')
                     
                 elif term_lower in ['embroidered', 'embroidery', 'plain']:
-                    # For styles, check both name and style field
-                    conditions.append(f'name.ilike.*{term}*')
+                    # For styles, check both title and style field
+                    conditions.append(f'title.ilike.*{term}*')
                     conditions.append(f'style.ilike.*{term}*')
                     conditions.append(f'description.ilike.*{term}*')
                     
@@ -369,7 +384,7 @@ def strict_product_search(search_terms: List[str], exact_match: bool = True) -> 
                 else:
                     # General terms
                     conditions.extend([
-                        f'name.ilike.*{term}*',
+                        f'title.ilike.*{term}*',
                         f'description.ilike.*{term}*'
                     ])
             
@@ -380,9 +395,9 @@ def strict_product_search(search_terms: List[str], exact_match: bool = True) -> 
             conditions = []
             for term in search_terms:
                 conditions.extend([
-                    f'name.ilike.%{term}%',
+                    f'title.ilike.%{term}%',
                     f'description.ilike.%{term}%',
-                    f'color.ilike.%{term}%',
+                    f'colors::text.ilike.%{term}%',
                     f'material.ilike.%{term}%',
                     f'style.ilike.%{term}%',
                     f'occasion.ilike.%{term}%'
@@ -405,9 +420,9 @@ def strict_product_search(search_terms: List[str], exact_match: bool = True) -> 
                 
                 for term in search_terms:
                     term_lower = term.lower()
-                    product_name = product.get('name', '').lower()
+                    product_title = product.get('title', '').lower()
                     product_desc = product.get('description', '').lower()
-                    product_color = product.get('color', '').lower()
+                    product_colors = [color.lower() for color in product.get('colors', [])]
                     product_material = product.get('material', '').lower()
                     product_style = product.get('style', '').lower()
                     product_occasion = product.get('occasion', '').lower()
@@ -419,15 +434,15 @@ def strict_product_search(search_terms: List[str], exact_match: bool = True) -> 
                         # Color must be primary (in name) and not mixed with other colors
                         if term_lower == 'blue':
                             # Special validation for blue - reject if mixed with other colors
-                            if ('blue' in product_name and 
-                                not any(other_color in product_name for other_color in ['green', 'teal', 'navy', 'purple', 'olive'] if other_color != 'blue')):
+                            if ('blue' in product_title and
+                                not any(other_color in product_title for other_color in ['green', 'teal', 'navy', 'purple', 'olive'] if other_color != 'blue')):
                                 term_matched = True
-                            elif (product_color == 'blue' and 
+                            elif ('blue' in product_colors and
                                   not any(other_color in product_desc[:100] for other_color in ['green', 'teal', 'hint', 'accent', 'touch'])):
                                 term_matched = True
                         else:
                             # For other colors, check if it's the primary color
-                            if term_lower in product_name or product_color == term_lower:
+                            if term_lower in product_title or term_lower in product_colors:
                                 term_matched = True
                     
                     # Strict material validation
@@ -437,11 +452,11 @@ def strict_product_search(search_terms: List[str], exact_match: bool = True) -> 
                     
                     # Strict style validation
                     elif term_lower in ['embroidered', 'embroidery']:
-                        if any(embr_term in product_name or embr_term in product_desc for embr_term in ['embroidered', 'embroidery']):
+                        if any(embr_term in product_title or embr_term in product_desc for embr_term in ['embroidered', 'embroidery']):
                             term_matched = True
                     elif term_lower == 'plain':
                         # Plain means NO embroidery or patterns
-                        if not any(pattern_term in product_name or pattern_term in product_desc 
+                        if not any(pattern_term in product_title or pattern_term in product_desc
                                  for pattern_term in ['embroidered', 'embroidery', 'pattern', 'printed', 'design']):
                             term_matched = True
                     
@@ -452,7 +467,7 @@ def strict_product_search(search_terms: List[str], exact_match: bool = True) -> 
                     
                     # General term matching
                     else:
-                        if term_lower in product_name or term_lower in product_desc:
+                        if term_lower in product_title or term_lower in product_desc:
                             term_matched = True
                     
                     # If any term doesn't match, exclude this product
@@ -567,7 +582,7 @@ def get_purchase_orders(include_items: bool = True) -> Dict[str, Any]:
         if include_items and result:
             for i, order in enumerate(result):
                 items_response = supabase.table('purchase_order_items')\
-                    .select('*, products(id, name, sku)')\
+                    .select('*, products(id, title, sku)')\
                     .eq('purchase_order_id', order['id'])\
                     .execute()
                     
@@ -609,7 +624,7 @@ def get_inventory_transactions(
     try:
         supabase = get_supabase_client()
         query = supabase.table('inventory_transactions')\
-            .select('*, products(id, name, sku)')\
+            .select('*, products(id, title, sku)')\
             .order('transaction_date', desc=True)\
             .limit(limit)
         
@@ -686,7 +701,7 @@ def get_inventory_summary() -> Dict[str, Any]:
         
         # Get recent transactions
         recent_transactions_response = supabase.table('inventory_transactions')\
-            .select('*, products(name)')\
+            .select('*, products(title)')\
             .order('transaction_date', desc=True)\
             .limit(10)\
             .execute()
@@ -778,13 +793,18 @@ def get_stock_status_report() -> Dict[str, Any]:
             
         products = products_response.data
         
-        # Calculate total inventory value and other metrics
+        # Calculate total inventory value and other metrics using new price schema
         total_value = 0
         category_values = {}
         stock_report = []
-        
+
         for product in products:
-            product_value = product['quantity'] * product['unit_price']
+            # Use sale_price if available, otherwise regular_price
+            regular_price = float(product.get('regular_price', 0)) if product.get('regular_price') else 0
+            sale_price = float(product.get('sale_price', 0)) if product.get('sale_price') else 0
+            unit_price = sale_price if sale_price > 0 else regular_price
+            quantity = int(product.get('quantity', 0))
+            product_value = quantity * unit_price
             total_value += product_value
             
             # Track value by category
@@ -793,17 +813,23 @@ def get_stock_status_report() -> Dict[str, Any]:
                 category_values[category_name] = 0
             category_values[category_name] += product_value
             
-            # Add to detailed report
+            # Add to detailed report with updated pricing
             stock_report.append({
                 'id': product['id'],
-                'name': product['name'],
-                'sku': product['sku'],
+                'title': product['title'],
+                'sku': product.get('sku', ''),
                 'category': category_name,
-                'quantity': product['quantity'],
-                'unit_price': product['unit_price'],
+                'quantity': quantity,
+                'regular_price': regular_price,
+                'sale_price': sale_price,
+                'effective_price': unit_price,
                 'total_value': product_value,
-                'status': 'Out of Stock' if product['quantity'] == 0 else 
-                          'Low Stock' if product['quantity'] < 5 else 'In Stock'
+                'colors': product.get('colors', []),
+                'sizes': product.get('sizes', []),
+                'available_sizes': product.get('available_sizes', []),
+                'on_sale': sale_price > 0 and sale_price < regular_price,
+                'status': 'Out of Stock' if quantity == 0 else
+                          'Low Stock' if quantity < 5 else 'In Stock'
             })
         
         # Sort by value (highest first)
@@ -853,13 +879,23 @@ def create_nested_inventory_json(categories, products):
             products_by_category[category_id] = []
         
         # Add simplified product to the appropriate category
+        regular_price = float(product.get("regular_price", 0)) if product.get("regular_price") else 0
+        sale_price = float(product.get("sale_price", 0)) if product.get("sale_price") else 0
+        effective_price = sale_price if sale_price > 0 else regular_price
+
         products_by_category[category_id].append({
             "id": product["id"],
-            "name": product["name"],
+            "title": product["title"],
             "description": product["description"],
-            "quantity": product["quantity"],
-            "fixed_price": product["unit_price"],
-            "IMPORTANT": "PRICE IS FIXED, NO DISCOUNTS"
+            "quantity": int(product.get("quantity", 0)),
+            "regular_price": regular_price,
+            "sale_price": sale_price,
+            "effective_price": effective_price,
+            "sizes": product.get("sizes", []),
+            "colors": product.get("colors", []),
+            "available_sizes": product.get("available_sizes", []),
+            "on_sale": sale_price > 0 and sale_price < regular_price,
+            "IMPORTANT": "EFFECTIVE PRICE IS THE CURRENT SELLING PRICE"
         })
     
     # Create the nested category structure with products

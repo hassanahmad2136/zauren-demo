@@ -12,6 +12,7 @@ import time
 import threading
 from typing import List, Dict, Any
 from .llm_core import safe_api_call, prepare_messages
+from .guardrails_config import validate_llm_response
 import logging
 logger = logging.getLogger(__name__)
 # Import from shopping modules
@@ -22,6 +23,8 @@ from .llm_shopping_browse import (
 )
 # Import optimized product search
 from .llm_product_search import handle_product_info_optimized
+# Import enhanced multi-layer retrieval
+from .enhanced_product_handler import handle_product_search_enhanced
 from .llm_shopping_cart_add import (
     handle_add_to_cart_impl
 )
@@ -154,7 +157,7 @@ Your summary should be under 150 words and capture the critical information."""
     # Get Groq API credentials
     api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
-        print("❌ GROQ_API_KEY environment variable not set")
+        logger.error("❌ GROQ_API_KEY environment variable not set")
         return f"Summary unavailable due to missing API credentials"
     
     # Set the model to use
@@ -230,38 +233,44 @@ Your summary should be under 150 words and capture the critical information."""
 def classify_intent(message, cart, inventory, conversation_history, user_name=None):
     """Classify the user's intent from their message"""
     system_prompt = f"""
-        You are a WhatsApp ordering assistant for a Pakistani clothing e-commerce store specializing in traditional attire.
+        You are a WhatsApp ordering assistant for ECS - Ehsan Chappal Store, Pakistan's premium footwear destination specializing in traditional chappals, modern sandals, formal shoes, and comfortable everyday footwear.
         Your task is to accurately classify the user's intent into one of these categories:
         - smalltalk: General conversation, greetings, questions not related to ordering
-        - view_inventory: User wants to see available products or categories
-        - add_to_cart: User wants to add products to their cart
-        - remove_from_cart: User wants to remove products from their cart
-        - view_cart: User wants to see what's in their cart
-        - confirm_order: User wants to complete their order
-        - product_info: User wants information about specific products, if user asks for product information with images then send to view inventory
-        - track_order: User wants to know the status of their order
+        - view_inventory: User wants to see available footwear products or browse categories
+        - add_to_cart: User wants to add specific footwear to their cart
+        - remove_from_cart: User wants to remove footwear from their cart
+        - view_cart: User wants to see what footwear is in their cart
+        - confirm_order: User wants to complete their footwear purchase
+        - track_order: User wants to know the status of their footwear order
         - NOT_SURE: When intent is genuinely ambiguous
-        
+
         Examples:
         - "hello" → smalltalk
-        - "show me your kurtas" → view_inventory
-        - "I want to buy a shalwar kameez" → add_to_cart
-        - "remove embroidered waistcoat from cart" → remove_from_cart
-        - "what's in my cart" → view_cart
-        - "I want to complete my order" → confirm_order
-        - "tell me about the wedding sherwani" → product_info
-        - "where is my order" → track_order
+        - "show me your chappals" → view_inventory
+        - "I want to buy size 8 brown leather sandals" → add_to_cart
+        - "remove formal shoes from cart" → remove_from_cart
+        - "what footwear is in my cart" → view_cart
+        - "I want to complete my chappal order" → confirm_order
+        - "where is my footwear order" → track_order
         
         
         Contextual guidance:
-        - When a user asks about availability, styles, or browsing products, or even if user is just starting to buy something and he probably needs information classify as view_inventory
-        - When a user asks detailed questions about a specific product, classify as product_info
-        - When a user mentions buying, getting, or wanting a specific product, and has selected the product or has specified the exact prodcut classify as add_to_cart
-        - For messages like "I want to see shalwar kameez", classify as view_inventory not add_to_cart
-        - Messages about purchasing in general without specifying a product are view_inventory
-        - "I'm looking for" statements should typically be view_inventory unless a very specific product(not category) is mentioned
+        - When a user asks about footwear availability, styles, or browsing products, classify as view_inventory
+        - When a user asks detailed questions about specific footwear, classify as product_info
+        - When a user mentions buying, getting, or wanting specific footwear with BOTH product AND size specified, classify as add_to_cart
+        - For messages like "I want to see chappals" or "show me sandals", classify as view_inventory not add_to_cart
+        - Messages about purchasing footwear in general without specifying exact product and size are view_inventory
+        - "I'm looking for" statements about footwear should typically be view_inventory unless very specific footwear with size is mentioned
+        - Size-only queries (like "size 45", "size 8", "what sizes") should ALWAYS be view_inventory (user is filtering/browsing)
+        - Color-only queries (like "black", "brown shoes") should be view_inventory
         - When uncertain between multiple intents, prioritize transaction intents over smalltalk
-        - Messages containing only product names should be classified as product_info
+        - Messages containing only footwear names (chappal, sandal, shoe) should be classified as product_info
+
+        IMPORTANT SIZE CLASSIFICATION RULES:
+        - "size 45" → view_inventory (user wants to filter by size)
+        - "do you have size 45?" → view_inventory (checking size availability)
+        - "I want size 8 brown leather chappals" → add_to_cart (specific product + size)
+        - "size 40 available?" → view_inventory (checking availability)
         
         -----IMPORTANT---------------------------------------- 
         NEED TO FOLLOW THE FOLLOWING FORMAT STRICTLY                              
@@ -276,6 +285,9 @@ def classify_intent(message, cart, inventory, conversation_history, user_name=No
     
     messages = prepare_messages(system_prompt, message, conversation_history)
     response = safe_api_call(messages)
+
+    # Apply GuardRails validation
+    response = validate_llm_response(response, "general")
     
     # Extract sender_id from conversation history if available
     sender_id = "unknown"
@@ -301,8 +313,17 @@ def handle_smalltalk(message, user_name, conversation_history, cart_status=None)
     return response
     
 def handle_view_inventory(message, inventory_json, conversation_history, user_name=None, user_history=None):
-    """Handle requests to view available products"""
-    response = handle_view_inventory_impl(message, inventory_json, conversation_history, user_name, user_history)
+    """Handle requests to view available products using enhanced multi-layer retrieval"""
+    # Extract user_id from conversation history or use user_name as fallback
+    user_id = _extract_user_id_from_history(conversation_history) or user_name or "anonymous"
+    
+    # Use enhanced multi-layer retrieval system for inventory browsing
+    response = handle_product_search_enhanced(
+        user_id=user_id,
+        message=message,
+        conversation_history=conversation_history,
+        user_name=user_name
+    )
     log_response(user_name, "view_inventory", message, response)
     return response
 
@@ -328,10 +349,26 @@ def handle_remove_from_cart(message, cart_json, conversation_history, user_name=
         })
 
 
+def _extract_user_id_from_history(conversation_history: List[Dict]) -> str:
+    """Extract user_id from conversation history"""
+    if conversation_history:
+        for message in conversation_history:
+            if message.get('user_id'):
+                return message['user_id']
+    return None
+
 def handle_product_info(message, inventory, conversation_history, user_name=None):
-    """Handle requests for product information using optimized search"""
-    # Use optimized approach that doesn't require full inventory
-    response = handle_product_info_optimized(message, conversation_history, user_name)
+    """Handle requests for product information using enhanced multi-layer retrieval"""
+    # Extract user_id from conversation history or use user_name as fallback
+    user_id = _extract_user_id_from_history(conversation_history) or user_name or "anonymous"
+    
+    # Use enhanced multi-layer retrieval system
+    response = handle_product_search_enhanced(
+        user_id=user_id,
+        message=message,
+        conversation_history=conversation_history,
+        user_name=user_name
+    )
     log_response(user_name, "product_info", message, response)
     return response
 

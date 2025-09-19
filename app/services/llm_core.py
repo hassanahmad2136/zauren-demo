@@ -32,6 +32,36 @@ def safe_api_call(messages, model="llama-3.3-70b-versatile", max_retries=2, retr
     retries = 0
     while retries < max_retries:
         try:
+            # Validate messages before sending
+            if not messages or not isinstance(messages, list):
+                print(f"Invalid messages format: {messages}")
+                return json.dumps({
+                    "error": "Invalid request format",
+                    "reply": "Sorry, I'm having trouble understanding your request. Please try again."
+                })
+            
+            # Check for overly long messages
+            total_length = sum(len(str(msg.get('content', ''))) for msg in messages)
+            if total_length > 50000:  # Reasonable limit
+                print(f"Message too long: {total_length} characters")
+                return json.dumps({
+                    "error": "Message too long",
+                    "reply": "Sorry, your request is too long. Please try with shorter text."
+                })
+            
+            # Ensure the word "json" appears in the messages for json_object response format
+            has_json_word = any("json" in str(msg.get('content', '')).lower() for msg in messages)
+            if not has_json_word:
+                # Add json instruction to the last message if it's a system message
+                if messages and messages[-1].get('role') == 'system':
+                    messages[-1]['content'] += "\n\nRespond with a valid JSON object."
+                else:
+                    # Add a system message with json instruction
+                    messages.append({
+                        "role": "system", 
+                        "content": "Please respond with a valid JSON object."
+                    })
+            
             chat_completion = client.chat.completions.create(
                 messages=messages,
                 model=model,
@@ -40,9 +70,19 @@ def safe_api_call(messages, model="llama-3.3-70b-versatile", max_retries=2, retr
             return chat_completion.choices[0].message.content
         except Exception as e:
             retries += 1
-            if "429" in str(e) or "Too Many Requests" in str(e):
+            error_msg = str(e)
+            print(f"LLM API Error (attempt {retries}/{max_retries}): {error_msg}")
+            
+            if "429" in error_msg or "Too Many Requests" in error_msg:
                 retry_delay *= 2  # Exponential backoff
                 time.sleep(retry_delay)
+            elif "400" in error_msg:
+                print(f"400 Bad Request details: {error_msg}")
+                # For 400 errors, don't retry - fix the request
+                return json.dumps({
+                    "error": "Sorry, I'm having trouble understanding your request. Please try rephrasing.",
+                    "reply": "Sorry, I'm having trouble understanding your request. Please try rephrasing."
+                })
             elif retries < max_retries:
                 time.sleep(retry_delay)
             else:

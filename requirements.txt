@@ -1,6 +1,6 @@
 # Core Flask and Web Framework
-flask>=2.3.0
-waitress>=2.1.2
+flask>=2.3.0,<3.0
+waitress>=2.1.2,<3.0
 
 # Database and Storage
 supabase>=1.0.0
@@ -35,3 +35,5 @@ groq>=0.4.0
 # Utilities
 pytz>=2023.0
 typing-extensions>=4.8.0
+--only-binary=lxml
+lxml>=4.9.3,<5.0

@@ -15,9 +15,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-def main():
-    """Main production server entry point"""
-
+if __name__ == '__main__':
     # Check if embeddings should be skipped for faster startup
     skip_embeddings = os.getenv('SKIP_EMBEDDINGS_ON_STARTUP', 'true').lower() == 'true'
 
@@ -51,35 +49,14 @@ def main():
     # Create Flask app
     app = create_app()
 
-    # Get port from environment or use default
-    port = int(os.getenv('PORT', 5000))
-
-    logger.info("🚀 Starting Waitress production server...")
-    logger.info(f"👥 Optimized for 30+ concurrent WhatsApp users")
-    logger.info(f"🌐 Server will be available at http://0.0.0.0:{port}")
-    logger.info(f"🔍 PORT environment variable: {os.getenv('PORT', 'not set')}")
-    logger.info(f"🔍 Using port: {port}")
-
-    # Start Waitress server with optimized settings for concurrency
+    # Get port and start server
+    port = int(os.environ.get('PORT', 5000))
+    logger.info(f"🚀 Starting server on 0.0.0.0:{port} (optimized for 30+ concurrent users)")
     serve(
         app,
         host='0.0.0.0',
         port=port,
-        threads=50,  # Number of threads for handling requests
-        connection_limit=1000,  # Maximum number of connections
-        cleanup_interval=30,  # Cleanup interval in seconds
-        channel_timeout=120,  # Channel timeout in seconds
-        log_socket_errors=True,
-        clear_untrusted_proxy_headers=True,
-        # Performance tuning
-        backlog=2048,  # Socket backlog
-        recv_bytes=65536,  # Receive buffer size
-        send_bytes=65536,  # Send buffer size
-        # Security
-        trusted_proxy='*',  # Trust all proxies (adjust for production)
-        trusted_proxy_count=1,
-        trusted_proxy_headers='x-forwarded-for x-forwarded-host x-forwarded-proto x-forwarded-port',
+        threads=50,
+        connection_limit=1000,
+        channel_timeout=120
     )
-
-if __name__ == '__main__':
-    main()

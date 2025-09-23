@@ -403,9 +403,21 @@ def generate_and_send_response(data, message, sender_id, sender_name, user_sessi
 
         if message_hash not in processed_messages:
             processed_messages[message_hash] = {'time': time.time(), 'status': 'processed'}
-            
+            print(f"💬 Replying to {sender_name} ({sender_id}): {reply_text[:100]}...")  # Log first 100 chars
+            # if intent is smalltalk send whatsapp message
+            if response_data.get('intent') == 'smalltalk':
+                logger.info(f"💬 Smalltalk response: {reply_text}"
+                )
+                send_whatsapp_message(
+                    phone_number_id=data.get("metadata", {}).get("phone_number_id"),
+                    recipient_phone=sender_id,
+                    message=reply_text,
+                    id=message.get("id", None)
+                )
             # Send WhatsApp message
-            if not interactive_message[0]:
+            
+            elif not interactive_message[0]:
+                print(f"💬 Sending text message to {sender_name} ({sender_id})")
                 send_whatsapp_message(
                     phone_number_id=data.get("metadata", {}).get("phone_number_id"),
                     recipient_phone=sender_id,
@@ -612,7 +624,7 @@ def generate_and_send_response(data, message, sender_id, sender_name, user_sessi
                         current_category = category_details[i]
                         
                         # Categories use placeholder images
-                        category_image = "https://via.placeholder.com/400x400/f0f0f0/666666?text=Category"
+                        category_image = "https://placehold.co/550x780/EEE/31343C.png"
                         
                         # Validate category_id
                         category_id = current_category.get('category_id')
@@ -635,7 +647,7 @@ def generate_and_send_response(data, message, sender_id, sender_name, user_sessi
                             logger.info(f"✅ Category {db_index} stored with secondary_id: {secondary_id}")
                     
                     # Send placeholder image for categories
-                    placeholder_image = "https://via.placeholder.com/400x400/f0f0f0/666666?text=Category"
+                    placeholder_image = "https://placehold.co/550x780/EEE/31343C.png"
                     
                     try:
                         from app.services.messaging_service import send_media_message
@@ -2040,7 +2052,8 @@ def generate_llm_response(text, sender_name, cart=None, inventory=None, conversa
             
             if intent == "smalltalk":
                 response = handle_smalltalk(text, sender_name, conversation_history)
-                
+                #print reply here
+                logger.info(f"💬 Smalltalk response: {response}")
             elif intent == "view_inventory":
                 # Use enhanced search-based handler instead of LLM to handle large inventory efficiently
                 search_response = handle_view_inventory_with_search(user_id or "unknown", text, sender_name)
@@ -2080,9 +2093,11 @@ def generate_llm_response(text, sender_name, cart=None, inventory=None, conversa
             # Parse the response JSON
             if isinstance(response, str):
                 try:
+                    print(f"💬 LLM raw response: {response}")
                     response_data = json.loads(response)
                     # Add the intent to the response data
                     response_data['intent'] = intent
+                    print(f"💬 Parsed response data: {json.dumps(response_data, indent=2)}")
                     return response_data
                 except json.JSONDecodeError:
                     # If the response is not valid JSON, return as is

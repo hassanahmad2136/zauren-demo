@@ -95,15 +95,17 @@ def send_whatsapp_message(id, phone_number_id, recipient_phone, message, enable_
         "recipient_type": "individual",
         "to": recipient_phone,
         "type": "text",
-        "context": {
-    "message_id": id
-  },
+        
         "text": {
             "preview_url": enable_preview,
             "body": message
         }
     }
-    
+
+    print("=== WhatsApp API Request Debug ===")
+    print(f"URL: {url}")
+    print(f"Headers: {json.dumps(headers, indent=2)}")
+    print(f"Payload: {json.dumps(payload, indent=2)}")
     try:
         # Send the request
         response = requests.post(url, headers=headers, json=payload, timeout=10)

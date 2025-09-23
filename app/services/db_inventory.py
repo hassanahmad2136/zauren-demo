@@ -920,4 +920,4 @@ def create_nested_inventory_json(categories, products):
     
     return inventory_json
 
-print(create_nested_inventory_json(get_all_categories()['data'], get_all_products()['data']))
+create_nested_inventory_json(get_all_categories()['data'], get_all_products()['data'])

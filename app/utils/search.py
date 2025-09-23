@@ -536,10 +536,15 @@ searcher = FlaskConversationSearcher()
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY', 'your-secret-key-here')
 
-@app.before_first_request
+_searcher_initialized = False
+
+@app.before_request
 def initialize_searcher():
-    """Initialize searcher when Flask starts"""
-    searcher.initialize()
+    """Initialize searcher before the first request"""
+    global _searcher_initialized
+    if not _searcher_initialized:
+        searcher.initialize()
+        _searcher_initialized = True
 
 @app.route('/api/search/conversation', methods=['POST'])
 def conversation_search_endpoint():
